@@ -1,5 +1,5 @@
 {
-    "name": "@ovchinnikov-lxs/nuxt3-template",
+    "name": "@ovchinnikov-lxs/groom-crm",
     "version": "1.0.0",
     "private": true,
     "scripts": {
@@ -16,13 +16,13 @@
         "lint:fix": "npm run el:fix && npm run sl:fix"
     },
     "dependencies": {
-        "@ovchinnikov-lxs/ui-kit": "2.2.25",
+        "@ovchinnikov-lxs-frontend/ui-kit": "^2.7.0",
         "normalize.css": "^8.0.1"
     },
     "devDependencies": {
         "@nuxtjs/eslint-config-typescript": "^12.0.0",
         "eslint": "^8.34.0",
-        "nuxt": "^3.1.2",
+        "nuxt": "^3.2.3",
         "sass": "^1.58.0",
         "nano-staged": "^0.5.0",
         "simple-git-hooks": "^2.4.1",
@@ -32,8 +32,5 @@
         "stylelint-order": "^4.1.0",
         "stylelint-scss": "^3.14.2",
         "vite-plugin-stylelint": "^4.2.0"
-    },
-    "browserslist": [
-        "extends @ovchinnikov-lxs/browserslist-config"
-    ]
+    }
 }

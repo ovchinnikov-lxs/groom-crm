@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // UiComponents
-import { UiButton } from '@ovchinnikov-lxs/ui-kit';
+import { UiButton } from '@ovchinnikov-lxs-frontend/ui-kit';
 
 const counter = useCounter();
 </script>

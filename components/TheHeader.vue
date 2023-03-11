@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UiImage } from '@ovchinnikov-lxs/ui-kit';
+import { UiImage } from '@ovchinnikov-lxs-frontend/ui-kit';
 import { useLang } from '~/composables/store';
 const imageUrl = 'https://images.unsplash.com/photo-1633409361618-c73427e4e206?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1780&q=80';
 
