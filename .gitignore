@@ -53,7 +53,7 @@ typings/
 
 # nuxt.js build output
 .nuxt
-
+.output
 # Translations
 *.mo
 *.pot
