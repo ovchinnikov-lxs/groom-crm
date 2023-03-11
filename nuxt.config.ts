@@ -28,7 +28,6 @@ export default defineNuxtConfig({
                 scss: {
                     additionalData: `
                     @use "~/assets/scss/shared/_functions.scss" as *;
-                    @use "~/assets/scss/shared/_variables.scss" as *;
                     @use "~/assets/scss/shared/_mixins.scss" as *;
                     `,
                 },

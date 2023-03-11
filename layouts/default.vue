@@ -1,12 +1,8 @@
 <template>
     <div :class="$style.DefaultLayout">
-        <TheHeader :class="$style.header" />
-
         <div :class="$style.container">
             <slot />
         </div>
-
-        <TheFooter :class="$style.footer" />
     </div>
 </template>
 

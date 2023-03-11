@@ -2,6 +2,13 @@
 /*
 ** Media queries mixins
 */
+$breakpoints: (
+    mobile: 576px,
+    tablet: 1112px,
+    laptop: 1440px,
+    desktop: 1920px,
+    desktop-l: 7680px,
+);
 
 @mixin respond-to($name) {
     $max: map-get($breakpoints, $name);
