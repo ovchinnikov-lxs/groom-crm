@@ -1,0 +1,56 @@
+
+/*
+** Media queries mixins
+*/
+
+@mixin respond-to($name) {
+    $max: map-get($breakpoints, $name);
+
+    @if $max {
+        @media only screen and (max-width: $max) {
+            @content;
+        }
+    }
+
+    @else {
+        @content;
+    }
+}
+
+/*
+** Adds mixins
+*/
+
+@mixin aspect-ratio($width, $height) {
+    position: relative;
+
+    &:before {
+        content: '';
+        display: block;
+        width: 100%;
+        padding-top: div($height, $width) * 100%;
+    }
+}
+
+@mixin hover {
+    @media (hover), (min-width: 0\0) {
+        &:hover {
+            @content;
+        }
+    }
+}
+
+@mixin reset-list {
+    list-style-type: none;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-inline-start: 0;
+}
+
+@mixin dotdotdot {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
