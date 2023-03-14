@@ -1,25 +1,5 @@
-@import "normalize.css";
 @import "@ovchinnikov-lxs-frontend/ui-kit/dist/ui-kit.css";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-
-* {
-    box-sizing: border-box;
-}
-
-:root {
-    --primary-color: #de4b50;
-    --primary-light-color: #f17479;
-    --secondary-color: #76777c;
-    --secondary-light-color: #e2e2e2;
-    --additional-color: #a6d0ff;
-    --additional-light-color: #e9f5ff;
-    --black-color: #131a35;
-    --white-color: #fcfcfc;
-    --light-gray-color: #76777c;
-    --ui-col: 40px;
-    --ui-unit: 4px;
-}
-
-body {
-    font-family: 'Montserrat', sans-serif;
-}
+@import "default";
+@import "reset";
+@import "text";

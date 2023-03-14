@@ -2,54 +2,41 @@
 definePageMeta({
     layout: 'auth',
 });
-
-function onSubmit() {
-    console.log('onSubmit');
-}
 </script>
 
 <template>
-    <div class="LoginPage">
-        <form :class="$style.wrapper" @submit.prevent="onSubmit">
+    <div :class="$style.LoginPage">
+        <section :class="$style.container">
+            <AuthAside :class="$style.aside"/>
 
-            <div :class="$style.cells">
-                <UiFormCell>
-                    <template #label>Номер телефона</template>
+            <div :class="$style.loginSide">
+                <AuthLoginForm :class="$style.form"/>
 
-                    <template #default>
-                        <UiInput/>
-                    </template>
-                </UiFormCell>
-
-                <UiFormCell>
-                    <template #label>Пароль</template>
-
-                    <template #default>
-                        <UiInput type="password"/>
-                    </template>
-                </UiFormCell>
+                <AuthLoginInfo :class="$style.info"/>
             </div>
 
-            <UiButton :class="$style.button">Войти</UiButton>
-        </form>
+        </section>
     </div>
 </template>
 
-
 <style lang="scss" module>
-.wrapper {
+.LoginPage {
     display: flex;
-    flex-direction: column;
     width: 100%;
 }
 
-.cells {
+.container {
+    @include container;
+
     display: flex;
-    flex-direction: column;
-    row-gap: calc(var(--ui-unit) * 6);
+    align-items: center;
 }
 
-.button {
-    margin-top: auto;
+.loginSide {
+    display: flex;
+    flex-direction: column;
+    width: calc(var(--ui-col) * 14);
+    row-gap: calc(var(--ui-unit) * 5);
+    margin-left: auto;
 }
 </style>

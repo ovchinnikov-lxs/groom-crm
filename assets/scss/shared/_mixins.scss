@@ -3,11 +3,9 @@
 ** Media queries mixins
 */
 $breakpoints: (
-    mobile: 576px,
-    tablet: 1112px,
-    laptop: 1440px,
     desktop: 1920px,
-    desktop-l: 7680px,
+    tablet: 1112px,
+    mobile: 576px,
 );
 
 @mixin respond-to($name) {
@@ -22,6 +20,17 @@ $breakpoints: (
     @else {
         @content;
     }
+}
+
+@mixin container($device: desktop) {
+    $width: (
+        desktop: calc(var(--ui-col) * 32),
+        tablet: calc(100% - var(--ui-unit) * 16),
+        mobile: calc(100% - var(--ui-unit) * 8),
+    );
+
+    width: map-get($width, $device);
+    margin: 0 auto;
 }
 
 /*

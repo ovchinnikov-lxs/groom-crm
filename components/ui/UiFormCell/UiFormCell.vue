@@ -44,7 +44,7 @@ defineProps({
     &.--secondary-color {
         #{$cell} {
             &__label {
-                color: var(--secondary-color);
+                color: var(--ui-secondary-color);
             }
         }
     }

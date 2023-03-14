@@ -1,0 +1,75 @@
+h1 {
+    font-size: calc(var(--ui-unit) * 13.75);
+
+    @include respond-to(mobile) {
+        font-size: calc(var(--ui-unit) * 11.25);
+    }
+}
+
+h2 {
+    font-size: calc(var(--ui-unit) * 11.25);
+
+    @include respond-to(mobile) {
+        font-size: calc(var(--ui-unit) * 9);
+    }
+}
+
+h3 {
+    font-size: calc(var(--ui-unit) * 9);
+
+    @include respond-to(mobile) {
+        font-size: calc(var(--ui-unit) * 7.25);
+    }
+}
+
+h4 {
+    font-size: calc(var(--ui-unit) * 6);
+
+    @include respond-to(mobile) {
+        font-size: calc(var(--ui-unit) * 4.75);
+    }
+}
+
+h5 {
+    font-size: calc(var(--ui-unit) * 4);
+
+    @include respond-to(mobile) {
+        font-size: calc(var(--ui-unit) * 3.25);
+    }
+}
+
+.text-large {
+    font-size: calc(var(--ui-unit) * 5);
+    line-height: 140%;
+
+    @include respond-to(mobile) {
+        font-size: calc(var(--ui-unit) * 4);
+    }
+}
+
+.text-medium {
+    font-size: calc(var(--ui-unit) * 4);
+    line-height: 140%;
+
+    @include respond-to(mobile) {
+        font-size: calc(var(--ui-unit) * 3.25);
+    }
+}
+
+.text-small {
+    font-size: calc(var(--ui-unit) * 3.5);
+    line-height: 140%;
+
+    @include respond-to(mobile) {
+        font-size: calc(var(--ui-unit) * 3);
+    }
+}
+
+.text-x-small {
+    font-size: calc(var(--ui-unit) * 3);
+    line-height: 140%;
+
+    @include respond-to(mobile) {
+        font-size: calc(var(--ui-unit) * 2.5);
+    }
+}

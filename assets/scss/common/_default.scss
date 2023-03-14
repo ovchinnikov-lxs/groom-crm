@@ -1,0 +1,29 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --ui-primary-color: #de4b50;
+    --ui-primary-light-color: #f17479;
+    --ui-secondary-color: #76777c;
+    --ui-secondary-light-color: #e2e2e2;
+    --ui-additional-color: #a6d0ff;
+    --ui-additional-light-color: #e9f5ff;
+    --ui-black-color: #131a35;
+    --ui-white-color: #fcfcfc;
+    --ui-light-gray-color: #76777c;
+    --ui-primary-color-rgb: 222, 75, 80;
+    --ui-primary-light-color-rgb: 241, 116, 121;
+    --ui-secondary-color-rgb: 118, 119, 124;
+    --ui-secondary-light-color-rgb: 226, 226, 226;
+    --ui-additional-color-rgb: 166, 208, 255;
+    --ui-additional-light-color-rgb: 233, 245, 255;
+    --ui-black-color-rgb: 19, 26, 53;
+    --ui-white-color-rgb: 252, 252, 252;
+    --ui-col: 40px;
+    --ui-unit: 4px;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}

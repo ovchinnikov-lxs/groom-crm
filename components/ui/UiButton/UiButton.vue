@@ -21,19 +21,28 @@ defineProps({
 
 <style lang="scss">
 .UiButton {
+    font-weight: bold;
+    line-height: 140%;
+
     &.--medium-size {
         padding: calc(var(--ui-unit) * 3) calc(var(--ui-unit) * 13);
-        border-radius: calc(var(--ui-unit) * 5);
+        border-radius: calc(var(--ui-unit) * 2.5);
         font-size: calc(var(--ui-unit) * 6);
+    }
+
+    &.--small-size {
+        padding: calc(var(--ui-unit) * 3) calc(var(--ui-unit) * 13);
+        border-radius: calc(var(--ui-unit) * 2.5);
+        font-size: calc(var(--ui-unit) * 4);
     }
 
     &.--primary-color {
         &.--is-solid {
-            background-color: var(--primary-color);
-            color: var(--white-color);
+            background-color: var(--ui-primary-light-color);
+            color: var(--ui-white-color);
 
             @include hover {
-                background-color: var(--primary-light-color);
+                background-color: var(--ui-primary-color);
             }
         }
     }
