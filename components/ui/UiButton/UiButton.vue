@@ -44,6 +44,10 @@ defineProps({
             @include hover {
                 background-color: var(--ui-primary-color);
             }
+
+            &.--is-disabled {
+                opacity: .6;
+            }
         }
     }
 }

@@ -29,16 +29,18 @@ defineProps({
         flex-direction: column;
     }
 
+    &__error {
+        color: var(--ui-error-color);
+    }
+
     &.--medium-size {
         #{$cell} {
             &__wrapper {
                 row-gap: var(--ui-unit);
             }
 
-            &__label {
-                font-size: calc(var(--ui-unit) * 4);
-            }
-
+            &__label,
+            &__error,
             &__info {
                 font-size: calc(var(--ui-unit) * 3);
             }

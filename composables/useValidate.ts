@@ -1,6 +1,11 @@
+// Deps
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, minLength, maxLength } from '@vuelidate/validators';
+import { required, email, minLength, maxLength, helpers } from '@vuelidate/validators';
 import { isValidPhoneNumber } from '@/node_modules/libphonenumber-js';
+import _ from 'lodash';
+
+// Dict
+import { MESSAGE_DICT } from 'assets/ts/dicts/validation';
 
 type TypeItemRules = string | {
     name: string,
@@ -9,9 +14,8 @@ type TypeItemRules = string | {
 }
 
 interface IRules {
-    [key: string]: Array<TypeItemRules>
+    [key: string]: Array<TypeItemRules> | IRules
 }
-
 
 export function isPhone(number: string): boolean {
     if (!number) {
@@ -24,11 +28,11 @@ export function isPhone(number: string): boolean {
 const validators: {
     [key: string]: any
 } = {
-    required,
-    email,
-    phone: (val: string) => isPhone(val),
-    minLength: (param: number) => minLength(param),
-    maxLength: (param: number) => maxLength(param),
+    required: helpers.withMessage(MESSAGE_DICT.required, required),
+    email: helpers.withMessage(MESSAGE_DICT.email, email),
+    phone: helpers.withMessage(MESSAGE_DICT.phone, (val: string) => isPhone(val)),
+    minLength: helpers.withMessage(MESSAGE_DICT.minLength, (param: number): any => minLength(param)),
+    maxLength: helpers.withMessage(MESSAGE_DICT.maxLength, (param: number): any => maxLength(param)),
 };
 
 function setValidators(arr: Array<TypeItemRules>) {
@@ -55,30 +59,37 @@ function setValidations(rules: IRules): object {
     }, {});
 }
 
-const validationDict: {
-    [key: string]: any
-} = {
-    required: 'Поле обяз ',
-    phone: 'Не валидный номер',
-};
-
 export function useValidate(rules: IRules, value: object) {
     const actualRules = setValidations(rules);
-
     const $v = useVuelidate(actualRules, value);
 
-    const getError = computed(() => (field: string) => {
-        const value = $v.value[field];
+    const initialValue = ref(_.cloneDeep(value));
 
-        if (!value.$dirty || !value.$errors?.length) {
-            return false;
+    const updateValue = () => {
+        initialValue.value = _.cloneDeep(value);
+    };
+
+    const getError = computed(() => (fieldPath: string) => {
+        const error = $v.value.$errors.find(i => i.$propertyPath === fieldPath);
+
+        if (!error) {
+            return null;
         }
 
-        return validationDict[value.$errors[0].$validator];
+        return error.$message;
     });
 
+    const isInvalid = computed(() => $v.value.$invalid || _.isEqual(initialValue.value, value));
+
+    const getInvalidState = async (): Promise<boolean> => {
+        const isValidated = await $v.value.$validate();
+
+        return !isValidated || isInvalid.value;
+    };
     return {
         $v,
         getError,
+        getInvalidState,
+        updateValue,
     };
 }

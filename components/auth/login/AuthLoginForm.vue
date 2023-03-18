@@ -25,11 +25,19 @@ const rules = {
     ],
 };
 
-const { $v, getError } = useValidate(rules, actualValue);
+const { $v, getError, getInvalidState } = useValidate(rules, actualValue);
 
-function onSubmit() {
-    console.log(actualValue, 'onSubmit');
-    router.push($routes.index);
+async function onSubmit() {
+    if (await getInvalidState()) {
+        return false;
+    }
+
+    try {
+        console.log(actualValue, 'onSubmit');
+        router.push($routes.index);
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 const showPassword = ref(false);
@@ -45,6 +53,7 @@ const passwordType = computed(() => showPassword.value ? 'text' : 'password');
                 <UiFormCell :error="getError('phone')">
                     <template #default>
                         <UiInput
+                            id="phone"
                             v-model="$v.phone.$model"
                             :error="getError('phone')"
                             placeholder="Введите телефон"
@@ -55,6 +64,7 @@ const passwordType = computed(() => showPassword.value ? 'text' : 'password');
                 <UiFormCell :error="getError('password')">
                     <template #default>
                         <UiInput
+                            id="password"
                             v-model="$v.password.$model"
                             :error="getError('password')"
                             :type="passwordType"
@@ -83,7 +93,9 @@ const passwordType = computed(() => showPassword.value ? 'text' : 'password');
 
             </div>
 
-            <UiButton :class="$style.button">Войти</UiButton>
+            <UiButton :class="$style.button">
+                Войти
+            </UiButton>
 
         </form>
     </UiPlate>

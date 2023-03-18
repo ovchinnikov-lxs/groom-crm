@@ -8,7 +8,7 @@ defineProps({
         default: 'additional-light',
     },
 });
-</script>
+</script>3
 
 <template>
     <UiInput :color="color" v-bind="$attrs"/>
@@ -33,11 +33,15 @@ defineProps({
 
         &:focus {
             border-color: var(--ui-black-color);
-        }
 
-        &.--is-error {
-            border-color: var(--ui-primary-color);
+            &.--is-error {
+                border-color: var(--ui-error-color);
+            }
         }
+    }
+
+    &.--is-error {
+        border-color: var(--ui-error-color);
     }
 }
 </style>
