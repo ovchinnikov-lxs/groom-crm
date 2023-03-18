@@ -1,7 +1,7 @@
 <template>
     <UiPlate rounded class="AuthLoginInfo">
         <div :class="$style.wrapper">
-            <UiButton size="small" to="/auth/registration">
+            <UiButton size="small" :to="$routes.auth.registration">
                 Зарегистрироваться
             </UiButton>
 
@@ -10,7 +10,7 @@
             </div>
 
             <UiLink
-                to="/"
+                :href="$routes.landing"
                 color="black"
                 size="small"
                 :class="$style.link"

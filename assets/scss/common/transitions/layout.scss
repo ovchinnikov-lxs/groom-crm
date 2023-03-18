@@ -1,0 +1,9 @@
+.layout-enter-active,
+.layout-leave-active {
+    transition: opacity .3s;
+}
+
+.layout-enter-from,
+.layout-leave-active {
+    opacity: 0;
+}

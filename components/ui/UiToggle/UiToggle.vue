@@ -5,7 +5,7 @@ import { UiToggle } from '@ovchinnikov-lxs-frontend/ui-kit';
 defineProps({
     color: {
         type: String,
-        default: 'additional',
+        default: 'black',
     },
 });
 </script>
@@ -56,26 +56,39 @@ defineProps({
                 }
             }
         }
-    }
 
-    &.--additional-color {
-        #{$toggle} {
-            &__button {
-                background-color: var(--ui-additional-light-color);
-
-                &:after {
-                    background-color: var(--ui-additional-color);
+        &.--is-toggled {
+            #{$toggle} {
+                &__button {
+                    &:after {
+                        transform: translateX(12px);
+                    }
                 }
             }
         }
     }
 
-    &.--is-toggled {
+    &.--black-color {
         #{$toggle} {
+            &__label {
+                color: var(--ui-black-color);
+            }
+
             &__button {
+                background-color: var(--ui-additional-light-color);
+
                 &:after {
                     background-color: var(--ui-black-color);
-                    transform: translateX(12px);
+                }
+            }
+        }
+
+        &.--is-toggled {
+            #{$toggle} {
+                &__button {
+                    &:after {
+                        background-color: var(--ui-additional-color);
+                    }
                 }
             }
         }

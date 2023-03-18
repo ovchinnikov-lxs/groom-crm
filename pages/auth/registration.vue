@@ -1,20 +1,24 @@
 <script setup lang="ts">
 definePageMeta({
     layout: 'auth',
+    pageTransition: {
+        name: 'top',
+        mode: 'out-in',
+    },
 });
 </script>
 
 <template>
-    <div class="registration">
-        <div :class="$style.wrapper">
-            registration
-        </div>
+    <div :class="$style.RegistrationPage">
+        <AuthRegistrationForm/>
+        <AuthRegistrationInfo/>
     </div>
 </template>
 
 <style lang="scss" module>
-.wrapper {
-    width: 100%;
-    height: 100%;
+.RegistrationPage {
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(var(--ui-unit) * 5);
 }
 </style>

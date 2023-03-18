@@ -32,18 +32,23 @@ defineProps({
     &.--medium-size {
         #{$cell} {
             &__wrapper {
-                row-gap: calc(var(--ui-unit) * 3);
+                row-gap: var(--ui-unit);
             }
 
             &__label {
                 font-size: calc(var(--ui-unit) * 4);
+            }
+
+            &__info {
+                font-size: calc(var(--ui-unit) * 3);
             }
         }
     }
 
     &.--secondary-color {
         #{$cell} {
-            &__label {
+            &__label,
+            &__info {
                 color: var(--ui-secondary-color);
             }
         }
