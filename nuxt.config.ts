@@ -10,9 +10,9 @@ export default defineNuxtConfig({
         head: {
             charset: 'utf-16',
             viewport: 'width=device-width, initial-scale=1',
-            title: 'Nuxt3 template',
+            title: 'GROOM.CRM',
             meta: [
-                { name: 'description', content: 'Nuxt3 template' },
+                { name: 'description', content: 'Приложение для записи клиентов' },
             ],
         },
     },

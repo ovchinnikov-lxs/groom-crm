@@ -1,11 +1,31 @@
 <script setup lang="ts">
+// Composables
+import { useValidate } from '~/composables/useValidate';
+
 const router = useRouter();
 const { $routes } = useNuxtApp();
 
-const actualValue = reactive({
+interface ILoginForm {
+    phone: string
+    password: string
+}
+
+const actualValue = reactive<ILoginForm>({
     phone: '',
     password: '',
 });
+
+const rules = {
+    phone: [
+        'required',
+        'phone',
+    ],
+    password: [
+        'required',
+    ],
+};
+
+const { $v, getError } = useValidate(rules, actualValue);
 
 function onSubmit() {
     console.log(actualValue, 'onSubmit');
@@ -22,16 +42,21 @@ const passwordType = computed(() => showPassword.value ? 'text' : 'password');
             <h3>Вход</h3>
 
             <div :class="$style.cells">
-                <UiFormCell>
+                <UiFormCell :error="getError('phone')">
                     <template #default>
-                        <UiInput v-model="actualValue.phone" placeholder="Введите телефон"/>
+                        <UiInput
+                            v-model="$v.phone.$model"
+                            :error="getError('phone')"
+                            placeholder="Введите телефон"
+                        />
                     </template>
                 </UiFormCell>
 
-                <UiFormCell>
+                <UiFormCell :error="getError('password')">
                     <template #default>
                         <UiInput
-                            v-model="actualValue.password"
+                            v-model="$v.password.$model"
+                            :error="getError('password')"
                             :type="passwordType"
                             placeholder="Введите пароль"
                         />
