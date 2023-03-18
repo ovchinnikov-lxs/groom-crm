@@ -1,0 +1,10 @@
+.top-enter-from,
+.top-leave-to {
+    opacity: 0;
+    transform: translate3d(0, -16px, 0);
+}
+
+.top-enter-active,
+.top-leave-active {
+    transition: opacity .5s ease, transform .5s ease;
+}

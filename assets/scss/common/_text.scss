@@ -40,7 +40,7 @@ h5 {
 
 .text-large {
     font-size: calc(var(--ui-unit) * 5);
-    line-height: 140%;
+    line-height: 125%;
 
     @include respond-to(mobile) {
         font-size: calc(var(--ui-unit) * 4);
@@ -49,7 +49,7 @@ h5 {
 
 .text-medium {
     font-size: calc(var(--ui-unit) * 4);
-    line-height: 140%;
+    line-height: 125%;
 
     @include respond-to(mobile) {
         font-size: calc(var(--ui-unit) * 3.25);
@@ -58,7 +58,7 @@ h5 {
 
 .text-small {
     font-size: calc(var(--ui-unit) * 3.5);
-    line-height: 140%;
+    line-height: 125%;
 
     @include respond-to(mobile) {
         font-size: calc(var(--ui-unit) * 3);
@@ -67,7 +67,7 @@ h5 {
 
 .text-x-small {
     font-size: calc(var(--ui-unit) * 3);
-    line-height: 140%;
+    line-height: 125%;
 
     @include respond-to(mobile) {
         font-size: calc(var(--ui-unit) * 2.5);

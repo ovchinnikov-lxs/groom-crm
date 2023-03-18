@@ -1,4 +1,7 @@
 <script setup lang="ts">
+const router = useRouter();
+const { $routes } = useNuxtApp();
+
 const actualValue = reactive({
     phone: '',
     password: '',
@@ -6,6 +9,7 @@ const actualValue = reactive({
 
 function onSubmit() {
     console.log(actualValue, 'onSubmit');
+    router.push($routes.index);
 }
 
 const showPassword = ref(false);
@@ -32,23 +36,26 @@ const passwordType = computed(() => showPassword.value ? 'text' : 'password');
                             placeholder="Введите пароль"
                         />
                     </template>
+
+                    <template #info>
+                        <div :class="$style.info">
+                            <UiToggle v-model="showPassword" size="small">
+                                <template #true-label>Показать пароль</template>
+                            </UiToggle>
+
+                            <UiLink
+                                :to="$routes.auth.recovery"
+                                size="small"
+                                color="secondary"
+                                :class="$style.restorePassword"
+                            >
+                                Не помню пароль
+                            </UiLink>
+                        </div>
+
+                    </template>
                 </UiFormCell>
 
-            </div>
-
-            <div :class="$style.info">
-                <UiToggle v-model="showPassword" size="small">
-                    <template #true-label>Показать пароль</template>
-                </UiToggle>
-
-                <UiLink
-                    to="/"
-                    size="small"
-                    color="secondary"
-                    :class="$style.restorePassword"
-                >
-                    Не помню пароль
-                </UiLink>
             </div>
 
             <UiButton :class="$style.button">Войти</UiButton>
@@ -77,7 +84,6 @@ const passwordType = computed(() => showPassword.value ? 'text' : 'password');
 .info {
     display: flex;
     align-items: center;
-    margin-top: calc(var(--ui-unit) * 5);
 }
 
 .restorePassword {

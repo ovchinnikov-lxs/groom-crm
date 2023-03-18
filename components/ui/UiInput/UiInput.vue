@@ -23,6 +23,7 @@ defineProps({
         border-radius: calc(var(--ui-unit) * 2.5);
         border-width: 1px;
         font-size: calc(var(--ui-unit) * 3.5);
+        line-height: 125%;
     }
 
     &.--additional-light-color {

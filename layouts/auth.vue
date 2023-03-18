@@ -9,7 +9,13 @@
         </header>
 
         <main :class="$style.main">
-            <slot />
+            <section :class="$style.container">
+                <AuthAside :class="$style.aside"/>
+
+                <div :class="$style.content">
+                    <slot/>
+                </div>
+            </section>
         </main>
 
         <footer :class="$style.footer">
@@ -65,5 +71,14 @@
 .main {
     display: flex;
     flex-grow: 1;
+
+    .container {
+        column-gap: calc(var(--ui-unit) * 8);
+    }
+}
+
+.content {
+    width: calc(var(--ui-col) * 14);
+    margin-left: auto;
 }
 </style>

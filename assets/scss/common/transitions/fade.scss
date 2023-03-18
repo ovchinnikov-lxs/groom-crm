@@ -1,0 +1,16 @@
+.f-enter-active,
+.f-leave-active {
+    transition: opacity .3s ease;
+}
+
+.fade-fast-enter-active,
+.fade-fast-leave-active {
+    transition: opacity .2s ease;
+}
+
+.f-enter-from,
+.f-leave-to,
+.fade-fast-enter-from,
+.fade-fast-leave-to {
+    opacity: 0;
+}
