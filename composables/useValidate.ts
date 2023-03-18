@@ -1,17 +1,19 @@
 // Deps
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, minLength, maxLength, helpers } from '@vuelidate/validators';
+import { required, email, minLength, maxLength, helpers, sameAs, and } from '@vuelidate/validators';
 import { isValidPhoneNumber } from '@/node_modules/libphonenumber-js';
 import _ from 'lodash';
 
 // Dict
+import { ComputedRef } from 'vue';
 import { MESSAGE_DICT } from 'assets/ts/dicts/validation';
 
-type TypeItemRules = string | {
-    name: string,
-    validator: (e: any) => any
-    param: any
+interface ICustomRule {
+    name: string
+    validator?: (e: any) => any
+    param?: any
 }
+type TypeItemRules = string | ICustomRule
 
 interface IRules {
     [key: string]: Array<TypeItemRules> | IRules
@@ -31,8 +33,9 @@ const validators: {
     required: helpers.withMessage(MESSAGE_DICT.required, required),
     email: helpers.withMessage(MESSAGE_DICT.email, email),
     phone: helpers.withMessage(MESSAGE_DICT.phone, (val: string) => isPhone(val)),
-    minLength: helpers.withMessage(MESSAGE_DICT.minLength, (param: number): any => minLength(param)),
-    maxLength: helpers.withMessage(MESSAGE_DICT.maxLength, (param: number): any => maxLength(param)),
+    minLength: (param: number) => helpers.withMessage(MESSAGE_DICT.minLength, minLength(param)),
+    maxLength: (param: number) => helpers.withMessage(MESSAGE_DICT.maxLength, maxLength(param)),
+    sameAsPassword: (value: string) => helpers.withMessage(MESSAGE_DICT.sameAsPassword, sameAs(value)),
 };
 
 function setValidators(arr: Array<TypeItemRules>) {
@@ -59,8 +62,8 @@ function setValidations(rules: IRules): object {
     }, {});
 }
 
-export function useValidate(rules: IRules, value: object) {
-    const actualRules = setValidations(rules);
+export function useValidate(rules: ComputedRef<IRules>, value: object) {
+    const actualRules = computed(() => setValidations(rules.value));
     const $v = useVuelidate(actualRules, value);
 
     const initialValue = ref(_.cloneDeep(value));
@@ -82,6 +85,7 @@ export function useValidate(rules: IRules, value: object) {
     const isInvalid = computed(() => $v.value.$invalid || _.isEqual(initialValue.value, value));
 
     const getInvalidState = async (): Promise<boolean> => {
+        // todo: Добавил асинхронную проверку
         const isValidated = await $v.value.$validate();
 
         return !isValidated || isInvalid.value;

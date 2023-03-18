@@ -15,7 +15,7 @@ const actualValue = reactive<ILoginForm>({
     password: '',
 });
 
-const rules = {
+const rules = computed(() => ({
     phone: [
         'required',
         'phone',
@@ -23,16 +23,16 @@ const rules = {
     password: [
         'required',
     ],
-};
+}));
 
 const { $v, getError, getInvalidState } = useValidate(rules, actualValue);
 
 async function onSubmit() {
-    if (await getInvalidState()) {
-        return false;
-    }
-
     try {
+        if (await getInvalidState()) {
+            return false;
+        }
+
         console.log(actualValue, 'onSubmit');
         router.push($routes.index);
     } catch (e) {

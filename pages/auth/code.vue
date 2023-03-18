@@ -1,5 +1,8 @@
 <!--todo: Надо обдумать момент с переиспользованием этого окна для подтверждения номера при регистрации-->
 <script setup lang="ts">
+// Composables
+import { useValidate } from '~/composables/useValidate';
+
 // Utils
 import { leadingZero } from 'assets/ts/utils/format-utils';
 
@@ -17,6 +20,12 @@ const { $routes } = useNuxtApp();
 const actualValue = reactive({
     code: '',
 });
+
+const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+    code: [
+        'required',
+    ],
+})), actualValue);
 
 const TIME_COUNT = 60;
 const retryTime = ref<number>(TIME_COUNT);
@@ -41,9 +50,17 @@ function onSendCode() {
     startTimer();
 }
 
-function onSubmit() {
-    console.log('onSubmit');
-    router.push($routes.index);
+async function onSubmit() {
+    try {
+        if (await getInvalidState()) {
+            return false;
+        }
+
+        console.log('onSubmit');
+        router.push($routes.index);
+    } catch (e) {
+        console.log(e);
+    }
 }
 </script>
 
@@ -62,10 +79,11 @@ function onSubmit() {
                 </template>
             </div>
 
-            <UiFormCell :class="$style.cell">
+            <UiFormCell :error="getError('code')" :class="$style.cell">
                 <template #default>
                     <UiInput
-                        v-model="actualValue.code"
+                        v-model="$v.code.$model"
+                        :error="getError('code')"
                         placeholder="Введите код"
                     />
                 </template>

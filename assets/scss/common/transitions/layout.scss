@@ -1,9 +1,10 @@
 .layout-enter-active,
 .layout-leave-active {
-    transition: opacity .3s;
+    transition: all .4s;
 }
 
 .layout-enter-from,
-.layout-leave-active {
+.layout-leave-to {
     opacity: 0;
+    filter: blur(1rem);
 }

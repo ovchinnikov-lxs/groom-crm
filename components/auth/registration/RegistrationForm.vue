@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Composables
+import { useValidate } from '~/composables/useValidate';
+
 const router = useRouter();
 const { $routes } = useNuxtApp();
 
@@ -10,18 +13,48 @@ const actualValue = reactive({
     company_name: '',
 });
 
+const rules = computed(() => ({
+    phone: [
+        'required',
+        'phone',
+    ],
+    password: [
+        'required',
+    ],
+    password2: [
+        'required',
+        { name: 'sameAsPassword', param: actualValue.password },
+    ],
+    full_name: [
+        'required',
+    ],
+    company_name: [
+        'required',
+    ],
+}));
+
+const { $v, getError, getInvalidState } = useValidate(rules, actualValue);
+
 const showPassword = ref(false);
 const passwordType = computed(() => showPassword.value ? 'text' : 'password');
 
-function onSubmit() {
-    console.log(actualValue, 'onSubmit');
-    router.push({
-        path: $routes.auth.code,
-        query: {
-            register: 1,
-            value: JSON.stringify(actualValue),
-        },
-    });
+async function onSubmit() {
+    try {
+        if (await getInvalidState()) {
+            return false;
+        }
+
+        console.log(actualValue, 'onSubmit');
+        router.push({
+            path: $routes.auth.code,
+            query: { // todo: :)
+                register: 1,
+                value: JSON.stringify(actualValue),
+            },
+        });
+    } catch (e) {
+        console.log(e);
+    }
 }
 </script>
 
@@ -36,30 +69,36 @@ function onSubmit() {
 
             <div :class="$style.cells">
 
-                <UiFormCell>
+                <UiFormCell :error="getError('phone')">
                     <template #default>
                         <UiInput
-                            v-model="actualValue.phone"
+                            id="phone"
+                            v-model="$v.phone.$model"
+                            :error="getError('phone')"
                             placeholder="Введите телефон"
                         />
                     </template>
                 </UiFormCell>
 
-                <UiFormCell>
+                <UiFormCell :error="getError('password')">
                     <template #default>
                         <UiInput
-                            v-model="actualValue.password"
+                            id="password"
+                            v-model="$v.password.$model"
                             :type="passwordType"
+                            :error="getError('password')"
                             placeholder="Придумайте пароль"
                         />
                     </template>
                 </UiFormCell>
 
-                <UiFormCell>
+                <UiFormCell :error="getError('password2')">
                     <template #default>
                         <UiInput
-                            v-model="actualValue.password2"
+                            id="password-confirm"
+                            v-model="$v.password2.$model"
                             :type="passwordType"
+                            :error="getError('password2')"
                             placeholder="Повторите пароль"
                         />
                     </template>
@@ -71,19 +110,23 @@ function onSubmit() {
                     </template>
                 </UiFormCell>
 
-                <UiFormCell>
+                <UiFormCell :error="getError('full_name')">
                     <template #default>
                         <UiInput
-                            v-model="actualValue.full_name"
-                            placeholder="Введите  имя и фамилию"
+                            id="full_name"
+                            v-model="$v.full_name.$model"
+                            :error="getError('full_name')"
+                            placeholder="Введите имя и фамилию"
                         />
                     </template>
                 </UiFormCell>
 
-                <UiFormCell>
+                <UiFormCell :error="getError('company_name')">
                     <template #default>
                         <UiInput
-                            v-model="actualValue.company_name"
+                            id="company_name"
+                            v-model="$v.company_name.$model"
+                            :error="getError('company_name')"
                             placeholder="Название компании"
                         />
                     </template>

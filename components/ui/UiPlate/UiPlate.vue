@@ -21,11 +21,31 @@ defineProps({
 .UiPlate {
     $plate: &;
 
+    &.--small-size {
+        &.--is-rounded {
+            #{$plate} {
+                &__wrapper {
+                    border-radius: calc(var(--ui-unit) * 2.5);
+                }
+            }
+        }
+    }
+
     &.--medium-size {
         &.--is-rounded {
             #{$plate} {
                 &__wrapper {
                     border-radius: calc(var(--ui-unit) * 5);
+                }
+            }
+        }
+    }
+
+    &.--white-color {
+        &.--is-solid {
+            #{$plate} {
+                &__wrapper {
+                    background-color: var(--ui-white-color);
                 }
             }
         }

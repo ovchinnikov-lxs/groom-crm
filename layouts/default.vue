@@ -1,6 +1,8 @@
 <template>
     <div :class="$style.DefaultLayout">
-        <div :class="$style.container">
+        <DefaultMenu :class="$style.menu"/>
+
+        <div :class="$style.page">
             <slot />
         </div>
     </div>
@@ -9,18 +11,22 @@
 <style lang="scss" module>
 .DefaultLayout {
     display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
     min-height: 100vh;
 }
 
-.header,
-.footer {
+.menu {
     flex-shrink: 0;
 }
 
-.container {
+.page {
     flex-grow: 1;
+    padding: calc(var(--ui-unit) * 16) calc(var(--ui-unit) * 18);
+
+    & > * {
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>

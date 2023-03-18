@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Composables
+import { useValidate } from '~/composables/useValidate';
+
 const router = useRouter();
 const { $routes } = useNuxtApp();
 
@@ -14,9 +17,24 @@ const actualValue = reactive({
     phone: '',
 });
 
-function onSubmit() {
-    console.log('onSubmit');
-    router.push($routes.auth.code);
+const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+    phone: [
+        'required',
+        'phone',
+    ],
+})), actualValue);
+
+async function onSubmit() {
+    try {
+        if (await getInvalidState()) {
+            return false;
+        }
+
+        console.log('onSubmit');
+        router.push($routes.auth.code);
+    } catch (e) {
+        console.log(e);
+    }
 }
 </script>
 
@@ -25,10 +43,12 @@ function onSubmit() {
         <form :class="$style.wrapper" @submit.prevent="onSubmit">
             <h3>Забыли пароль?</h3>
 
-            <UiFormCell :class="$style.cell">
+            <UiFormCell :error="getError('phone')" :class="$style.cell">
                 <template #default>
                     <UiInput
-                        v-model="actualValue.phone"
+                        id="phone"
+                        v-model="$v.phone.$model"
+                        :error="getError('phone')"
                         placeholder="Введите телефон"
                     />
                 </template>
