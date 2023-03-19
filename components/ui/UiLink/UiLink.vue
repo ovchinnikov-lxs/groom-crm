@@ -20,16 +20,20 @@ import { UiLink } from '@ovchinnikov-lxs-frontend/ui-kit';
     &.--secondary-color {
         color: var(--ui-secondary-color);
 
-        @include hover {
-            color: var(--ui-primary-color);
+        &.--is-interactive {
+            @include hover {
+                color: var(--ui-primary-color);
+            }
         }
     }
 
     &.--black-color {
         color: var(--ui-black-color);
 
-        @include hover {
-            color: var(--ui-primary-color);
+        &.--is-interactive {
+            @include hover {
+                color: var(--ui-primary-color);
+            }
         }
     }
 }

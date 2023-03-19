@@ -52,5 +52,20 @@ export default defineNuxtConfig({
         },
     },
 
-    modules: ['nuxt-icons'],
+    modules: [
+        'nuxt-icons',
+        '@pinia/nuxt',
+    ],
+
+    imports: {
+        dirs: ['stores'],
+    },
+
+    pinia: {
+        autoImports: [
+            // automatically imports `defineStore`
+            'defineStore', // import { defineStore } from 'pinia'
+            ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+        ],
+    },
 });

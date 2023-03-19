@@ -34,7 +34,7 @@ async function onSubmit() {
         }
 
         console.log(actualValue, 'onSubmit');
-        router.push($routes.index);
+        router.push($routes.salons.list);
     } catch (e) {
         console.log(e);
     }

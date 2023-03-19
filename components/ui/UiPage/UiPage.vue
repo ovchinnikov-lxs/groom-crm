@@ -6,6 +6,8 @@
         class="UiPage"
     >
         <header class="UiPage__header">
+            <UiPageBreadCrumbs/>
+
             <slot name="header"></slot>
         </header>
 
@@ -26,10 +28,16 @@
     $page: &;
 
     .UiPlate__wrapper {
-        padding: calc(var(--ui-unit) * 16) calc(var(--ui-unit) * 13);
+        display: flex;
+        flex-direction: column;
+        row-gap: calc(var(--ui-unit) * 13);
+        padding: calc(var(--ui-unit) * 10) calc(var(--ui-unit) * 12);
     }
 
     &__header {
+        display: flex;
+        flex-direction: column;
+        row-gap: calc(var(--ui-unit) * 3);
         user-select: none;
     }
 }

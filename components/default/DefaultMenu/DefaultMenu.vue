@@ -2,6 +2,7 @@
 const { $routes } = useNuxtApp();
 
 const navItems = [
+    // todo: Добавить страницу пользователя
     {
         to: $routes.salons.list,
         title: 'Салоны',
@@ -40,12 +41,14 @@ const navItems = [
 
 <style lang="scss" module>
 .wrapper {
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
     row-gap: calc(var(--ui-unit) * 48);
     padding: calc(var(--ui-unit) * 6);
+    border-radius: 0 5px 5px 0;
     background-color: var(--ui-additional-color);
 }
 

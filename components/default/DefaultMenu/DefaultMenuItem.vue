@@ -37,6 +37,24 @@ defineProps({
     &:global(.--is-active-link) {
         .wrapper {
             &:before {
+                transform: translateX(calc(-100% - 12px));
+            }
+        }
+
+        &:global(:not(.--is-exact-link)) {
+            .wrapper {
+                @include hover {
+                    &:before {
+                        transform: translateX(-100%);
+                    }
+                }
+            }
+        }
+    }
+
+    &:global(.--is-exact-link) {
+        .wrapper {
+            &:before {
                 transform: translateX(0);
             }
         }

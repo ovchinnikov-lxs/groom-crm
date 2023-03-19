@@ -1,7 +1,17 @@
+<script setup lang="ts">
+import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
+
+const breadCrumbs = useBreadCrumbsStore();
+
+breadCrumbs.changeBreadCrumbs([{
+    title: 'Финансы',
+}]);
+</script>
+
 <template>
     <UiPage class="FinancePage">
-        <template #header>
-            <h3>FinancePage</h3>
+        <template #default>
+            FinancePage
         </template>
     </UiPage>
 </template>

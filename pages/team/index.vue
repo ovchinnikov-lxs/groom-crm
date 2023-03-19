@@ -1,7 +1,17 @@
+<script setup lang="ts">
+import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
+
+const breadCrumbs = useBreadCrumbsStore();
+
+breadCrumbs.changeBreadCrumbs([{
+    title: 'Команда',
+}]);
+</script>
+
 <template>
     <UiPage class="TeamPage">
-        <template #header>
-            <h3>TeamPage</h3>
+        <template #default>
+            TeamPage
         </template>
     </UiPage>
 </template>
