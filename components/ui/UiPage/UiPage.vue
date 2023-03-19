@@ -27,7 +27,7 @@
 .UiPage {
     $page: &;
 
-    .UiPlate__wrapper {
+    & > .UiPlate__wrapper {
         display: flex;
         flex-direction: column;
         row-gap: calc(var(--ui-unit) * 13);

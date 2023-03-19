@@ -51,6 +51,16 @@ defineProps({
         }
     }
 
+    &.--additional-color {
+        &.--is-solid {
+            #{$plate} {
+                &__wrapper {
+                    background-color: var(--ui-additional-color);
+                }
+            }
+        }
+    }
+
     &.--additional-50-color {
         &.--is-solid {
             #{$plate} {

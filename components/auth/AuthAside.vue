@@ -7,6 +7,7 @@
 
             <div :class="$style.imageWrapper">
                 <UiImage
+                    :has-preview="false"
                     origin="/images/dog.png"
                     :class="$style.image"
                 />
