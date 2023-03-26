@@ -17,11 +17,15 @@ breadCrumbs.changeBreadCrumbs([
 
 
 <template>
-    <div class="SalonDetailPage">
-        <div :class="$style.wrapper">
-            SalonDetailPage
-        </div>
-    </div>
+    <UiPage class="SalonsIndex">
+        <template #default>
+            <div class="SalonDetailPage">
+                <div :class="$style.wrapper">
+                    SalonDetailPage
+                </div>
+            </div>
+        </template>
+    </UiPage>
 </template>
 
 <style lang="scss" module>

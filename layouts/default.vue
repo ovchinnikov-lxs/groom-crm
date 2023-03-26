@@ -23,10 +23,5 @@
 .page {
     flex-grow: 1;
     padding: calc(var(--ui-unit) * 16) calc(var(--ui-unit) * 18);
-
-    & > * {
-        width: 100%;
-        height: 100%;
-    }
 }
 </style>

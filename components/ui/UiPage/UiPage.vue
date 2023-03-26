@@ -36,8 +36,8 @@
 
     &__header {
         display: flex;
-        flex-direction: column;
-        row-gap: calc(var(--ui-unit) * 3);
+        align-items: center;
+        column-gap: calc(var(--ui-unit) * 8);
         user-select: none;
     }
 }
