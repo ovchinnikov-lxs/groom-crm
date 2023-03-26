@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { modal } from '~/composables/modal';
 import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
 import SalonsPlate from '~/components/salons/SalonsPlate.vue';
 
@@ -24,18 +25,24 @@ const mockList = [
         name: 'м. Сокол',
         image: '',
     },
-    // {
-    //     id: '4',
-    //     name: 'м. Сокол',
-    //     image: 'https://s3-alpha-sig.figma.com/img/f3cb/94ea/b06af86106f00978c9edeb3986bd22ad?Expires=1679875200&Signature=WFMTYb9PLm~CLPj3Uk8baxlr2FYDFd1jObBcDoZeEJyjVBWYYmXIDoM-qbnZ3r0h8a5EBFSMk9JoproEIGo-JGeFCnkLQAc~njpE5pL5eL11ciZDe8jYq3Hi0PAqRU0EtOaDOYzTflmEAoaWoDCRli-perDrMaYlIJNpAVJryG0NSFb7GbJ~XAwU~HYbPAWDxgIg5iyvOwJVTh9zkAZ0XcQX5I7SzrSckR9AYm4k0cL0B44nxOim0Xk82oKVmhL2boeA8iTIVB9QCakeYChBdjNVxsobM2B028qQeyOjOP2PI6AKYPZ7ObSX2p2DdKHoTuUYXlinSE91wA4mRhmlMg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
-    // },
+    {
+        id: '4',
+        name: 'м. Сокол',
+        image: 'https://s3-alpha-sig.figma.com/img/f3cb/94ea/b06af86106f00978c9edeb3986bd22ad?Expires=1679875200&Signature=WFMTYb9PLm~CLPj3Uk8baxlr2FYDFd1jObBcDoZeEJyjVBWYYmXIDoM-qbnZ3r0h8a5EBFSMk9JoproEIGo-JGeFCnkLQAc~njpE5pL5eL11ciZDe8jYq3Hi0PAqRU0EtOaDOYzTflmEAoaWoDCRli-perDrMaYlIJNpAVJryG0NSFb7GbJ~XAwU~HYbPAWDxgIg5iyvOwJVTh9zkAZ0XcQX5I7SzrSckR9AYm4k0cL0B44nxOim0Xk82oKVmhL2boeA8iTIVB9QCakeYChBdjNVxsobM2B028qQeyOjOP2PI6AKYPZ7ObSX2p2DdKHoTuUYXlinSE91wA4mRhmlMg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
+    },
 ];
+
+function openCreateModal() {
+    modal.open({
+        component: () => import('~/components/salons/SalonCreate.vue'),
+    });
+}
 </script>
 
 <template>
     <UiPage class="SalonsIndex">
         <template #header>
-            <UiButton :class="$style.button">Создать салон</UiButton>
+            <UiButton :class="$style.button" @click="openCreateModal">Создать салон</UiButton>
         </template>
 
         <template #default>
@@ -75,6 +82,14 @@ const mockList = [
 
 .plateWrapper {
     @include aspect-ratio(410, 360);
+}
+
+.modal {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    padding: 16px;
+    background: var(--ui-additional-light-color);
 }
 
 .plate {

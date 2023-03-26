@@ -39,6 +39,10 @@ defineProps({
                 row-gap: var(--ui-unit);
             }
 
+            &__label {
+                padding-left: calc(var(--ui-unit) * 5);
+            }
+
             &__label,
             &__error,
             &__info {
