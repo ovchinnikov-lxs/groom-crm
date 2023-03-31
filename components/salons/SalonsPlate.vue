@@ -36,9 +36,9 @@ defineProps({
                 :class="$style.image"
             />
 
-            <div :class="$style.iconWrapper">
+            <span :class="$style.iconWrapper">
                 <nuxt-icon name="salons/pet" :class="$style.icon"/>
-            </div>
+            </span>
 
             <span :class="$style.name">
                 {{ name }}
@@ -89,6 +89,7 @@ defineProps({
     position: absolute;
     top: 20%;
     left: 50%;
+    display: block;
     width: 34%;
     color: var(--ui-white-color);
     transform: translate3d(-50%, 0, 0);

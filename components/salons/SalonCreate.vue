@@ -5,7 +5,7 @@ function onSubmit() {
 </script>
 
 <template>
-    <DefaultModalContainer class="SalonCreate">
+    <UiModalPopupWrapper class="SalonCreate">
         <template #header>
             <h4>Добавить салон</h4>
         </template>
@@ -28,7 +28,7 @@ function onSubmit() {
                     </template>
 
                     <template #default>
-                        <UiInput/>
+                        <UiTimeInput :model-value="{openAt: '09:00', closeAt: '19:00'}"/>
                     </template>
                 </UiFormCell>
 
@@ -68,7 +68,7 @@ function onSubmit() {
         <template #footer>
             <UiButton @click="onSubmit">Сохранить</UiButton>
         </template>
-    </DefaultModalContainer>
+    </UiModalPopupWrapper>
 </template>
 
 <style lang="scss" module>

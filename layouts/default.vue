@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.DefaultLayout">
-        <DefaultModal :class="$style.modal"/>
+        <UiModal :class="$style.modal"/>
         <DefaultMenu :class="$style.menu"/>
 
         <div :class="$style.page">
@@ -30,9 +30,8 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 3;
+    z-index: 6;
     width: 100%;
     height: 100%;
-    pointer-events: none;
 }
 </style>

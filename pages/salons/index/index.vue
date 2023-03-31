@@ -18,17 +18,12 @@ const mockList = [
     {
         id: '2',
         name: 'м. Новаторская',
-        image: 'https://s3-alpha-sig.figma.com/img/f3cb/94ea/b06af86106f00978c9edeb3986bd22ad?Expires=1679875200&Signature=WFMTYb9PLm~CLPj3Uk8baxlr2FYDFd1jObBcDoZeEJyjVBWYYmXIDoM-qbnZ3r0h8a5EBFSMk9JoproEIGo-JGeFCnkLQAc~njpE5pL5eL11ciZDe8jYq3Hi0PAqRU0EtOaDOYzTflmEAoaWoDCRli-perDrMaYlIJNpAVJryG0NSFb7GbJ~XAwU~HYbPAWDxgIg5iyvOwJVTh9zkAZ0XcQX5I7SzrSckR9AYm4k0cL0B44nxOim0Xk82oKVmhL2boeA8iTIVB9QCakeYChBdjNVxsobM2B028qQeyOjOP2PI6AKYPZ7ObSX2p2DdKHoTuUYXlinSE91wA4mRhmlMg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
+        image: 'https://avatars.mds.yandex.net/get-tycoon/1654178/2a0000017b64d0ab711bf1342c01628c4af3/priority-headline-main-narrow',
     },
     {
         id: '3',
         name: 'м. Сокол',
         image: '',
-    },
-    {
-        id: '4',
-        name: 'м. Сокол',
-        image: 'https://s3-alpha-sig.figma.com/img/f3cb/94ea/b06af86106f00978c9edeb3986bd22ad?Expires=1679875200&Signature=WFMTYb9PLm~CLPj3Uk8baxlr2FYDFd1jObBcDoZeEJyjVBWYYmXIDoM-qbnZ3r0h8a5EBFSMk9JoproEIGo-JGeFCnkLQAc~njpE5pL5eL11ciZDe8jYq3Hi0PAqRU0EtOaDOYzTflmEAoaWoDCRli-perDrMaYlIJNpAVJryG0NSFb7GbJ~XAwU~HYbPAWDxgIg5iyvOwJVTh9zkAZ0XcQX5I7SzrSckR9AYm4k0cL0B44nxOim0Xk82oKVmhL2boeA8iTIVB9QCakeYChBdjNVxsobM2B028qQeyOjOP2PI6AKYPZ7ObSX2p2DdKHoTuUYXlinSE91wA4mRhmlMg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
     },
 ];
 
@@ -40,7 +35,7 @@ function openCreateModal() {
 </script>
 
 <template>
-    <UiPage class="SalonsIndex">
+    <UiPage>
         <template #header>
             <UiButton :class="$style.button" @click="openCreateModal">Создать салон</UiButton>
         </template>

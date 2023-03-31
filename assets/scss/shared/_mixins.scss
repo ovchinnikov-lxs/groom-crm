@@ -71,3 +71,29 @@ $breakpoints: (
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+@mixin scrollbar {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--ui-additional-color) var(--ui-white-color);
+
+    &::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+        box-shadow: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 16px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+        background-color: var(--ui-additional-color);
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+}
