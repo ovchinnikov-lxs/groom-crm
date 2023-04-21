@@ -38,7 +38,7 @@ const { classList } = useModal(props);
     align-items: center;
     justify-content: center;
 
-    &.modal-in-enter,
+    &.modal-in-enter-from,
     &.modal-in-enter-to,
     &.--is-visible {
         #{$popup} {
@@ -49,15 +49,15 @@ const { classList } = useModal(props);
 
             &__inner {
                 opacity: 0;
-                transform: translate3d(0, 32px, 0);
+                transform: scale(.8);
                 animation: innerIn .3s ease .1s forwards;
             }
         }
     }
 
-    &.modal-in-leave,
+    &.modal-in-leave-from,
     &.modal-in-leave-to,
-    &.modal-out-in-leave,
+    &.modal-out-in-leave-from,
     &.modal-out-in-leave-to,
     &.--is-hidden {
         #{$popup} {
@@ -68,7 +68,7 @@ const { classList } = useModal(props);
 
             &__inner {
                 opacity: 1;
-                transform: translate3d(0, 0, 0);
+                transform: scale(1);
                 animation: innerOut .2s ease forwards;
             }
         }
@@ -143,24 +143,24 @@ const { classList } = useModal(props);
 @keyframes innerIn {
     0% {
         opacity: 0;
-        transform: translate3d(0, 32px, 0);
+        transform: scale(.8);
     }
 
     100% {
         opacity: 1;
-        transform: translate3d(0, 0, 0);
+        transform: scale(1);
     }
 }
 
 @keyframes innerOut {
     0% {
         opacity: 1;
-        transform: translate3d(0, 0, 0);
+        transform: scale(1);
     }
 
     100% {
         opacity: 0;
-        transform: translate3d(0, 32px, 0);
+        transform: scale(1.2);
     }
 }
 </style>
