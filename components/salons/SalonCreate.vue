@@ -1,5 +1,19 @@
 <script setup lang="ts">
+const actualValue = reactive({
+    name: '',
+    openAt: '',
+    closeAt: '',
+    pricePerMonth: '',
+    masters: [],
+    location: {
+        lat: '',
+        lng: '',
+        address: '',
+    },
+});
+
 function onSubmit() {
+    console.log(actualValue.openAt, actualValue.closeAt);
     console.log('onSubmit');
 }
 </script>
@@ -18,7 +32,7 @@ function onSubmit() {
                     </template>
 
                     <template #default>
-                        <UiInput/>
+                        <UiInput v-model="actualValue.name"/>
                     </template>
                 </UiFormCell>
 
@@ -28,7 +42,15 @@ function onSubmit() {
                     </template>
 
                     <template #default>
-                        <UiTimeInput :model-value="{openAt: '09:00', closeAt: '19:00'}"/>
+                        <div :class="$style.cellWrapper">
+                            <UiTimeInput
+                                v-model="actualValue.openAt"
+                            />
+                            :
+                            <UiTimeInput
+                                v-model="actualValue.closeAt"
+                            />
+                        </div>
                     </template>
                 </UiFormCell>
 
@@ -44,11 +66,20 @@ function onSubmit() {
 
                 <UiFormCell>
                     <template #label>
-                        Мастера салона
+                        Команда салона
                     </template>
 
                     <template #default>
-                        <UiInput/>
+                        <UiSelect
+                            multiple
+                            :options="[{id: '1', name: 'ansty'}, {id: '2', name: 'alex'}]"
+                        >
+                            <template #body-header>
+                                <UiButton size="x-small">
+                                    Добавить сотрудника
+                                </UiButton>
+                            </template>
+                        </UiSelect>
                     </template>
                 </UiFormCell>
 
@@ -76,5 +107,11 @@ function onSubmit() {
     display: flex;
     flex-direction: column;
     row-gap: calc(var(--ui-unit) * 6);
+}
+
+.cellWrapper {
+    display: flex;
+    align-items: center;
+    column-gap: calc(var(--ui-unit) * 4);
 }
 </style>

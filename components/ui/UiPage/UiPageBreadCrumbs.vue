@@ -17,8 +17,9 @@ const list = computed(() => store.list);
                     class="UiPageBreadCrumbs__item"
                 >
 
-                    <nuxt-icon
+                    <UiIcon
                         v-if="index"
+                        size="x-large"
                         name="ui/arrow-right"
                         class="UiPageBreadCrumbs__icon"
                     />
@@ -54,8 +55,6 @@ const list = computed(() => store.list);
         display: flex;
         align-items: center;
         justify-content: center;
-        width: calc(var(--ui-unit) * 8);
-        height: calc(var(--ui-unit) * 8);
         color: var(--ui-secondary-color);
         transform: translate3d(-100%, 0, 0);
     }

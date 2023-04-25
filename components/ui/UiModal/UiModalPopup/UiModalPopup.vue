@@ -16,8 +16,9 @@ const { classList } = useModal(props);
 
         <div class="UiModalPopup__inner">
 
-            <nuxt-icon
+            <UiIcon
                 name="ui/close"
+                size="large"
                 class="UiModalPopup__close"
                 @click="$emit('close')"
             />
@@ -100,6 +101,7 @@ const { classList } = useModal(props);
         border-radius: 10px;
         background-color: var(--ui-white-color);
         will-change: transform;
+        box-shadow: rgba(var(--ui-black-color-rgb), .04) 0 calc(var(--ui-unit) * 2) calc(var(--ui-unit) * 6) 0;
     }
 
     &__close {
@@ -108,11 +110,6 @@ const { classList } = useModal(props);
         right: calc(var(--ui-unit) * 6);
         transition: transform .3s ease;
         cursor: pointer;
-
-        svg {
-            width: calc(var(--ui-unit) * 6);
-            height: calc(var(--ui-unit) * 6);
-        }
 
         @include hover {
             transform: rotate(90deg);

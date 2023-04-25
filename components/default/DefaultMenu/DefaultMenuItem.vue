@@ -23,7 +23,11 @@ defineProps({
         :class="$style.DefaultMenuItem"
     >
         <div :class="$style.wrapper">
-            <nuxt-icon :name="`menu/${icon}`" :class="$style.icon"/>
+            <UiIcon
+                :name="`menu/${icon}`"
+                size="large"
+                :class="$style.icon"
+            />
 
             <span>
                 {{ title }}
@@ -102,7 +106,5 @@ defineProps({
 
 .icon {
     flex-shrink: 0;
-    width: calc(var(--ui-unit) * 8);
-    height: calc(var(--ui-unit) * 8);
 }
 </style>

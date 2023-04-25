@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import type { PropType } from 'vue';
+
 // UiKit Components
 import { UiInput } from '@ovchinnikov-lxs-frontend/ui-kit';
 
 defineProps({
     color: {
-        type: String,
+        type: [String, null] as PropType<string | null>,
         default: 'additional-light',
     },
 });
@@ -19,7 +21,7 @@ defineProps({
     border-style: solid;
 
     &.--medium-size {
-        padding: calc(var(--ui-unit) * 4.5) calc(var(--ui-unit) * 5);
+        padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 5);
         border-radius: calc(var(--ui-unit) * 2.5);
         border-width: 1px;
         font-size: calc(var(--ui-unit) * 3.5);

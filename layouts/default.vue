@@ -13,8 +13,7 @@
 .DefaultLayout {
     display: flex;
     width: 100%;
-    height: 100%;
-    min-height: 100vh;
+    height: 100vh;
 }
 
 .menu {
@@ -22,6 +21,7 @@
 }
 
 .page {
+    overflow: auto;
     flex-grow: 1;
     padding: calc(var(--ui-unit) * 16) calc(var(--ui-unit) * 18);
 }

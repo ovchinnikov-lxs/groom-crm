@@ -37,7 +37,11 @@ defineProps({
             />
 
             <span :class="$style.iconWrapper">
-                <nuxt-icon name="salons/pet" :class="$style.icon"/>
+                <UiIcon
+                    name="salons/pet"
+                    size="custom"
+                    :class="$style.icon"
+                />
             </span>
 
             <span :class="$style.name">
@@ -101,13 +105,6 @@ defineProps({
     left: 0;
     width: 100%;
     height: 100%;
-
-    &:global(.nuxt-icon) {
-        svg {
-            width: unset;
-            height: unset;
-        }
-    }
 }
 
 .name {

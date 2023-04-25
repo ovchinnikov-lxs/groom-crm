@@ -64,7 +64,11 @@ defineProps({
 
             </div>
 
-            <nuxt-icon name="ui/edit" :class="$style.icon"/>
+            <UiIcon
+                name="ui/edit"
+                size="large"
+                :class="$style.icon"
+            />
 
         </div>
     </UiPlate>
@@ -108,11 +112,6 @@ defineProps({
 .icon {
     transition: color .3s ease;
     cursor: pointer;
-
-    svg {
-        width: calc(var(--ui-unit) * 6);
-        height: calc(var(--ui-unit) * 6);
-    }
 
     @include hover {
         color: var(--ui-primary-color);

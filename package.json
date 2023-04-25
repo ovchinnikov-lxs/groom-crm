@@ -33,7 +33,7 @@
         "@types/uuid": "^9.0.1",
         "eslint": "^8.34.0",
         "nano-staged": "^0.5.0",
-        "nuxt": "^3.3.1",
+        "nuxt": "^3.4.2",
         "sass": "^1.58.0",
         "simple-git-hooks": "^2.4.1",
         "stylelint": "^13.13.1",

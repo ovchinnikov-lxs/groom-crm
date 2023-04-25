@@ -1,22 +1,21 @@
 <script setup lang="ts">
 const props = defineProps({
     modelValue: {
-        type: Object,
-        default: () => ({
-            openAt: '',
-            closeAt: '',
-        }),
+        type: String,
+        default: '',
     },
 });
 
 const actualValue = reactive({
-    openAt: [],
-    closeAt: [],
+    hour: '',
+    minutes: '',
 });
 
-watch(() => props.modelValue, ({ openAt, closeAt }) => {
-    actualValue.openAt = openAt.split(':');
-    actualValue.closeAt = closeAt.split(':');
+watch(() => props.modelValue, (value: string) => {
+    const [hour, minutes] = value.split(':');
+
+    actualValue.hour = hour;
+    actualValue.minutes = minutes;
 }, {
     immediate: true,
 });
@@ -24,29 +23,15 @@ watch(() => props.modelValue, ({ openAt, closeAt }) => {
 </script>
 
 <template>
-    <div class="UiTimeInput">
-        <div class="UiTimeInput__wrapper">
-            <UiInput
-                v-model="actualValue.openAt[0]"
-                class="UiTimeInput__input"
-            />
-            :
-            <UiInput
-                v-model="actualValue.openAt[1]"
-                class="UiTimeInput__input"
-            />
-            -
-            <UiInput
-                v-model="actualValue.closeAt[0]"
-                class="UiTimeInput__input"
-            />
-            :
-            <UiInput
-                v-model="actualValue.closeAt[1]"
-                class="UiTimeInput__input"
-            />
-        </div>
-    </div>
+    <UiSelect>
+        <template #header-component="headerProps">
+            <UiSelectHeader v-bind="headerProps">
+                <template #default>
+                    09:32
+                </template>
+            </UiSelectHeader>
+        </template>
+    </UiSelect>
 </template>
 
 <style lang="scss">
