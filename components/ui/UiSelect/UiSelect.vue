@@ -14,6 +14,7 @@ defineProps({
 
 <template>
     <UiSelect v-bind="$attrs" :color="color">
+
         <template #header-component="props">
             <slot name="header-component" v-bind="props">
                 <UiSelectHeader v-bind="props"/>

@@ -12,7 +12,7 @@ defineProps({
 
     size: {
         type: String,
-        required: true,
+        default: 'medium',
     },
 });
 </script>
@@ -67,7 +67,7 @@ defineProps({
         color: var(--ui-secondary-color);
 
         &.--is-opened {
-            border-color: var(--ui-black-color);
+            border-color: var(--ui-additional-color);
         }
     }
 }

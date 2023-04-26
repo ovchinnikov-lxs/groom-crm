@@ -34,7 +34,7 @@ defineProps({
         color: var(--ui-secondary-color);
 
         &:focus {
-            border-color: var(--ui-black-color);
+            border-color: var(--ui-additional-color);
 
             &.--is-error {
                 border-color: var(--ui-error-color);

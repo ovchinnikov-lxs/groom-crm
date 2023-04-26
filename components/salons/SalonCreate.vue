@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const actualValue = reactive({
     name: '',
-    openAt: '',
-    closeAt: '',
+    openAt: '10:00',
+    closeAt: '19:00',
     pricePerMonth: '',
     masters: [],
     location: {
@@ -43,11 +43,11 @@ function onSubmit() {
 
                     <template #default>
                         <div :class="$style.cellWrapper">
-                            <UiTimeInput
+                            <UiTimeSelect
                                 v-model="actualValue.openAt"
                             />
-                            :
-                            <UiTimeInput
+                            -
+                            <UiTimeSelect
                                 v-model="actualValue.closeAt"
                             />
                         </div>
