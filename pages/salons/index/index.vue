@@ -29,7 +29,7 @@ const mockList = [
 
 function openCreateModal() {
     modal.open({
-        component: () => import('~/components/salons/SalonCreate.vue'),
+        component: shallowRef(defineAsyncComponent(() => import('~/components/salons/SalonCreate.vue'))),
     });
 }
 </script>

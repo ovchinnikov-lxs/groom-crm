@@ -1,6 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Component } from 'vue';
 
+// Utils
+import { lockBody, unlockBody } from 'assets/ts/utils/dom-utils';
+
 export type ModalTypes = 'popup' | 'confirm';
 
 interface IModalParams {
@@ -15,11 +18,13 @@ export interface IModalItem extends IModalParams{
 }
 
 interface IModal {
+    bodyIsLocked: boolean
     list: Array<IModalItem>
     open: (params: IModalParams) => void
     close: (id: string) => void
 }
 export const modal = reactive<IModal>({
+    bodyIsLocked: false,
     list: [],
     open({ component, modalProps, componentProps, type = 'popup' } : IModalParams) {
         this.list.push({
@@ -29,11 +34,22 @@ export const modal = reactive<IModal>({
             componentProps,
             type,
         });
+
+        if (!this.bodyIsLocked) {
+            lockBody();
+            this.bodyIsLocked = true;
+        }
     },
     close(id) {
         const modalIndex = this.list.findIndex(m => m.id === id);
 
         this.list.splice(modalIndex, 1);
+
+
+        if (!this.list.length && this.bodyIsLocked) {
+            unlockBody();
+            this.bodyIsLocked = false;
+        }
     },
 });
 

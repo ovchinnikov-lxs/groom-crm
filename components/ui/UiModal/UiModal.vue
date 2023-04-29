@@ -3,9 +3,9 @@ import { IModalItem, modal } from '~/composables/modal';
 import type { ModalTypes } from '~/composables/modal';
 
 const MODAL_TYPES: {
-    [key: string]: () => Promise<any>
+    [key: string]: any
 } = {
-    popup: () => import('~/components/ui/UiModal/UiModalPopup/UiModalPopup.vue'),
+    popup: defineAsyncComponent(() => import('~/components/ui/UiModal/UiModalPopup/UiModalPopup.vue')),
 };
 const modalIsVisible = computed(() => (id: string, type: ModalTypes) => {
     const modalIndex = modal.list.findIndex((m: IModalItem) => m.id === id);
@@ -21,7 +21,7 @@ const modalIsVisible = computed(() => (id: string, type: ModalTypes) => {
         class="UiModal"
     >
         <component
-            :is="defineAsyncComponent(MODAL_TYPES[item.type])"
+            :is="MODAL_TYPES[item.type]"
             v-for="(item, index) in modal.list"
             :key="item.id"
             :style="{zIndex: index}"
@@ -32,7 +32,7 @@ const modalIsVisible = computed(() => (id: string, type: ModalTypes) => {
         >
             <template #default>
                 <component
-                    :is="defineAsyncComponent(item.component)"
+                    :is="item.component"
                     :ref="item.id"
                     :key="item.id"
                     v-bind="item.componentProps"
