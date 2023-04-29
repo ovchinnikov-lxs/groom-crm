@@ -166,7 +166,7 @@ function onMinuteSelect(minutes: number) {
 
         &:after {
             bottom: 0;
-            pointer-events: none;
+            background: linear-gradient(to top, rgba(var(--ui-additional-light-color-rgb), 1), rgba(var(--ui-additional-light-color-rgb), 0));
         }
 
         &.--medium-size {
@@ -182,7 +182,7 @@ function onMinuteSelect(minutes: number) {
 
             .UiTimeSelect__half {
                 flex-shrink: 0;
-                width: 50%;
+                width: calc(50% - var(--ui-unit) / 2);
             }
         }
 
