@@ -13,7 +13,7 @@ export const getMinutesMilliseconds = (minutes: number): number => minuteMillise
 export const getHoursMilliseconds = (hours: number): number => hourMilliseconds * hours;
 export const getDaysMilliseconds = (days: number): number => dayMilliseconds * days;
 
-export const resetDate = date => {
+export const resetDate = (date: Date): Date => {
     const regex = /[0-9]{0-2}\.[0-9]{0-2}\.[0-9]{0-4}/gm;
     const [day, month, year] = date
         ? date.toString().split(/\./g)
@@ -28,12 +28,12 @@ export const resetDate = date => {
     return d;
 };
 
-export const getTime = date => {
+export const getTime = (date: Date): number => {
     const d = date ? new Date(date) : new Date();
     return d.getTime();
 };
 
-export const yesterdayDate = () => {
+export const yesterdayDate = (): Date => {
     const todayTime = getTime(resetDate(new Date()));
     return new Date(todayTime - dayMilliseconds);
 };
@@ -43,7 +43,7 @@ export const tomorrowDate = () => {
     return new Date(todayTime + dayMilliseconds);
 };
 
-export const dayList = (index, short) => {
+export const dayList = (index: number, short?: boolean) => {
     const fullList = [
         'Понедельник',
         'Вторник',
@@ -67,7 +67,7 @@ export const dayList = (index, short) => {
     return short ? shortList[index] : fullList[index];
 };
 
-export const monthList = (index, short, plural) => {
+export const monthList = (index: number, short?: boolean, plural?: boolean) => {
     const fullList = [
         'Январь',
         'Февраль',
@@ -120,16 +120,18 @@ export const monthList = (index, short, plural) => {
     return plural ? pluralList[index] : fullList[index];
 };
 
-export const isValidDate = date => !isNaN(Date.parse(date));
+export const isValidDate = (date: string): boolean => !isNaN(Date.parse(date));
 
-export const formatDateTime = (date, pattern) => {
+export const formatDateTime = (date: string, pattern: string) => {
     if (!date) {
         return '';
     }
 
     const d = isValidDate(date) ? new Date(date) : new Date();
 
-    const params = {
+    const params: {
+        [key: string]: string | number
+    } = {
         // Date
         $d: leadingZero(d.getDate()), // Day of the month, 2 digits with leading zeros. // '01' to '31'
         $j: d.getDate(), // Day of the month without leading zeros. // '1' to '31'
@@ -166,17 +168,17 @@ export const formatDateTime = (date, pattern) => {
         $S: leadingZero(d.getSeconds()), // Seconds. // '1' to '59'
     };
 
-    const symbols = pattern.match(/[$][a-zA-Z]/gm);
+    const symbols = pattern.match(/[$][a-zA-Z]/gm) || [];
     let result = pattern;
 
     symbols.forEach(s => {
-        result = result.replace(s, params[s]);
+        result = result.replace(s, String(params[s]));
     });
 
     return result;
 };
 
-export function getNumberOfDays(start, end) {
+export function getNumberOfDays(start: string, end: string) {
     const date1 = new Date(start);
     const date2 = new Date(end);
 
