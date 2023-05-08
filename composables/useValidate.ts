@@ -1,6 +1,6 @@
 // Deps
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, minLength, maxLength, helpers, sameAs, and } from '@vuelidate/validators';
+import { required, email, minLength, maxLength, helpers, sameAs } from '@vuelidate/validators';
 import { isValidPhoneNumber } from '@/node_modules/libphonenumber-js';
 import _ from 'lodash';
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
+import type { TypeSize } from 'assets/ts/types';
 
-type TypeSize = 'xx-small' | 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'xx-large' | 'custom';
 
 const props = defineProps({
     name: {

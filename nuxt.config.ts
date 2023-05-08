@@ -2,10 +2,6 @@
 import stylelint from 'vite-plugin-stylelint';
 
 export default defineNuxtConfig({
-    typescript: {
-        strict: true,
-    },
-
     app: {
         pageTransition: {
             name: 'page',
@@ -29,6 +25,34 @@ export default defineNuxtConfig({
 
     css: ['~/assets/scss/common/_bundle.scss'],
 
+    imports: {
+        dirs: ['stores'],
+    },
+
+    modules: [
+        'nuxt-icons',
+        '@pinia/nuxt',
+    ],
+
+    pinia: {
+        autoImports: [
+            // automatically imports `defineStore`
+            'defineStore', // import { defineStore } from 'pinia'
+            ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+        ],
+    },
+
+    router: {
+        options: {
+            linkActiveClass: '--is-active-link',
+            linkExactActiveClass: '--is-exact-link',
+        },
+    },
+
+    typescript: {
+        strict: true,
+    },
+
     vite: {
         plugins: [
             stylelint(),
@@ -43,29 +67,5 @@ export default defineNuxtConfig({
                 },
             },
         },
-    },
-
-    router: {
-        options: {
-            linkActiveClass: '--is-active-link',
-            linkExactActiveClass: '--is-exact-link',
-        },
-    },
-
-    modules: [
-        'nuxt-icons',
-        '@pinia/nuxt',
-    ],
-
-    imports: {
-        dirs: ['stores'],
-    },
-
-    pinia: {
-        autoImports: [
-            // automatically imports `defineStore`
-            'defineStore', // import { defineStore } from 'pinia'
-            ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
-        ],
     },
 });

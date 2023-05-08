@@ -32,7 +32,7 @@ defineProps({
 
             <UiImage
                 v-if="image"
-                :origin="image"
+                :src="image"
                 :class="$style.image"
             />
 

@@ -29,7 +29,7 @@ export const modal = reactive<IModal>({
     open({ component, modalProps, componentProps, type = 'popup' } : IModalParams) {
         this.list.push({
             id: uuidv4(),
-            component,
+            component: shallowRef(component),
             modalProps,
             componentProps,
             type,
@@ -61,7 +61,7 @@ export interface IModalProps {
 export const modalProps = {
     size: {
         type: String,
-        default: 'medium',
+        default: 'small',
     },
 
     isVisible: {

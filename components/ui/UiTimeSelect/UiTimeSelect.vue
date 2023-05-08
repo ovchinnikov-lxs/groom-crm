@@ -3,12 +3,13 @@
 import { UiPopover } from '@ovchinnikov-lxs-frontend/ui-kit';
 
 // Utils
+import { PropType } from 'vue';
 import { leadingZero } from 'assets/ts/utils/format-utils';
 
 const props = defineProps({
     modelValue: {
-        type: String,
-        required: true,
+        type: [String, null] as PropType<string | null>,
+        default: null,
     },
 
     startHour: {
@@ -38,6 +39,16 @@ const props = defineProps({
         type: String,
         default: 'additional-light',
     },
+
+    error: {
+        type: [String, Number, null, Boolean] as PropType<string | number | null | boolean | Ref<string>>,
+        default: null,
+    },
+
+    placeholder: {
+        type: String,
+        default: 'Введите время',
+    },
 });
 
 const actualValue = reactive<{
@@ -52,8 +63,8 @@ const $emit = defineEmits<{(e: 'update:modelValue', value: string): void }>();
 
 const isOpened = ref(false);
 
-watch(() => props.modelValue, (value: string) => {
-    const [hour, minutes] = value.split(':');
+watch(() => props.modelValue, (value: string | null) => {
+    const [hour, minutes] = value?.split(':') || ['', ''];
 
     actualValue.hour = hour;
     actualValue.minutes = minutes;
@@ -89,6 +100,7 @@ function onMinuteSelect(minutes: number) {
         parent-width
         :size="size"
         :color="color"
+        :error="error"
         class="UiTimeSelect"
     >
         <template #top>
@@ -96,9 +108,15 @@ function onMinuteSelect(minutes: number) {
                 :is-opened="isOpened"
                 :size="size"
                 :color="color"
+                :error="error"
             >
                 <template #default>
-                    {{ actualValue.hour }}&nbsp;:&nbsp;{{ actualValue.minutes }}
+                    <template v-if="!actualValue.hour || !actualValue.minutes">
+                        {{ placeholder }}
+                    </template>
+                    <template v-else>
+                        {{ actualValue.hour }}&nbsp;:&nbsp;{{ actualValue.minutes }}
+                    </template>
                 </template>
             </UiSelectHeader>
         </template>

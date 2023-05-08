@@ -2,16 +2,26 @@
 // Lib Components
 import { UiImage } from '@ovchinnikov-lxs-frontend/ui-kit';
 
-defineProps({
+const props = defineProps({
     hasPreview: {
         type: Boolean,
         default: true,
     },
+
+    src: {
+        type: String,
+        required: true,
+    },
 });
+
+const imageAttrs = computed(() => ({
+    origin: props.src,
+    // preview: props.src, todo: imgproxy blured
+}));
 </script>
 
 <template>
-    <UiImage v-bind="$attrs">
+    <UiImage v-bind="{...$attrs, ...imageAttrs}">
         <template v-if="hasPreview" #preview></template>
     </UiImage>
 </template>

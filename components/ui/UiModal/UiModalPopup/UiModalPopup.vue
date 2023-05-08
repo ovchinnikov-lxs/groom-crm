@@ -15,18 +15,7 @@ const { classList } = useModal(props);
         </div>
 
         <div class="UiModalPopup__inner">
-
-            <UiIcon
-                name="ui/close"
-                size="large"
-                class="UiModalPopup__close"
-                @click="$emit('close')"
-            />
-
-            <div class="UiModalPopup__container">
-                <slot name="default"></slot>
-            </div>
-
+            <slot name="default"></slot>
         </div>
     </div>
 </template>
@@ -75,12 +64,18 @@ const { classList } = useModal(props);
         }
     }
 
+    &.--small-size {
+        #{$popup} {
+            &__inner {
+                width: calc(var(--ui-col) * 14);
+            }
+        }
+    }
+
     &.--medium-size {
         #{$popup} {
             &__inner {
                 width: calc(var(--ui-col) * 25);
-                min-height: calc(var(--ui-unit) * 125);
-                max-height: calc(var(--ui-col) * 20);
             }
         }
     }
@@ -97,23 +92,11 @@ const { classList } = useModal(props);
     &__inner {
         position: relative;
         z-index: 2;
-        padding: calc(var(--ui-unit) * 8) calc(var(--ui-unit) * 12);
-        border-radius: 10px;
+        overflow: hidden;
+        border-radius: calc(var(--ui-unit) * 2.5);
         background-color: var(--ui-white-color);
         will-change: transform;
         box-shadow: rgba(var(--ui-black-color-rgb), .04) 0 calc(var(--ui-unit) * 2) calc(var(--ui-unit) * 6) 0;
-    }
-
-    &__close {
-        position: absolute;
-        top: calc(var(--ui-unit) * 6);
-        right: calc(var(--ui-unit) * 6);
-        transition: transform .3s ease;
-        cursor: pointer;
-
-        @include hover {
-            transform: rotate(90deg);
-        }
     }
 }
 
@@ -157,7 +140,7 @@ const { classList } = useModal(props);
 
     100% {
         opacity: 0;
-        transform: scale(1.2);
+        transform: scale(.8);
     }
 }
 </style>

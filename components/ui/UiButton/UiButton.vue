@@ -18,6 +18,9 @@ defineProps({
 
 <style lang="scss">
 .UiButton {
+    border-color: transparent;
+    border-style: solid;
+    border-width: 1px;
     font-weight: bold;
     line-height: 140%;
 
@@ -47,6 +50,35 @@ defineProps({
 
             @include hover {
                 background-color: var(--ui-primary-color);
+            }
+
+            &.--is-disabled {
+                opacity: .6;
+            }
+        }
+    }
+
+    &.--error-color {
+        &.--is-solid {
+            background-color: var(--ui-error-color);
+            color: var(--ui-white-color);
+
+            @include hover {
+                opacity: .8;
+            }
+
+            &.--is-disabled {
+                opacity: .6;
+            }
+        }
+
+        &.--is-outline {
+            border-color: var(--ui-error-color);
+            color: var(--ui-error-color);
+
+            @include hover {
+                background-color: var(--ui-error-color);
+                color: var(--ui-white-color);
             }
 
             &.--is-disabled {

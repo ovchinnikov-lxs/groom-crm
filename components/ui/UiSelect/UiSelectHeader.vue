@@ -69,6 +69,10 @@ defineProps({
         &.--is-opened {
             border-color: var(--ui-additional-color);
         }
+
+        &.--is-error {
+            border-color: var(--ui-error-color);
+        }
     }
 }
 </style>

@@ -21,7 +21,7 @@ defineProps({
             </slot>
         </template>
 
-        <template #body-header>
+        <template v-if="$slots['body-header']" #body-header>
             <slot name="body-header"></slot>
         </template>
 
@@ -31,7 +31,7 @@ defineProps({
             </slot>
         </template>
 
-        <template #body-footer>
+        <template v-if="$slots['body-footer']" #body-footer>
             <slot name="body-footer"></slot>
         </template>
     </UiSelect>

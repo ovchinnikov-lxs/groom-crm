@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 import { plural } from '~/assets/ts/utils/format-utils';
+import { modal } from '~/composables/modal';
 
 defineProps({
     id: {
@@ -33,6 +34,15 @@ defineProps({
         default: () => [],
     },
 });
+
+function onUpdate() {
+    modal.open({
+        component: defineAsyncComponent(() => import('~/components/salons/SalonSave.vue')),
+        componentProps: {
+            type: 'update',
+        },
+    });
+}
 </script>
 <template>
     <UiPlate class="SalonsDetailInfo">
@@ -41,7 +51,7 @@ defineProps({
             <div :class="$style.imageWrapper">
                 <UiImage
                     v-if="image"
-                    :origin="image"
+                    :src="image"
                     :class="$style.image"
                 />
             </div>
@@ -68,6 +78,7 @@ defineProps({
                 name="ui/edit"
                 size="large"
                 :class="$style.icon"
+                @click="onUpdate"
             />
 
         </div>
