@@ -1,7 +1,7 @@
 import routesAuth from '~/plugins/routes/auth';
 import routesSalons from '~/plugins/routes/salons';
 import routesFinance from '~/plugins/routes/finance';
-import routesTeam from '~/plugins/routes/team';
+import routesStaff from '~/plugins/routes/staff';
 import routesUser from '~/plugins/routes/user';
 
 export const routes = {
@@ -11,7 +11,7 @@ export const routes = {
     ...routesAuth,
     ...routesSalons,
     ...routesFinance,
-    ...routesTeam,
+    ...routesStaff,
     ...routesUser,
 };
 

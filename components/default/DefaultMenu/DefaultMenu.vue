@@ -9,9 +9,9 @@ const navItems = [
         icon: 'salons',
     },
     {
-        to: $routes.team.list,
+        to: $routes.staff.list,
         title: 'Команда',
-        icon: 'team',
+        icon: 'staff',
     },
     {
         to: $routes.finance.detail,

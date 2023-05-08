@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 // Dict
 import { ComputedRef } from 'vue';
-import { MESSAGE_DICT } from 'assets/ts/dicts/validation';
+import { MESSAGE_DICT } from 'assets/ts/constants/validation';
 
 interface ICustomRule {
     name: string

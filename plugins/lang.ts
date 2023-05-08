@@ -1,4 +1,4 @@
-import langDict from '~/assets/ts/dicts/lang';
+import langDict from 'assets/ts/constants/lang';
 import { useLang } from '~/composables/store';
 
 interface IDict {

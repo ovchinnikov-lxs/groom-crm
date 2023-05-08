@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // UiKit Components
-import { UiInput } from '@ovchinnikov-lxs-frontend/ui-kit';
+import { UiRichText } from '@ovchinnikov-lxs-frontend/ui-kit';
 
 defineProps({
     color: {
@@ -8,14 +8,14 @@ defineProps({
         default: 'additional-light',
     },
 });
-</script>3
+</script>
 
 <template>
-    <UiInput :color="color" v-bind="$attrs"/>
+    <UiRichText v-bind="$attrs" :color="color"/>
 </template>
 
-<style lang="scss">
-.UiInput {
+<style scoped lang="scss">
+.UiRichText {
     border-style: solid;
 
     &.--medium-size {

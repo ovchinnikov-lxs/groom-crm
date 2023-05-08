@@ -1,5 +1,20 @@
+<script setup lang="ts">
+defineProps({
+    tag: {
+        type: String,
+        default: 'div',
+    },
+});
+
+defineEmits<{(e: 'close'): void}>();
+</script>
+
 <template>
-    <div class="UiModalPopupWrapper">
+    <component
+        v-bind="$attrs"
+        :is="tag"
+        class="UiModalPopupWrapper"
+    >
         <header class="UiModalPopupWrapper__header">
             <slot name="header"></slot>
 
@@ -17,7 +32,7 @@
         <footer class="UiModalPopupWrapper__footer">
             <slot name="footer"></slot>
         </footer>
-    </div>
+    </component>
 </template>
 
 <style lang="scss">
@@ -27,7 +42,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - var(--ui-unit) * 4);
+    max-height: 80vh;
 
     &__header {
         position: sticky;
@@ -53,12 +68,12 @@
     }
 
     &__main {
-        padding: 0 calc(var(--ui-unit) * 12);
+        padding: calc(var(--ui-unit) * 6) calc(var(--ui-unit) * 12);
     }
 
     &__footer {
         position: sticky;
-        bottom: 0;
+        bottom: -1px;
         z-index: 3;
         width: 100%;
         padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 12);

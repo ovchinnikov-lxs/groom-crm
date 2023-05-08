@@ -37,7 +37,7 @@ function openCreateModal() {
 <template>
     <UiPage>
         <template #header>
-            <UiButton :class="$style.button" @click="openCreateModal">Создать салон</UiButton>
+            <UiButton :class="$style.button" @click="openCreateModal">Добавить салон</UiButton>
         </template>
 
         <template #default>
@@ -77,14 +77,6 @@ function openCreateModal() {
 
 .plateWrapper {
     @include aspect-ratio(410, 360);
-}
-
-.modal {
-    position: fixed;
-    top: 50px;
-    left: 50%;
-    padding: 16px;
-    background: var(--ui-additional-light-color);
 }
 
 .plate {

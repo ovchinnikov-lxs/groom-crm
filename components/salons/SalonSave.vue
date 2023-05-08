@@ -2,6 +2,7 @@
 // Composables
 import type { PropType } from 'vue';
 import { useValidate } from '~/composables/useValidate';
+import { modal } from '~/composables/modal';
 
 const props = defineProps({
     type: {
@@ -53,20 +54,31 @@ async function onSubmit() {
         console.log(e);
     }
 }
+
+function onCreateStaff() {
+    document.body.click();
+    modal.open({
+        component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
+    });
+}
 </script>
 
 <template>
-    <UiModalPopupWrapper class="SalonSave">
+    <UiModalPopupWrapper
+        tag="form"
+        class="SalonSave"
+        @submit.prevent="onSubmit"
+    >
         <template #header>
             <h4>
                 <template v-if="type === 'create'">Добавить</template>
-                <template v-else>Обновить</template>
+                <template v-else>Редактировать</template>
                 салон
             </h4>
         </template>
 
         <template #default>
-            <form :class="$style.form" @submit.prevent="onSubmit">
+            <div :class="$style.form">
                 <UiFormCell :error="getError('name')">
                     <template #label>
                         Название салона
@@ -142,7 +154,11 @@ async function onSubmit() {
                             :options="staffOptions"
                         >
                             <template #body-header>
-                                <UiButton size="x-small">
+                                <UiButton
+                                    type="button"
+                                    size="x-small"
+                                    @click="onCreateStaff"
+                                >
                                     Добавить сотрудника
                                 </UiButton>
                             </template>
@@ -164,11 +180,11 @@ async function onSubmit() {
                     </template>
                 </UiFormCell>
 
-            </form>
+            </div>
         </template>
 
         <template #footer>
-            <UiButton size="small" @click="onSubmit">Сохранить</UiButton>
+            <UiButton size="small">Сохранить</UiButton>
         </template>
     </UiModalPopupWrapper>
 </template>
