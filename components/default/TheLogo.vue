@@ -30,6 +30,7 @@ const classList = computed(() => [
 
 <style lang="scss" module>
 .TheLogo {
+    text-align: center;
     user-select: none;
     color: var(--ui-white-color);
 

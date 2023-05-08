@@ -11,7 +11,7 @@ defineProps({
 </script>
 
 <template>
-    <UiRichText v-bind="$attrs" :color="color"/>
+    <UiRichText v-bind="$attrs" :color="color"></UiRichText>
 </template>
 
 <style scoped lang="scss">

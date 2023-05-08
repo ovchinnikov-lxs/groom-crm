@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import DefaultMenuUser from '~/components/default/DefaultMenu/DefaultMenuUser.vue';
+
 const { $routes } = useNuxtApp();
 
 const navItems = [
-    // todo: Добавить страницу пользователя
     {
         to: $routes.salons.list,
         title: 'Салоны',
@@ -35,6 +36,8 @@ const navItems = [
                 />
             </nav>
 
+            <DefaultMenuUser :class="$style.user"/>
+
         </div>
     </div>
 </template>
@@ -56,5 +59,9 @@ const navItems = [
     display: flex;
     flex-direction: column;
     row-gap: calc(var(--ui-unit) * 4);
+}
+
+.user {
+    margin-top: auto;
 }
 </style>

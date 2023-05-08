@@ -28,12 +28,24 @@ defineProps({
         padding: calc(var(--ui-unit) * 3) calc(var(--ui-unit) * 13);
         border-radius: calc(var(--ui-unit) * 2.5);
         font-size: calc(var(--ui-unit) * 6);
+
+        &.--is-icon {
+            width: calc(var(--ui-unit) * 12);
+            height: calc(var(--ui-unit) * 12);
+            padding: 0;
+        }
     }
 
     &.--small-size {
         padding: calc(var(--ui-unit) * 3) calc(var(--ui-unit) * 13);
         border-radius: calc(var(--ui-unit) * 2.5);
         font-size: calc(var(--ui-unit) * 4);
+
+        &.--is-icon {
+            width: calc(var(--ui-unit) * 8);
+            height: calc(var(--ui-unit) * 8);
+            padding: 0;
+        }
     }
 
     &.--x-small-size {

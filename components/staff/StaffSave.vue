@@ -7,7 +7,6 @@ import { useValidate } from '~/composables/useValidate';
 
 // Constants
 import { ROLES_KEYS, ROLES_OPTIONS } from 'assets/ts/constants/roles';
-import UiRichText from '~/components/ui/UiRichText/UiRichText.vue';
 
 const props = defineProps({
     type: {
