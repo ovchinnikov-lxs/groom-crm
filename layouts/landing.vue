@@ -25,6 +25,7 @@
 .header {
     position: sticky;
     top: 0;
+    z-index: 4;
     width: 100%;
 }
 
