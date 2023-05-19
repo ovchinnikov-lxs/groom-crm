@@ -4,7 +4,6 @@ import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
 const breadCrumbs = useBreadCrumbsStore();
 const { $routes } = useNuxtApp();
 
-
 const salonMock = {
     id: '1',
     name: 'Название салона',
