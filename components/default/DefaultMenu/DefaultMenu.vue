@@ -25,7 +25,7 @@ const navItems = [
     <div class="DefaultMenu">
         <div :class="$style.wrapper">
 
-            <DefaultTheLogo/>
+            <DefaultTheLogo :class="$style.logo"/>
 
             <nav :class="$style.nav">
                 <DefaultMenuItem
@@ -35,7 +35,7 @@ const navItems = [
                 />
             </nav>
 
-            <DefaultMenuUser/>
+            <DefaultMenuUser :class="$style.user"/>
 
         </div>
     </div>
@@ -52,6 +52,11 @@ const navItems = [
     column-gap: calc(var(--ui-unit) * 4);
     padding: 0 calc(var(--ui-unit) * 18);
     background-color: var(--ui-additional-color);
+}
+
+.logo,
+.user {
+    width: calc(var(--ui-unit) * 41);
 }
 
 .nav {

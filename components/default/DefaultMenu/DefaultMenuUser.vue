@@ -39,6 +39,7 @@ const user = {
 .wrapper {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     width: 100%;
     height: 100%;
     column-gap: calc(var(--ui-unit) * 2);
@@ -51,10 +52,11 @@ const user = {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: var(--ui-col);
-    height: var(--ui-col);
+    width: calc(var(--ui-unit) * 8);
+    height: calc(var(--ui-unit) * 8);
     border-radius: 50%;
     background-color: var(--ui-additional-light-color);
+    font-size: calc(var(--ui-unit) * 3);
     color: var(--ui-secondary-color);
     transform: translate3d(0, 0, 0);
     user-select: none;
