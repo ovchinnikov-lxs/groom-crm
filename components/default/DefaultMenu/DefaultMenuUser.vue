@@ -38,11 +38,10 @@ const user = {
 <style module lang="scss">
 .wrapper {
     display: flex;
-    flex-direction: column;
     align-items: center;
     width: 100%;
     height: 100%;
-    row-gap: calc(var(--ui-unit) * 2);
+    column-gap: calc(var(--ui-unit) * 2);
 }
 
 .previewWrapper {

@@ -29,27 +29,29 @@ defineProps({
                 :class="$style.icon"
             />
 
-            <span>
+            <b>
                 {{ title }}
-            </span>
+            </b>
         </div>
     </NuxtLink>
 </template>
 
 <style lang="scss" module>
 .DefaultMenuItem {
+    display: block;
+
     &:global(.--is-active-link) {
         .wrapper {
             &:before {
-                transform: translateX(calc(-100% - 12px));
+                transform: translateY(50%);
             }
         }
 
         &:global(:not(.--is-exact-link)) {
-            .wrapper {
-                @include hover {
+            @include hover {
+                .wrapper {
                     &:before {
-                        transform: translateX(-100%);
+                        transform: translateY(0);
                     }
                 }
             }
@@ -58,8 +60,10 @@ defineProps({
 
     &:global(.--is-exact-link) {
         .wrapper {
+            color: var(--ui-white-color);
+
             &:before {
-                transform: translateX(0);
+                transform: translateY(0);
             }
         }
     }
@@ -72,34 +76,35 @@ defineProps({
     width: 100%;
     height: 100%;
     column-gap: calc(var(--ui-unit) * 3);
-    padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 8);
-    font-size: calc(var(--ui-unit) * 6);
+    padding: calc(var(--ui-unit) * 3) 0;
+    font-size: calc(var(--ui-unit) * 4);
     line-height: 150%;
     color: var(--ui-black-color);
     transition: color .3s ease;
+    user-select: none;
 
     &:before {
         content: '';
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 0;
         width: 100%;
-        height: 100%;
-        border-radius: calc(var(--ui-unit) + 1px);
+        height: 8px;
+        border-radius: 2px 2px 0 0;
         background-color: var(--ui-white-color);
-        transform: translateX(calc(-100% - 24px));
+        transform: translateY(100%);
         transition: all .3s ease;
     }
 
     .icon,
-    span {
+    b {
         position: relative;
         z-index: 2;
     }
 
     @include hover {
         &:before {
-            transform: translateX(-100%);
+            transform: translateY(0);
         }
     }
 }

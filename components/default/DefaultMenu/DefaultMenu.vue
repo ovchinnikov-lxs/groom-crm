@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import DefaultMenuUser from '~/components/default/DefaultMenu/DefaultMenuUser.vue';
-
 const { $routes } = useNuxtApp();
 
 const navItems = [
@@ -20,6 +18,7 @@ const navItems = [
         icon: 'finance',
     },
 ];
+
 </script>
 
 <template>
@@ -36,7 +35,7 @@ const navItems = [
                 />
             </nav>
 
-            <DefaultMenuUser :class="$style.user"/>
+            <DefaultMenuUser/>
 
         </div>
     </div>
@@ -46,22 +45,18 @@ const navItems = [
 .wrapper {
     overflow: hidden;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
     height: 100%;
-    row-gap: calc(var(--ui-unit) * 48);
-    padding: calc(var(--ui-unit) * 6);
-    border-radius: 0 5px 5px 0;
+    column-gap: calc(var(--ui-unit) * 4);
+    padding: 0 calc(var(--ui-unit) * 18);
     background-color: var(--ui-additional-color);
 }
 
 .nav {
     display: flex;
-    flex-direction: column;
-    row-gap: calc(var(--ui-unit) * 4);
-}
-
-.user {
-    margin-top: auto;
+    align-items: center;
+    column-gap: calc(var(--ui-unit) * 12);
 }
 </style>

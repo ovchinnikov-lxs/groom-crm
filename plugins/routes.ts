@@ -6,7 +6,6 @@ import routesUser from '~/plugins/routes/user';
 
 export const routes = {
     index: '/',
-    landing: 'https://groom-crm.ru',
 
     ...routesAuth,
     ...routesSalons,

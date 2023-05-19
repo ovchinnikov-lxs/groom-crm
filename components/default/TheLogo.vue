@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import type { PropType } from 'vue';
+const { $routes } = useNuxtApp();
 
 const props = defineProps({
     size: {
@@ -23,16 +24,17 @@ const classList = computed(() => [
 </script>
 
 <template>
-    <b :class="[$style.TheLogo, classList]">
+    <NuxtLink :to="$routes.index" :class="[$style.TheLogo, classList]">
         GROOM.CRM
-    </b>
+    </NuxtLink>
 </template>
 
 <style lang="scss" module>
 .TheLogo {
     text-align: center;
-    user-select: none;
+    font-weight: bold;
     color: var(--ui-white-color);
+    user-select: none;
 
     &.--medium-size {
         font-size: calc(var(--ui-unit) * 6);

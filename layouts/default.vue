@@ -12,18 +12,15 @@
 <style lang="scss" module>
 .DefaultLayout {
     display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100vh;
-}
-
-.menu {
-    flex-shrink: 0;
 }
 
 .page {
     overflow: auto;
     flex-grow: 1;
-    padding: calc(var(--ui-unit) * 16) calc(var(--ui-unit) * 18);
+    padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 18);
 }
 
 .modal {
