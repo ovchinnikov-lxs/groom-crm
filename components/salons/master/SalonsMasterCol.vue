@@ -78,7 +78,7 @@ const recordStyleList = computed(() => (item: IScheduleItem) => {
         <div :class="$style.wrapper">
 
             <div :class="$style.header">
-                <h4>{{ name }}</h4>
+                <h5>{{ name }}</h5>
             </div>
 
             <div :class="$style.body">
@@ -112,8 +112,9 @@ const recordStyleList = computed(() => (item: IScheduleItem) => {
 }
 
 .header {
-    height: calc(var(--ui-unit) * 14);
+    height: var(--master-name-height);
     padding: calc(var(--ui-unit) * 2) calc(var(--ui-unit) * 4);
+    text-align: center;
     color: var(--ui-secondary-color);
 }
 

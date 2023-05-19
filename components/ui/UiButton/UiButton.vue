@@ -27,7 +27,7 @@ defineProps({
     &.--medium-size {
         padding: calc(var(--ui-unit) * 3) calc(var(--ui-unit) * 13);
         border-radius: calc(var(--ui-unit) * 2.5);
-        font-size: calc(var(--ui-unit) * 6);
+        font-size: calc(var(--ui-unit) * 4);
 
         &.--is-icon {
             width: calc(var(--ui-unit) * 12);
@@ -49,8 +49,8 @@ defineProps({
     }
 
     &.--x-small-size {
-        padding: calc(var(--ui-unit) * 2) calc(var(--ui-unit) * 5);
-        border-radius: calc(var(--ui-unit) * 2.5);
+        padding: var(--ui-unit) calc(var(--ui-unit) * 5);
+        border-radius: calc(var(--ui-unit) * 2);
         font-size: calc(var(--ui-unit) * 3);
         line-height: 150%;
     }

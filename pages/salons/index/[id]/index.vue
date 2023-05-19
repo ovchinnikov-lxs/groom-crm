@@ -147,6 +147,10 @@ const scheduleMock = [
     row-gap: calc(var(--ui-unit) * 6);
 }
 
+.info {
+    width: 100%;
+}
+
 .schedule {
     width: 100%;
     height: 100%;

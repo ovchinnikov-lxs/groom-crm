@@ -121,6 +121,7 @@ function onUpdate() {
 }
 
 .icon {
+    margin-left: auto;
     transition: color .3s ease;
     cursor: pointer;
 

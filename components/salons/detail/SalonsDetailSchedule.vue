@@ -83,10 +83,12 @@ const getTime = computed(() => (index: number) => {
 
 <style lang="scss" module>
 .wrapper {
+    --master-name-height: calc(var(--ui-unit) * 10);
+
     position: relative;
     width: 100%;
     height: 100%;
-    margin-top: calc(var(--ui-unit) * 14);
+    margin-top: var(--master-name-height);
     border-radius: calc(var(--ui-unit) * 4);
     border: 1px solid var(--ui-additional-color);
     background-color: rgba(var(--ui-additional-light-color-rgb), .4);
@@ -96,12 +98,12 @@ const getTime = computed(() => (index: number) => {
     @include scrollbar;
 
     position: absolute;
-    top: calc(var(--ui-unit) * -14);
+    top: calc(var(--master-name-height) * -1);
     left: 0;
     overflow: auto;
     display: flex;
     width: 100%;
-    height: calc(100% + var(--ui-unit) * 14);
+    height: calc(100% + var(--master-name-height));
     column-gap: calc(var(--ui-unit) * 4);
     padding: 0 calc(var(--ui-unit) * 5);
     border-radius: calc(var(--ui-unit) * 4);

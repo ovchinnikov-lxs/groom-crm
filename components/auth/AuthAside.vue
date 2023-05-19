@@ -1,9 +1,9 @@
 <template>
     <div class="AuthAside">
         <div :class="$style.wrapper">
-            <h1>GROOM.CRM</h1>
+            <h2>GROOM.CRM</h2>
 
-            <h3 :class="$style.subtitle">Приложение для записи клиентов</h3>
+            <h4 :class="$style.subtitle">Приложение для записи клиентов</h4>
 
             <div :class="$style.imageWrapper">
                 <UiImage

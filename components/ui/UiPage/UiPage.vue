@@ -30,8 +30,8 @@
     & > .UiPlate__wrapper {
         display: flex;
         flex-direction: column;
-        row-gap: calc(var(--ui-unit) * 13);
-        padding: calc(var(--ui-unit) * 10) calc(var(--ui-unit) * 12);
+        row-gap: calc(var(--ui-unit) * 8);
+        padding: calc(var(--ui-unit) * 8) calc(var(--ui-unit) * 10);
     }
 
     &__header {

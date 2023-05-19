@@ -62,7 +62,7 @@ defineProps({
     transition: transform .3s ease;
 
     @include hover {
-        transform: scale(1.05);
+        transform: scale(1.02);
     }
 }
 
@@ -115,11 +115,11 @@ defineProps({
     align-items: center;
     justify-content: center;
     margin-top: auto;
-    padding: calc(var(--ui-unit) * 4);
+    padding: calc(var(--ui-unit) * 2);
     background-color: rgba(var(--ui-additional-color-rgb), .8);
     text-align: center;
     white-space: nowrap;
-    font-size: calc(var(--ui-unit) * 9);
+    font-size: calc(var(--ui-unit) * 6);
     font-weight: bold;
     line-height: 140%;
     color: var(--ui-white-color);

@@ -19,7 +19,7 @@ const list = computed(() => store.list);
 
                     <UiIcon
                         v-if="index"
-                        size="x-large"
+                        size="large"
                         name="ui/arrow-right"
                         class="UiPageBreadCrumbs__icon"
                     />
@@ -52,18 +52,19 @@ const list = computed(() => store.list);
 
     &__icon {
         position: absolute;
+        top: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: var(--ui-secondary-color);
-        transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, -50%, 0);
     }
 
     &__item {
         position: relative;
         display: flex;
         align-items: flex-end;
-        font-size: calc(var(--ui-unit) * 8);
+        font-size: calc(var(--ui-unit) * 6);
     }
 
     &__link {

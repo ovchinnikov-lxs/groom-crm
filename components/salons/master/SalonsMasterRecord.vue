@@ -85,9 +85,9 @@ function onMouseLeave(event: Event) {
             @mouseleave="onMouseLeave"
         >
             <div :class="$style.inner">
-                <h5>{{ serviceName }}</h5>
+                <h6>{{ serviceName }}</h6>
 
-                <div class="text-small">
+                <div class="text-x-small">
                     <b>{{ petName }}</b> {{ petBreed }}
                 </div>
 
@@ -142,7 +142,7 @@ function onMouseLeave(event: Event) {
     flex-direction: column;
     flex-grow: 1;
     row-gap: var(--ui-unit);
-    padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 6);
+    padding: calc(var(--ui-unit) * 5) calc(var(--ui-unit) * 6);
 }
 
 .price {
