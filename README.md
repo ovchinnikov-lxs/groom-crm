@@ -4,7 +4,6 @@
 
 
 Click to "Use this template" in github
-
 ```bash
 # npm
 npm install
@@ -21,6 +20,8 @@ npm run dev
 ## Production
 
 Build the application for production:
+https://habr.com/ru/articles/438862/
+
 
 ```bash
 npm run build
