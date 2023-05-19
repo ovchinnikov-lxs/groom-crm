@@ -37,9 +37,9 @@ defineProps({
     }
 
     &.--small-size {
-        padding: calc(var(--ui-unit) * 3) calc(var(--ui-unit) * 13);
+        padding: calc(var(--ui-unit) * 2) calc(var(--ui-unit) * 6);
         border-radius: calc(var(--ui-unit) * 2.5);
-        font-size: calc(var(--ui-unit) * 4);
+        font-size: calc(var(--ui-unit) * 3);
 
         &.--is-icon {
             width: calc(var(--ui-unit) * 8);

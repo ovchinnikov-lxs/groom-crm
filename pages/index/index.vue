@@ -5,5 +5,10 @@ definePageMeta({
 </script>
 
 <template>
-    <div>Landing with landing layout</div>
+    <div>
+        <LandingIntro id="intro"/>
+        <LandingAbout id="about"/>
+        <LandingAdvantages id="advantages"/>
+        <LandingTariffs id="tariffs"/>
+    </div>
 </template>
