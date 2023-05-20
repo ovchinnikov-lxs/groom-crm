@@ -9,10 +9,13 @@ interface IListItem {
 }
 
 type ListType = Array<IListItem>
+
+interface IState {
+    list: ListType;
+}
+
 export const useTariffs = defineStore('tariffs', {
-    state: (): {
-        list: ListType
-    } => ({
+    state: (): IState => ({
         list: [],
     }),
 
