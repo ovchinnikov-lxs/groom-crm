@@ -17,7 +17,7 @@ const { $routes } = useNuxtApp();
                     и&nbsp;контролируйте свои финансы&nbsp;&mdash; все это с&nbsp;помощью GROOM.CRM
                 </h4>
 
-                <UiButton :to="$routes.auth.login" :class="$style.button">
+                <UiButton :to="$routes.auth.registration" :class="$style.button">
                     Получить 15 дней бесплатно
                 </UiButton>
 

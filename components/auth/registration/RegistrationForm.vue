@@ -127,7 +127,7 @@ async function onSubmit() {
                             id="company_name"
                             v-model="$v.company_name.$model"
                             :error="getError('company_name')"
-                            placeholder="Название компании"
+                            placeholder="Название организации"
                         />
                     </template>
                 </UiFormCell>

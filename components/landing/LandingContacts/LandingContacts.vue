@@ -18,7 +18,7 @@ const { $routes } = useNuxtApp();
                 </div>
             </div>
 
-            <UiButton :to="$routes.auth.login">
+            <UiButton :to="$routes.auth.registration">
                 Получить 15 дней бесплатно
             </UiButton>
         </div>

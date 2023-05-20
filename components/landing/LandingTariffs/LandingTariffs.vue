@@ -1,28 +1,8 @@
 <script setup lang="ts">
 import { splitThousands } from '~/assets/ts/utils/format-utils';
+const { $routes } = useNuxtApp();
 
-// todo: Данные с бэка
-
-const tariffs = [
-    {
-        id: 'basic',
-        name: 'Basic',
-        price: 1500,
-        description: 'Идеально подходит для одиночных грумеров или небольших салонов. Включает такие функции, как онлайн-запись клиентов, управление встречами и&nbsp;ограниченную отчетность.',
-    },
-    {
-        id: 'standard',
-        name: 'Standard',
-        price: 4000,
-        description: 'Идеально подходит для салонов среднего размера, которым нужны более продвинутые функции. <b>Включает все, что есть в&nbsp;тарифном плане Basic</b>, а&nbsp;также приоритетную поддержку, расширенное управление финансами и&nbsp;больше настраиваемых шаблонов.',
-    },
-    {
-        id: 'premium',
-        name: 'Premium',
-        price: 8000,
-        description: 'Предназначен для крупных салонов и&nbsp;сетей с&nbsp;несколькими филиалами, которые ищут наиболее комплексное решение. <b>Включает в&nbsp;себя все функции тарифного плана Standard</b> и&nbsp;дополнительно предлагает управление несколькими филиалами и&nbsp;высококлассное обслуживание клиентов.',
-    },
-];
+const tariffs = useTariffs();
 </script>
 
 <template>
@@ -43,10 +23,10 @@ const tariffs = [
 
             <div :class="$style.list">
                 <UiPlate
-                    v-for="item in tariffs"
+                    v-for="item in tariffs.list"
                     :key="item.id"
                     rounded
-                    :class="[$style.item, [$style[`--${item.id}-plan`]]]"
+                    :class="[$style.item, [$style[`--${item.name.toLowerCase()}-plan`]]]"
                 >
                     <h5>{{ item.name }}</h5>
 
@@ -62,7 +42,12 @@ const tariffs = [
                             {{ splitThousands(item.price) }} ₽/мес.
                         </h4>
 
-                        <UiButton>
+                        <UiButton
+                            :to="{
+                                path: $routes.auth.registration,
+                                query: { tariffId: item.id },
+                            }"
+                        >
                             Выбрать
                         </UiButton>
                     </div>
