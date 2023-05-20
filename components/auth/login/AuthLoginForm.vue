@@ -21,7 +21,7 @@ const rules = computed(() => ({
         'phone',
     ],
     password: [
-        'required',
+        // 'required',
     ],
 }));
 
@@ -38,7 +38,10 @@ async function onSubmit() {
             token: string;
         }>($api.auth.login, {
             method: 'POST',
-            body: actualValue,
+            body: {
+                phone: actualValue.phone,
+                password: actualValue.password,
+            },
         });
 
         if (data.value) {

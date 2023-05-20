@@ -5,7 +5,9 @@ import { defu } from 'defu';
 import { AUTH_TOKEN_KEY } from 'assets/ts/constants/auth';
 
 export function useAxios<T>(url: string, options: UseFetchOptions<T> = {}) {
-    const userAuth = useCookie(AUTH_TOKEN_KEY);
+    const userAuth = useCookie(AUTH_TOKEN_KEY, {
+        path: '/',
+    });
     const config = useRuntimeConfig();
 
     const defaults: UseFetchOptions<T> = {

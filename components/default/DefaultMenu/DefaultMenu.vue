@@ -25,17 +25,19 @@ const navItems = [
     <div class="DefaultMenu">
         <div :class="$style.wrapper">
 
-            <DefaultTheLogo :class="$style.logo"/>
+            <main class="container" :class="$style.container">
+                <DefaultTheLogo :class="$style.logo"/>
 
-            <nav :class="$style.nav">
-                <DefaultMenuItem
-                    v-for="item in navItems"
-                    v-bind="item"
-                    :key="item.to"
-                />
-            </nav>
+                <nav :class="$style.nav">
+                    <DefaultMenuItem
+                        v-for="item in navItems"
+                        v-bind="item"
+                        :key="item.to"
+                    />
+                </nav>
 
-            <DefaultMenuUser :class="$style.user"/>
+                <DefaultMenuUser :class="$style.user"/>
+            </main>
 
         </div>
     </div>
@@ -44,14 +46,16 @@ const navItems = [
 <style lang="scss" module>
 .wrapper {
     overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-color: var(--ui-additional-color);
+}
+
+.container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    height: 100%;
     column-gap: calc(var(--ui-unit) * 4);
-    padding: 0 calc(var(--ui-unit) * 18);
-    background-color: var(--ui-additional-color);
 }
 
 .logo,

@@ -1,54 +1,70 @@
 <script setup lang="ts">
-// Composables
-import { useValidate } from '~/composables/useValidate';
-
-// Constants
-import { ROLES_KEYS } from 'assets/ts/constants/roles';
+const { $api } = useNuxtApp();
+const auth = useAuth();
+const { isMaster, isOwner } = useUser();
+const company = useCompany();
 
 const actualValue = reactive<{
     fullName: string | null
     phone: string | null
-    roles: Array<string>
     preview: string | null
     description: string | null
-    breeds: Array<string>
-    services: Array<string>
+    // breeds: Array<string>
+    // services: Array<string>
     companyName: string
 }>({
-    fullName: '',
-    phone: '',
-    roles: ['owner', 'master'],
-    preview: '',
-    description: '',
-    breeds: [],
-    services: [],
-    companyName: 'Милана',
+    fullName: auth.user.fullName,
+    phone: auth.user.phone,
+    preview: auth.user.preview,
+    description: auth.user.description,
+    // breeds: [],
+    // services: [],
+    companyName: company.detail.name,
 });
 
-const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+const { $v, getError, getInvalidState, updateValue } = useValidate(computed(() => ({
     fullName: ['required'],
     phone: ['required', 'phone'],
-    roles: ['required'],
 
-    ...actualValue.roles.includes(ROLES_KEYS.MASTER) && {
-        preview: ['required'],
-        description: ['required'],
-        breeds: [],
-        services: ['required'],
+    ...isMaster && {
+        preview: [],
+        description: [],
+        // breeds: [],
+        // services: [],
     },
 
-    ...actualValue.roles.includes(ROLES_KEYS.OWNER) && {
+    ...isOwner && {
         companyName: ['required'],
     },
 })), actualValue);
 
 async function onSubmit() {
     try {
+        console.log('onSubmit');
         if (await getInvalidState()) {
             return false;
         }
 
-        console.log('onSubmit');
+        await useAxios($api.user.me, {
+            method: 'PATCH',
+            body: {
+                fullName: actualValue.fullName,
+                preview: actualValue.preview,
+                description: actualValue.description,
+            },
+        });
+        await auth.fetchUser();
+
+        if (isOwner) {
+            await useAxios($api.company.detail, {
+                method: 'PATCH',
+                body: {
+                    name: actualValue.companyName,
+                },
+            });
+        }
+
+        updateValue();
     } catch (e) {
         console.log(e);
     }
@@ -60,6 +76,18 @@ async function onSubmit() {
         <form :class="$style.wrapper" @submit.prevent="onSubmit">
 
             <h5>Общая информация</h5>
+
+            <UiFormCell v-if="isOwner" :error="getError('companyName')">
+                <template #label>Название организации</template>
+
+                <template #default>
+                    <UiInput
+                        v-model="$v.companyName.$model"
+                        :error="getError('companyName')"
+                        placeholder="Введите название организации"
+                    />
+                </template>
+            </UiFormCell>
 
             <UiFormCell :error="getError('fullName')">
                 <template #label>Имя и Фамилия</template>
@@ -79,27 +107,14 @@ async function onSubmit() {
                 <template #default>
                     <UiInput
                         v-model="$v.phone.$model"
+                        disabled
                         :error="getError('phone')"
                         placeholder="Введите номер телефона"
                     />
                 </template>
             </UiFormCell>
 
-            <template v-if="actualValue.roles.includes(ROLES_KEYS.OWNER)">
-                <UiFormCell :error="getError('companyName')">
-                    <template #label>Название компании</template>
-
-                    <template #default>
-                        <UiInput
-                            v-model="$v.companyName.$model"
-                            :error="getError('companyName')"
-                            placeholder="Введите название компании"
-                        />
-                    </template>
-                </UiFormCell>
-            </template>
-
-            <template v-if="actualValue.roles.includes(ROLES_KEYS.MASTER)">
+            <template v-if="isMaster">
                 <UiFormCell :error="getError('preview')">
                     <template #label>Аватар</template>
                     <template #default>
@@ -127,7 +142,7 @@ async function onSubmit() {
                 </UiFormCell>
             </template>
 
-            <UiButton size="small">
+            <UiButton>
                 Сохранить
             </UiButton>
         </form>

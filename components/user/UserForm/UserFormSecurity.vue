@@ -1,15 +1,13 @@
 <script setup lang="ts">
-// Composables
-import { useValidate } from '~/composables/useValidate';
-
 const actualValue = reactive({
     password: '',
     password2: '',
 });
 
-const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+const { $v, getError, getInvalidState, updateValue } = useValidate(computed(() => ({
     password: [
         'required',
+        { name: 'minLength', param: 6 },
     ],
     password2: [
         'required',
@@ -26,7 +24,15 @@ async function onSubmit() {
             return false;
         }
 
-        console.log('onSubmit');
+        const { $api } = useNuxtApp();
+        await useAxios($api.auth.password, {
+            method: 'PATCH',
+            body: {
+                password: actualValue.password,
+            },
+        });
+
+        updateValue();
     } catch (e) {
         console.log(e);
     }
@@ -69,7 +75,7 @@ async function onSubmit() {
             </template>
         </UiFormCell>
 
-        <UiButton size="small">
+        <UiButton>
             Обновить
         </UiButton>
     </form>

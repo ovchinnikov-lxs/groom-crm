@@ -11,7 +11,7 @@ defineProps({
 </script>
 
 <template>
-    <UiRichText v-bind="$attrs" :color="color"></UiRichText>
+    <UiRichText v-bind="$attrs" :color="color"/>
 </template>
 
 <style scoped lang="scss">
@@ -29,7 +29,7 @@ defineProps({
     &.--additional-light-color {
         border-color: var(--ui-white-color);
         background-color: var(--ui-additional-light-color);
-        color: var(--ui-secondary-color);
+        color: var(--ui-black-color);
 
         &:focus {
             border-color: var(--ui-additional-color);

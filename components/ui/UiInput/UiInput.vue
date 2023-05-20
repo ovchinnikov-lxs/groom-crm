@@ -29,7 +29,7 @@ defineProps({
     &.--additional-light-color {
         border-color: var(--ui-white-color);
         background-color: var(--ui-additional-light-color);
-        color: var(--ui-secondary-color);
+        color: var(--ui-black-color);
 
         &:focus {
             border-color: var(--ui-additional-color);
@@ -37,6 +37,12 @@ defineProps({
             &.--is-error {
                 border-color: var(--ui-error-color);
             }
+        }
+
+        &.--is-disabled {
+            border-color: var(--ui-additional-light-color);
+            background-color: rgba(var(--ui-additional-light-color-rgb), .4);
+            color: rgba(var(--ui-black-color-rgb), .4);
         }
     }
 

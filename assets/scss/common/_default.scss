@@ -31,3 +31,8 @@ body {
     background-color: var(--ui-additional-light-color);
     font-family: 'Montserrat', sans-serif;
 }
+
+.container {
+    width: calc(var(--ui-col) * 36);
+    margin: 0 auto;
+}

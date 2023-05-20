@@ -1,8 +1,14 @@
 import { api } from '~/plugins/api';
 import { AUTH_TOKEN_KEY } from 'assets/ts/constants/auth';
 
+interface IState {
+    loggedIn: boolean;
+    user: {
+        [key: string]: any
+    }
+}
 export const useAuth = defineStore('auth', {
-    state: () => ({
+    state: (): IState => ({
         loggedIn: false,
         user: {},
     }),
@@ -41,7 +47,7 @@ export const useAuth = defineStore('auth', {
                 if (token.value) {
                     const { data } = await useAxios(api.user.me);
 
-                    this.user = data || {};
+                    this.user = data.value || {};
                     this.loggedIn = true;
                 }
             } catch (e) {

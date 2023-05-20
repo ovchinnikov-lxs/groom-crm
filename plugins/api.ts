@@ -1,23 +1,23 @@
-export const apiPrefix = 'http://localhost:8000/api';
 export const api = {
     tariffs: {
-        list: `${apiPrefix}/tariffs`,
+        list: '/tariffs',
     },
     roles: {
-        list: `${apiPrefix}/roles`,
+        list: '/roles',
     },
 
     auth: {
-        login: `${apiPrefix}/auth/login`,
-        signup: `${apiPrefix}/auth/signup`,
+        login: '/auth/login',
+        signup: '/auth/signup',
+        password: '/auth/password',
     },
 
     user: {
-        me: `${apiPrefix}/user/me`,
+        me: '/user/me',
     },
 
     company: {
-        detail: `${apiPrefix}/company`,
+        detail: '/company',
     },
 };
 

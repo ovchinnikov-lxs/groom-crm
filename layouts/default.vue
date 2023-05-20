@@ -3,7 +3,7 @@
         <UiModal :class="$style.modal"/>
         <DefaultMenu :class="$style.menu"/>
 
-        <div :class="$style.page">
+        <div class="container" :class="$style.page">
             <slot />
         </div>
     </div>
@@ -20,7 +20,7 @@
 .page {
     overflow: auto;
     flex-grow: 1;
-    padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 18);
+    padding: calc(var(--ui-unit) * 4) 0;
 }
 
 .modal {
