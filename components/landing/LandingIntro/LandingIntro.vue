@@ -9,7 +9,7 @@ const { $routes } = useNuxtApp();
             <aside :class="$style.aside">
 
                 <h2>
-                    Добро пожаловать в&nbsp;GROOM.CRM&nbsp;&mdash; ваше универсальное решение для управления салоном
+                    Добро пожаловать в&nbsp;<span>GROOM.CRM</span>&nbsp;&mdash; ваше универсальное решение для управления салоном
                 </h2>
 
                 <h4 :class="$style.text">
@@ -68,6 +68,12 @@ const { $routes } = useNuxtApp();
     align-items: flex-start;
     width: calc(var(--ui-unit) * 164);
     row-gap: calc(var(--ui-unit) * 6);
+
+    h2 {
+        span {
+            color: var(--ui-primary-color);
+        }
+    }
 }
 
 .button {
