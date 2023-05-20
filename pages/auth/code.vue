@@ -1,4 +1,3 @@
-<!--todo: Надо обдумать момент с переиспользованием этого окна для подтверждения номера при регистрации-->
 <script setup lang="ts">
 // Composables
 import { useValidate } from '~/composables/useValidate';
@@ -65,7 +64,7 @@ async function onSubmit() {
 </script>
 
 <template>
-    <UiPlate rounded :class="$style.CodePage">
+    <UiPlate rounded class="CodePage">
         <form :class="$style.wrapper" @submit.prevent="onSubmit">
             <h3>Введите код из SMS</h3>
 

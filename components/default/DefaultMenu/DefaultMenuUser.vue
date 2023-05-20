@@ -1,25 +1,42 @@
 <script setup lang="ts">
 const { $routes } = useNuxtApp();
+const auth = useAuth();
 
-const user = {
-    full_name: 'Анастасия Молькова',
-    preview: null,
-};
+const isOpened = ref(false);
+async function onLogout() {
+    isOpened.value = false;
+    await auth.logout();
+    navigateTo($routes.auth.login);
+}
 </script>
 
 <template>
     <div class="DefaultMenuUser">
         <div :class="$style.wrapper">
 
-            <div :title="user.full_name" :class="$style.previewWrapper">
-                <UiImage
-                    v-if="user.preview"
-                    :src="user.preview"
-                    :class="$style.preview"
-                />
+            <UiTooltip
+                v-model="isOpened"
+                interactive
+                position="bottom"
+            >
+                <template #header>
+                    <div :title="auth.user.fullName" :class="$style.previewWrapper">
+                        <UiImage
+                            v-if="auth.user.preview"
+                            :src="auth.user.preview"
+                            :class="$style.preview"
+                        />
 
-                <div>{{ user.full_name.split(' ').map(i => i[0]).join('') }}</div>
-            </div>
+                        <div>{{ auth.user.fullName.split(' ').map(i => i[0]).join('') }}</div>
+                    </div>
+                </template>
+
+                <template #bottom>
+                    <UiButton size="x-small" @click="onLogout">
+                        Выйти
+                    </UiButton>
+                </template>
+            </UiTooltip>
 
             <UiButton
                 tag="NuxtLink"
@@ -59,6 +76,7 @@ const user = {
     font-size: calc(var(--ui-unit) * 3);
     color: var(--ui-secondary-color);
     transform: translate3d(0, 0, 0);
+    cursor: pointer;
     user-select: none;
 }
 

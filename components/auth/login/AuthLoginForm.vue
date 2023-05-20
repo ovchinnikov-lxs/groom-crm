@@ -2,8 +2,8 @@
 // Composables
 import { useValidate } from '~/composables/useValidate';
 
-const router = useRouter();
-const { $routes } = useNuxtApp();
+const { $api, $routes } = useNuxtApp();
+const auth = useAuth();
 
 interface ILoginForm {
     phone: string
@@ -33,8 +33,19 @@ async function onSubmit() {
             return false;
         }
 
-        console.log(actualValue, 'onSubmit');
-        router.push($routes.salons.list);
+        const { data } = await useAxios<{
+            user: object;
+            token: string;
+        }>($api.auth.login, {
+            method: 'POST',
+            body: actualValue,
+        });
+
+        if (data.value) {
+            await auth.setUserToken(data.value.token);
+            await auth.fetchUser();
+            navigateTo($routes.salons.list);
+        }
     } catch (e) {
         console.log(e);
     }

@@ -22,7 +22,7 @@ export const useTariffs = defineStore('tariffs', {
     actions: {
         async fetchList() {
             try {
-                const { data } = await useFetch<ListType>(api.tariffs.list);
+                const { data } = await useAxios<ListType>(api.tariffs.list);
 
                 this.list = data.value || [];
             } catch (e) {

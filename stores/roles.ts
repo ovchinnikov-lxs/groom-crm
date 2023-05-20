@@ -3,6 +3,7 @@ import { api } from '~/plugins/api';
 
 interface IRole {
     name: string;
+    value: string;
     description: string;
 }
 
@@ -20,7 +21,7 @@ export const useRoles = defineStore('roles', {
     actions: {
         async fetchList() {
             try {
-                const { data } = await useFetch<ListType>(api.roles.list);
+                const { data } = await useAxios<ListType>(api.roles.list);
 
                 this.list = data.value || [];
             } catch (e) {

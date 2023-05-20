@@ -6,27 +6,27 @@ import { useValidate } from '~/composables/useValidate';
 import { ROLES_KEYS } from 'assets/ts/constants/roles';
 
 const actualValue = reactive<{
-    full_name: string | null
+    fullName: string | null
     phone: string | null
     roles: Array<string>
     preview: string | null
     description: string | null
     breeds: Array<string>
     services: Array<string>
-    company_name: string
+    companyName: string
 }>({
-    full_name: '',
+    fullName: '',
     phone: '',
     roles: ['owner', 'master'],
     preview: '',
     description: '',
     breeds: [],
     services: [],
-    company_name: 'Милана',
+    companyName: 'Милана',
 });
 
 const { $v, getError, getInvalidState } = useValidate(computed(() => ({
-    full_name: ['required'],
+    fullName: ['required'],
     phone: ['required', 'phone'],
     roles: ['required'],
 
@@ -38,7 +38,7 @@ const { $v, getError, getInvalidState } = useValidate(computed(() => ({
     },
 
     ...actualValue.roles.includes(ROLES_KEYS.OWNER) && {
-        company_name: ['required'],
+        companyName: ['required'],
     },
 })), actualValue);
 
@@ -61,13 +61,13 @@ async function onSubmit() {
 
             <h5>Общая информация</h5>
 
-            <UiFormCell :error="getError('full_name')">
+            <UiFormCell :error="getError('fullName')">
                 <template #label>Имя и Фамилия</template>
 
                 <template #default>
                     <UiInput
-                        v-model="$v.full_name.$model"
-                        :error="getError('full_name')"
+                        v-model="$v.fullName.$model"
+                        :error="getError('fullName')"
                         placeholder="Введите имя и фамилию"
                     />
                 </template>
@@ -86,13 +86,13 @@ async function onSubmit() {
             </UiFormCell>
 
             <template v-if="actualValue.roles.includes(ROLES_KEYS.OWNER)">
-                <UiFormCell :error="getError('company_name')">
+                <UiFormCell :error="getError('companyName')">
                     <template #label>Название компании</template>
 
                     <template #default>
                         <UiInput
-                            v-model="$v.company_name.$model"
-                            :error="getError('company_name')"
+                            v-model="$v.companyName.$model"
+                            :error="getError('companyName')"
                             placeholder="Введите название компании"
                         />
                     </template>

@@ -16,7 +16,7 @@ const props = defineProps({
 });
 
 const actualValue = reactive<{
-    full_name: string | null
+    fullName: string | null
     phone: string | null
     roles: Array<string>
     preview: string | null
@@ -26,7 +26,7 @@ const actualValue = reactive<{
     services: Array<string>
     hourly_rates: number | null
 }>({
-    full_name: '',
+    fullName: '',
     phone: '',
     roles: [],
     preview: '',
@@ -37,7 +37,7 @@ const actualValue = reactive<{
     hourly_rates: null,
 });
 const { $v, getError, getInvalidState } = useValidate(computed(() => ({
-    full_name: ['required'],
+    fullName: ['required'],
     phone: ['required', 'phone'],
     roles: ['required'],
 
@@ -134,13 +134,13 @@ async function onSubmit() {
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('full_name')">
+                <UiFormCell :error="getError('fullName')">
                     <template #label>Имя и Фамилия</template>
 
                     <template #default>
                         <UiInput
-                            v-model="$v.full_name.$model"
-                            :error="getError('full_name')"
+                            v-model="$v.fullName.$model"
+                            :error="getError('fullName')"
                             placeholder="Введите имя и фамилию"
                         />
                     </template>

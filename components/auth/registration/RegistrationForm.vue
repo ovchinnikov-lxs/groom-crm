@@ -1,16 +1,20 @@
 <script setup lang="ts">
 // Composables
 import { useValidate } from '~/composables/useValidate';
+import { useTariffs } from '~/stores/tarrifs';
+import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
 
-const router = useRouter();
-const { $routes } = useNuxtApp();
+const { $api, $routes } = useNuxtApp();
+const route = useRoute();
+const tariffs = useTariffs();
+const auth = useAuth();
 
 const actualValue = reactive({
     phone: '',
     password: '',
     password2: '',
-    full_name: '',
-    company_name: '',
+    fullName: '',
+    companyName: '',
 });
 
 const rules = computed(() => ({
@@ -20,15 +24,17 @@ const rules = computed(() => ({
     ],
     password: [
         'required',
+        { name: 'minLength', param: 6 },
     ],
     password2: [
         'required',
         { name: 'sameAsPassword', param: actualValue.password },
+        { name: 'minLength', param: 6 },
     ],
-    full_name: [
+    fullName: [
         'required',
     ],
-    company_name: [
+    companyName: [
         'required',
     ],
 }));
@@ -44,14 +50,23 @@ async function onSubmit() {
             return false;
         }
 
-        console.log(actualValue, 'onSubmit');
-        router.push({
-            path: $routes.auth.code,
-            query: { // todo: :)
-                register: 1,
-                value: JSON.stringify(actualValue),
+        const { data } = await useAxios<{
+            user: object;
+            token: string;
+        }>($api.auth.signup, {
+            method: 'POST',
+            body: {
+                ...actualValue,
+                tariffId: route.query.tariffId || tariffs.list.find(t => t.name === TARIFFS_KEY.PREMIUM)?.id,
             },
         });
+
+        if (data.value) {
+            await auth.setUserToken(data.value.token);
+            await auth.fetchUser();
+            navigateTo($routes.salons.list);
+        }
+        // todo: Добавить подтвержение номера телефона по смс и там уже регистрировать
     } catch (e) {
         console.log(e);
     }
@@ -110,23 +125,23 @@ async function onSubmit() {
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('full_name')">
+                <UiFormCell :error="getError('fullName')">
                     <template #default>
                         <UiInput
-                            id="full_name"
-                            v-model="$v.full_name.$model"
-                            :error="getError('full_name')"
+                            id="fullName"
+                            v-model="$v.fullName.$model"
+                            :error="getError('fullName')"
                             placeholder="Введите имя и фамилию"
                         />
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('company_name')">
+                <UiFormCell :error="getError('companyName')">
                     <template #default>
                         <UiInput
-                            id="company_name"
-                            v-model="$v.company_name.$model"
-                            :error="getError('company_name')"
+                            id="companyName"
+                            v-model="$v.companyName.$model"
+                            :error="getError('companyName')"
                             placeholder="Название организации"
                         />
                     </template>
