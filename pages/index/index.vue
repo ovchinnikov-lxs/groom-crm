@@ -10,5 +10,6 @@ definePageMeta({
         <LandingAbout id="about"/>
         <LandingAdvantages id="advantages"/>
         <LandingTariffs id="tariffs"/>
+        <LandingContacts/>
     </div>
 </template>
