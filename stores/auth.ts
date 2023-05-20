@@ -47,8 +47,10 @@ export const useAuth = defineStore('auth', {
                 if (token.value) {
                     const { data } = await useAxios(api.user.me);
 
-                    this.user = data.value || {};
-                    this.loggedIn = true;
+                    if (data.value) {
+                        this.user = data.value || {};
+                        this.loggedIn = true;
+                    }
                 }
             } catch (e) {
                 console.log(e);

@@ -27,7 +27,7 @@ async function onLogout() {
                             :class="$style.preview"
                         />
 
-                        <div>{{ auth.user.fullName.split(' ').map(i => i[0]).join('') }}</div>
+                        <div>{{ auth.user?.fullName?.split(' ').map(i => i[0]).join('') }}</div>
                     </div>
                 </template>
 
