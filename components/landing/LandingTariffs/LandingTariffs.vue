@@ -51,7 +51,7 @@ const tariffs = [
                     <h5>{{ item.name }}</h5>
 
                     <div
-                        class="text-x-small"
+                        class="text-small"
                         :class="$style.description"
                         v-html="item.description"
                     >
@@ -112,7 +112,7 @@ const tariffs = [
         flex-direction: column;
         align-items: center;
         row-gap: calc(var(--ui-unit) * 4);
-        padding: calc(var(--ui-unit) * 8) calc(var(--ui-unit) * 6);
+        padding: calc(var(--ui-unit) * 8) calc(var(--ui-unit) * 8);
         text-align: center;
     }
 
