@@ -18,7 +18,7 @@ const { $routes } = useNuxtApp();
                 </h4>
 
                 <UiButton :to="$routes.auth.login" :class="$style.button">
-                    Узнать подробнее
+                    Получить 15 дней бесплатно
                 </UiButton>
 
             </aside>

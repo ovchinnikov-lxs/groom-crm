@@ -7,11 +7,20 @@
 
             <div :class="$style.container">
 
-                <div :class="[$style.circle, $style['--is-large']]">
-                    <div :class="[$style.circle, $style['--is-medium']]">
-                        <div :class="[$style.circle, $style['--is-small']]">
+                <div :class="$style.imageWrapper">
+                    <div :class="[$style.circle, $style['--is-large']]">
+                        <div :class="[$style.circle, $style['--is-medium']]">
+                            <div :class="[$style.circle, $style['--is-small']]">
+                            </div>
                         </div>
                     </div>
+
+                    <UiImage
+                        :has-preview="false"
+                        object-fit="contain"
+                        src="/images/dog.png"
+                        :class="$style.image"
+                    />
                 </div>
 
                 <ol :class="$style.aside">
@@ -64,6 +73,22 @@
     align-items: center;
     width: var(--container-width);
     margin: 0 auto;
+}
+
+.imageWrapper {
+    position: relative;
+    width: calc(var(--ui-unit) * 120);
+    height: calc(var(--ui-unit) * 120);
+}
+
+.image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    transform: translate3d(-50%, -50%, 0);
 }
 
 .circle {
@@ -128,9 +153,9 @@
     display: flex;
     flex-direction: column;
     width: calc(var(--ui-unit) * 168);
-    row-gap: calc(var(--ui-unit) * 4);
+    row-gap: calc(var(--ui-unit) * 8);
     margin-left: auto;
-    font-size: calc(var(--ui-unit) * 6);
+    font-size: calc(var(--ui-unit) * 5);
 
     li {
         &::marker {

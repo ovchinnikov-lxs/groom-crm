@@ -14,7 +14,35 @@ const plural = (num: number, postfixes: Array<string>) => {
     return postfixes[num % 100 > 4 && num % 100 < 20 ? 2 : cases[Math.min(num % 10, 5)]];
 };
 
+function splitThousands<T extends string | number>(val: T, separator = ' ') {
+    if (val === '' || val === null) {
+        return '';
+    }
+
+    if (typeof val !== 'string' && isNaN(val)) {
+        return val;
+    }
+
+    const prefix = Number(val) < 0 ? '-' : '';
+
+    let [
+        numerator,
+        // eslint-disable-next-line prefer-const
+        fractional,
+    ] = Math.abs(Number(val))
+        .toString()
+        .split('.');
+
+    numerator = numerator
+        .replace(/\s/g, '')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+
+    return `${prefix}${numerator}${fractional ? `.${fractional}` : ''}`;
+}
+
+
 export {
+    splitThousands,
     leadingZero,
     plural,
 };

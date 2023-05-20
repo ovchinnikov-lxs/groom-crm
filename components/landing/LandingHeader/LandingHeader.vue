@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const { $routes } = useNuxtApp();
+const route = useRoute();
+const $style = useCssModule();
 
 const list = [
     {
@@ -21,29 +23,38 @@ const list = [
         },
     },
 ];
+
+const linkClassList = computed(() => (link: { hash: string }) => [{
+    [$style['--is-active']]: route.hash === link.hash,
+}]);
 </script>
 
 <template>
     <header class="LandingHeader">
         <div :class="$style.wrapper">
-            <DefaultTheLogo :class="$style.logo"/>
 
-            <nav :class="$style.nav">
-                <NuxtLink
-                    v-for="(item, index) in list"
-                    :key="index"
-                    :to="item.to"
-                    :class="[$style.link, { [$style['--is-active']]: $route.hash === item.to.hash }]"
-                >
-                    <b>
-                        {{ item.title }}
-                    </b>
-                </NuxtLink>
+            <main :class="$style.container">
 
-                <UiButton :class="$style.button" :to="$routes.auth.login">
-                    Войти
-                </UiButton>
-            </nav>
+                <DefaultTheLogo :class="$style.logo"/>
+
+                <nav :class="$style.nav">
+                    <NuxtLink
+                        v-for="(item, index) in list"
+                        :key="index"
+                        :to="item.to"
+                        :class="[$style.link, linkClassList(item.to)]"
+                    >
+                        <b>
+                            {{ item.title }}
+                        </b>
+                    </NuxtLink>
+
+                    <UiButton :class="$style.button" :to="$routes.auth.login">
+                        Войти
+                    </UiButton>
+                </nav>
+
+            </main>
 
         </div>
     </header>
@@ -51,12 +62,14 @@ const list = [
 
 <style module lang="scss">
 .wrapper {
+    background-color: rgba(var(--ui-additional-light-color-rgb), .8);
+}
+
+.container {
     display: flex;
     align-items: center;
     width: var(--container-width);
-    height: 100%;
     margin: 0 auto;
-    background-color: var(--ui-additional-light-color);
 }
 
 .logo {
@@ -68,7 +81,7 @@ const list = [
     align-items: center;
     column-gap: calc(var(--ui-unit) * 8);
     margin-left: auto;
-    padding: calc(var(--ui-unit) * 8) calc(var(--ui-unit) * 24);
+    padding: calc(var(--ui-unit) * 3) calc(var(--ui-unit) * 24);
     border-radius: calc(var(--ui-unit) * 4);
     background-color: var(--ui-additional-color);
 }
