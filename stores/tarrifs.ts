@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia';
 import { api } from '~/plugins/api';
 
-interface IListItem {
+export interface ITariffItem {
     id: string;
     name: string;
     description: string;
     price: number;
 }
 
-type ListType = Array<IListItem>
+type ListType = Array<ITariffItem>
 
 interface IState {
     list: ListType;

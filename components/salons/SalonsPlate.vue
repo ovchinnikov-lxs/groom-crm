@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
 
+const { $routes } = useNuxtApp();
+
 defineProps({
     id: {
         type: String,
@@ -12,7 +14,7 @@ defineProps({
         required: true,
     },
 
-    image: {
+    preview: {
         type: [String, null] as PropType<string | null>,
         default: null,
     },
@@ -30,19 +32,7 @@ defineProps({
     >
         <span :class="$style.wrapper">
 
-            <UiImage
-                v-if="image"
-                :src="image"
-                :class="$style.image"
-            />
-
-            <span :class="$style.iconWrapper">
-                <UiIcon
-                    name="salons/pet"
-                    size="custom"
-                    :class="$style.icon"
-                />
-            </span>
+            <SalonsPreview :preview="preview" :class="$style.preview"/>
 
             <span :class="$style.name">
                 {{ name }}
@@ -79,27 +69,7 @@ defineProps({
     }
 }
 
-.image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.iconWrapper {
-    @include aspect-ratio(140, 140);
-
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    display: block;
-    width: 34%;
-    color: var(--ui-white-color);
-    transform: translate3d(-50%, 0, 0);
-}
-
-.icon {
+.preview {
     position: absolute;
     top: 0;
     left: 0;

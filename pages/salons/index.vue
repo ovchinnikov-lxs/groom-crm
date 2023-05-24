@@ -2,6 +2,7 @@
 import { modal } from '~/composables/modal';
 import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
 import SalonsPlate from '~/components/salons/SalonsPlate.vue';
+import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
 
 const breadCrumbs = useBreadCrumbsStore();
 
@@ -9,53 +10,71 @@ breadCrumbs.changeBreadCrumbs([{
     title: 'Салоны',
 }]);
 
-const mockList = [
-    {
-        id: '1',
-        name: 'м. Сокол',
-        image: '',
-    },
-    {
-        id: '2',
-        name: 'м. Новаторская',
-        image: 'https://avatars.mds.yandex.net/get-tycoon/1654178/2a0000017b64d0ab711bf1342c01628c4af3/priority-headline-main-narrow',
-    },
-    {
-        id: '3',
-        name: 'м. Сокол',
-        image: '',
-    },
-];
+const { $api } = useNuxtApp();
+const { data: list } = await useAxios<Array<object>>($api.salons.list, {
+    key: 'list',
+});
+const { isOwner } = useUser();
 
 function openCreateModal() {
     modal.open({
         component: defineAsyncComponent(() => import('~/components/salons/SalonSave.vue')),
     });
 }
+
+const disableCreateSalon = computed(() => {
+    const { tariffCompanyIs } = useCompany();
+
+    if (tariffCompanyIs(TARIFFS_KEY.PREMIUM)) {
+        return false;
+    }
+
+    return Boolean(tariffCompanyIs(TARIFFS_KEY.BASIC) && list.value?.length);
+});
 </script>
 
 <template>
     <UiPage>
         <template #header>
-            <UiButton :class="$style.button" @click="openCreateModal">Добавить салон</UiButton>
+            <UiTooltip :disabled="!disableCreateSalon" :class="$style.button">
+                <template #header>
+                    <UiButton
+                        v-if="isOwner"
+                        :disabled="disableCreateSalon"
+                        @click="openCreateModal"
+                    >
+                        Добавить салон
+                    </UiButton>
+                </template>
+                <template #bottom>
+                    <div :class="$style.tooltipBottom">
+                        Для того чтобы создать больше одного салона,
+                        оформите подписку <b>{{ TARIFFS_KEY.PREMIUM }}</b>
+                    </div>
+                </template>
+            </UiTooltip>
         </template>
 
         <template #default>
             <div class="SalonsList">
-                <div :class="$style.wrapper">
+                <div v-if="list.length" :class="$style.wrapper">
                     <div
-                        v-for="item in mockList"
+                        v-for="item in list"
                         :key="item.id"
                         :class="$style.plateWrapper"
                     >
                         <SalonsPlate
                             :id="item.id"
                             :name="item.name"
-                            :image="item.image"
+                            :preview="item.preview"
                             :class="$style.plate"
                         />
                     </div>
                 </div>
+
+                <UiEmpty v-else :class="$style.empty">
+                    <template #text>Вы еще не создали ни один салон</template>
+                </UiEmpty>
             </div>
         </template>
     </UiPage>
@@ -64,6 +83,15 @@ function openCreateModal() {
 <style lang="scss" module>
 .button {
     margin-left: auto;
+}
+
+.tooltipBottom {
+    width: calc(var(--ui-col) * 6);
+    text-align: center;
+
+    b {
+        color: var(--ui-primary-color);
+    }
 }
 
 .wrapper {
@@ -85,5 +113,9 @@ function openCreateModal() {
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+.empty {
+    margin: var(--ui-col) 0;
 }
 </style>

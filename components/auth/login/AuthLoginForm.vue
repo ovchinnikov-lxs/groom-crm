@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// Composables
-import { useValidate } from '~/composables/useValidate';
-
 const { $api, $routes } = useNuxtApp();
 const auth = useAuth();
 
@@ -47,6 +44,7 @@ async function onSubmit() {
         if (data.value) {
             await auth.setUserToken(data.value.token);
             await auth.fetchUser();
+            await useGlobal().fetchInitial();
             navigateTo($routes.salons.list);
         }
     } catch (e) {

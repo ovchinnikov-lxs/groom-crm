@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
 import { plural } from '~/assets/ts/utils/format-utils';
-import { modal } from '~/composables/modal';
 
 defineProps({
     id: {
@@ -9,7 +8,7 @@ defineProps({
         required: true,
     },
 
-    image: {
+    preview: {
         type: [String, null] as PropType<string | null>,
         default: null,
     },
@@ -35,26 +34,13 @@ defineProps({
     },
 });
 
-function onUpdate() {
-    modal.open({
-        component: defineAsyncComponent(() => import('~/components/salons/SalonSave.vue')),
-        componentProps: {
-            type: 'update',
-        },
-    });
-}
+defineEmits<{(e: 'update'): void; (e: 'delete'): void }>();
 </script>
 <template>
     <UiPlate class="SalonsDetailInfo">
         <div :class="$style.wrapper">
 
-            <div :class="$style.imageWrapper">
-                <UiImage
-                    v-if="image"
-                    :src="image"
-                    :class="$style.image"
-                />
-            </div>
+            <SalonsPreview :preview="preview" :class="$style.preview"/>
 
             <div :class="$style.info">
                 <h5>{{ name }}</h5>
@@ -74,12 +60,20 @@ function onUpdate() {
 
             </div>
 
-            <UiIcon
-                name="ui/edit"
-                size="large"
-                :class="$style.icon"
-                @click="onUpdate"
-            />
+            <div :class="$style.controls">
+                <UiButton size="small" @click="$emit('update')">
+                    Редактировать
+                </UiButton>
+
+                <UiButton
+                    outline
+                    color="error"
+                    size="small"
+                    @click="$emit('delete')"
+                >
+                    Удалить
+                </UiButton>
+            </div>
 
         </div>
     </UiPlate>
@@ -95,19 +89,13 @@ function onUpdate() {
     padding: calc(var(--ui-unit) * 4);
 }
 
-.imageWrapper {
+.preview {
     overflow: hidden;
     flex-shrink: 0;
     width: calc(var(--ui-unit) * 20);
     height: calc(var(--ui-unit) * 20);
     border-radius: calc(var(--ui-unit) * 2.5);
-    background-color: var(--ui-white-color);
     transform: translate3d(0, 0, 0);
-}
-
-.image {
-    width: 100%;
-    height: 100%;
 }
 
 .info {
@@ -120,13 +108,10 @@ function onUpdate() {
     color: var(--ui-secondary-color);
 }
 
-.icon {
+.controls {
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(var(--ui-unit) * 3);
     margin-left: auto;
-    transition: color .3s ease;
-    cursor: pointer;
-
-    @include hover {
-        color: var(--ui-primary-color);
-    }
 }
 </style>

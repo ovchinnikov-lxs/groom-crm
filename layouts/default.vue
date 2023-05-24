@@ -3,8 +3,10 @@
         <UiModal :class="$style.modal"/>
         <DefaultMenu :class="$style.menu"/>
 
-        <div class="container" :class="$style.page">
-            <slot />
+        <div :class="$style.page">
+            <main class="container">
+                <slot />
+            </main>
         </div>
     </div>
 </template>

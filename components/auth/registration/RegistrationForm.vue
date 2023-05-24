@@ -64,6 +64,7 @@ async function onSubmit() {
         if (data.value) {
             await auth.setUserToken(data.value.token);
             await auth.fetchUser();
+            await useGlobal().fetchInitial();
             navigateTo($routes.salons.list);
         }
         // todo: Добавить подтвержение номера телефона по смс и там уже регистрировать

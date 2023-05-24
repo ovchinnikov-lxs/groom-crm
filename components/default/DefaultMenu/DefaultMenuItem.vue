@@ -89,7 +89,7 @@ defineProps({
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 8px;
+        height: var(--ui-unit);
         border-radius: 2px 2px 0 0;
         background-color: var(--ui-white-color);
         transform: translateY(100%);

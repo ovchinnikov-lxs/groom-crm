@@ -1,23 +1,48 @@
 <script setup lang="ts">
 // Composables
 import type { PropType } from 'vue';
-import { useValidate } from '~/composables/useValidate';
-import { modal } from '~/composables/modal';
+// import { modal } from '~/composables/modal';
+
+interface IValue {
+    name: string | null;
+    preview: string | null;
+    openAt: string;
+    closeAt: string;
+    pricePerMonth: number | null;
+    location: {
+        lat: number | null;
+        lng: number | null;
+        address: string | null;
+    }
+}
+
+interface IPropsValue extends IValue {
+    id: string;
+}
 
 const props = defineProps({
-    type: {
-        type: String as PropType<'create' | 'update'>,
-        default: 'create',
+    method: {
+        type: String as PropType<'POST' | 'PATCH'>,
+        default: 'POST',
+    },
+
+    value: {
+        type: [Object, null] as PropType<IPropsValue | null>,
+        default: null,
+    },
+
+    onCloseModal: {
+        type: Function,
+        default: () => ({}),
     },
 });
 
-const actualValue = reactive({
+const actualValue = reactive<IValue>({
     name: null,
     preview: null,
     openAt: '10:00',
     closeAt: '19:00',
     pricePerMonth: null,
-    staff: [],
     location: {
         lat: null,
         lng: null,
@@ -25,14 +50,23 @@ const actualValue = reactive({
     },
 });
 
+watch(() => props.value, val => {
+    if (val) {
+        actualValue.name = val.name;
+        actualValue.preview = val.preview;
+        actualValue.openAt = val.openAt;
+        actualValue.closeAt = val.closeAt;
+        actualValue.pricePerMonth = val.pricePerMonth;
+        actualValue.location = val.location;
+    }
+}, { immediate: true });
 
 const { $v, getError, getInvalidState } = useValidate(computed(() => ({
     name: ['required'],
-    preview: ['required'],
+    preview: [],
     openAt: ['required'],
     closeAt: ['required'],
     pricePerMonth: ['required'],
-    staff: [],
     location: {
         lat: ['required'],
         lng: ['required'],
@@ -41,26 +75,51 @@ const { $v, getError, getInvalidState } = useValidate(computed(() => ({
 })), actualValue);
 
 
-const staffOptions = [];
+// const staffOptions = [];
+const $emit = defineEmits<{(e: 'close'): void }>();
 
 async function onSubmit() {
     try {
         if (await getInvalidState()) {
             return false;
         }
-        // todo: Change the path relative to the type
-        console.log(actualValue, 'onSubmit', props.type);
+
+        const { $api, $routes } = useNuxtApp();
+        const url = props.method === 'PATCH' && props.value
+            ? $api.salons.detail(props.value.id)
+            : $api.salons.list;
+
+        const { data } = await useAxios<{
+            id: string;
+            [key: string]: any;
+        }>(url, {
+            method: props.method,
+            body: {
+                name: actualValue.name,
+                preview: actualValue.preview,
+                openAt: actualValue.openAt,
+                closeAt: actualValue.closeAt,
+                pricePerMonth: actualValue.pricePerMonth,
+                location: actualValue.location,
+            },
+        });
+
+        props.onCloseModal();
+        $emit('close');
+        if (props.method === 'POST' && data.value) {
+            navigateTo($routes.salons.detail(data.value.id));
+        }
     } catch (e) {
         console.log(e);
     }
 }
 
-function onCreateStaff() {
-    document.body.click();
-    modal.open({
-        component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
-    });
-}
+// function onCreateStaff() {
+//     document.body.click();
+//     modal.open({
+//         component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
+//     });
+// }
 </script>
 
 <template>
@@ -68,10 +127,11 @@ function onCreateStaff() {
         tag="form"
         class="SalonSave"
         @submit.prevent="onSubmit"
+        @close="$emit('close')"
     >
         <template #header>
             <h4>
-                <template v-if="type === 'create'">Добавить</template>
+                <template v-if="method === 'POST'">Добавить</template>
                 <template v-else>Редактировать</template>
                 салон
             </h4>
@@ -140,31 +200,31 @@ function onCreateStaff() {
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('staff')">
-                    <template #label>
-                        Команда салона
-                    </template>
+                <!--                <UiFormCell :error="getError('staff')">-->
+                <!--                    <template #label>-->
+                <!--                        Команда салона-->
+                <!--                    </template>-->
 
-                    <template #default>
-                        <UiSelect
-                            v-model="$v.staff.$model"
-                            multiple
-                            :error="getError('staff')"
-                            placeholder="Выберете сотрундиков"
-                            :options="staffOptions"
-                        >
-                            <template #body-header>
-                                <UiButton
-                                    type="button"
-                                    size="x-small"
-                                    @click="onCreateStaff"
-                                >
-                                    Добавить сотрудника
-                                </UiButton>
-                            </template>
-                        </UiSelect>
-                    </template>
-                </UiFormCell>
+                <!--                    <template #default>-->
+                <!--                        <UiSelect-->
+                <!--                            v-model="$v.staff.$model"-->
+                <!--                            multiple-->
+                <!--                            :error="getError('staff')"-->
+                <!--                            placeholder="Выберете сотрундиков"-->
+                <!--                            :options="staffOptions"-->
+                <!--                        >-->
+                <!--                            <template #body-header>-->
+                <!--                                <UiButton-->
+                <!--                                    type="button"-->
+                <!--                                    size="x-small"-->
+                <!--                                    @click="onCreateStaff"-->
+                <!--                                >-->
+                <!--                                    Добавить сотрудника-->
+                <!--                                </UiButton>-->
+                <!--                            </template>-->
+                <!--                        </UiSelect>-->
+                <!--                    </template>-->
+                <!--                </UiFormCell>-->
 
                 <UiFormCell :error="getError('location.lat') || getError('location.lng') || getError('location.address')">
                     <template #label>
@@ -184,7 +244,7 @@ function onCreateStaff() {
         </template>
 
         <template #footer>
-            <UiButton size="small">Сохранить</UiButton>
+            <UiButton>Сохранить</UiButton>
         </template>
     </UiModalPopupWrapper>
 </template>

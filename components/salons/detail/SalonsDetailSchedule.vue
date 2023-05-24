@@ -36,13 +36,21 @@ const props = defineProps({
     },
 });
 
+const hourDiff = ref(0);
 const TODAY = `01/01/${new Date().getFullYear()}`;
-const OPEN_AT_TIME = new Date(`${TODAY} ${props.openAt}:00`);
-const CLOSE_AT_TIME = new Date(`${TODAY} ${props.closeAt}:00`);
 
-const timeStart = OPEN_AT_TIME.getHours();
-const timeEnd = CLOSE_AT_TIME.getHours();
-const hourDiff = timeEnd - timeStart;
+function onInitSchedule() {
+    const OPEN_AT_TIME = new Date(`${TODAY} ${props.openAt}:00`);
+    const CLOSE_AT_TIME = new Date(`${TODAY} ${props.closeAt}:00`);
+
+    const timeStart = OPEN_AT_TIME.getHours();
+    const timeEnd = CLOSE_AT_TIME.getHours();
+    hourDiff.value = timeEnd - timeStart + 1;
+}
+
+watch(props, () => {
+    onInitSchedule();
+}, { immediate: true });
 
 const getTime = computed(() => (index: number) => {
     const date = new Date(`${TODAY} ${props.openAt}:00`);
@@ -127,7 +135,7 @@ const getTime = computed(() => (index: number) => {
     border-top: 1px solid rgba(var(--ui-additional-color-rgb), .4);
 
     &:last-child {
-        border-bottom: 1px solid rgba(var(--ui-additional-color-rgb), .4);
+        height: 0;
     }
 
     &:before {

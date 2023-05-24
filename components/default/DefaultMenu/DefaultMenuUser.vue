@@ -14,21 +14,32 @@ async function onLogout() {
     <div class="DefaultMenuUser">
         <div :class="$style.wrapper">
 
+
+            <div :title="auth.user.fullName" :class="$style.previewWrapper">
+                <UiImage
+                    v-if="auth.user.preview"
+                    :src="auth.user.preview"
+                    :class="$style.preview"
+                />
+
+                <div>{{ auth.user?.fullName?.split(' ').map(i => i[0]).join('') }}</div>
+            </div>
+
             <UiTooltip
                 v-model="isOpened"
                 interactive
                 position="bottom"
             >
                 <template #header>
-                    <div :title="auth.user.fullName" :class="$style.previewWrapper">
-                        <UiImage
-                            v-if="auth.user.preview"
-                            :src="auth.user.preview"
-                            :class="$style.preview"
-                        />
-
-                        <div>{{ auth.user?.fullName?.split(' ').map(i => i[0]).join('') }}</div>
-                    </div>
+                    <UiButton
+                        tag="NuxtLink"
+                        :to="$routes.user.detail"
+                        icon
+                        size="small"
+                        :class="$style.button"
+                    >
+                        <UiIcon name="ui/settings"/>
+                    </UiButton>
                 </template>
 
                 <template #bottom>
@@ -37,16 +48,6 @@ async function onLogout() {
                     </UiButton>
                 </template>
             </UiTooltip>
-
-            <UiButton
-                tag="NuxtLink"
-                :to="$routes.user.detail"
-                icon
-                size="small"
-                :class="$style.button"
-            >
-                <UiIcon name="ui/settings"/>
-            </UiButton>
 
         </div>
     </div>
@@ -76,7 +77,6 @@ async function onLogout() {
     font-size: calc(var(--ui-unit) * 3);
     color: var(--ui-secondary-color);
     transform: translate3d(0, 0, 0);
-    cursor: pointer;
     user-select: none;
 }
 

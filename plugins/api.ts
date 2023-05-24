@@ -19,6 +19,11 @@ export const api = {
     company: {
         detail: '/company',
     },
+
+    salons: {
+        list: '/salons',
+        detail: (salonId: string) => `/salons/${salonId}`,
+    },
 };
 
 export default defineNuxtPlugin(() => ({
