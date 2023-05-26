@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
+const { changeBreadCrumbs } = useBreadCrumbsStore();
 
-const breadCrumbs = useBreadCrumbsStore();
-
-breadCrumbs.changeBreadCrumbs([{
+changeBreadCrumbs([{
     title: 'Финансы',
 }]);
 </script>

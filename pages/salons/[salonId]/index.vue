@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
 import { modal } from '~/composables/modal';
 import { ISalonDetail } from '~/plugins/api/salons';
 

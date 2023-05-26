@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
-
-const store = useBreadCrumbsStore();
-await useAsyncData('breadCrumbs', async () => store.list);
-
-const list = computed(() => store.list);
+const { list } = useBreadCrumbsStore();
+await useAsyncData('breadCrumbs', async () => list);
 </script>
 
 <template>
