@@ -1,29 +1,17 @@
 import { defineStore } from 'pinia';
-import { api } from '~/plugins/api';
-
-export interface ITariffItem {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-}
-
-type ListType = Array<ITariffItem>
-
-interface IState {
-    list: ListType;
-}
-
+import { ITariffsItem } from '~/plugins/api/tariffs';
 export const useTariffs = defineStore('tariffs', {
-    state: (): IState => ({
+    state: (): {
+        list: Array<ITariffsItem>
+    } => ({
         list: [],
     }),
 
     actions: {
         async fetchList() {
             try {
-                const { data } = await useAxios<ListType>(api.tariffs.list);
-
+                const { $api } = useNuxtApp();
+                const { data } = await $api.tariffs.getList();
                 this.list = data.value || [];
             } catch (e) {
                 console.log(e);

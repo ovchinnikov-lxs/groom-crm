@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { modal } from '~/composables/modal';
-import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
-import SalonsPlate from '~/components/salons/SalonsPlate.vue';
+
+// Components
+import SalonsPlate from '~/components/salons/SalonsPlate';
+
+// Constants
 import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
 
-const breadCrumbs = useBreadCrumbsStore();
-
-breadCrumbs.changeBreadCrumbs([{
+const { changeBreadCrumbs } = useBreadCrumbsStore();
+changeBreadCrumbs([{
     title: 'Салоны',
 }]);
 
 const { $api } = useNuxtApp();
-const { data: list } = await useAxios<Array<object>>($api.salons.list, {
+const { data: list } = await $api.salons.getList<object[]>({
     key: 'list',
 });
 const { isOwner } = useUser();

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const { $api } = useNuxtApp();
 const auth = useAuth();
 const { isMaster, isOwner } = useUser();
 const company = useCompany();
@@ -40,27 +39,22 @@ const { $v, getError, getInvalidState, updateValue } = useValidate(computed(() =
 
 async function onSubmit() {
     try {
-        console.log('onSubmit');
         if (await getInvalidState()) {
             return false;
         }
 
-        await useAxios($api.user.me, {
-            method: 'PATCH',
-            body: {
-                fullName: actualValue.fullName,
-                preview: actualValue.preview,
-                description: actualValue.description,
-            },
+        const { $api } = useNuxtApp();
+
+        await $api.user.updateInfo({
+            fullName: actualValue.fullName,
+            preview: actualValue.preview,
+            description: actualValue.description,
         });
         await auth.fetchUser();
 
         if (isOwner) {
-            await useAxios($api.company.detail, {
-                method: 'PATCH',
-                body: {
-                    name: actualValue.companyName,
-                },
+            await $api.company.updateInfo({
+                name: actualValue.companyName,
             });
         }
 

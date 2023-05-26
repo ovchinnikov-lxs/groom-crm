@@ -1,7 +1,11 @@
+<script setup lang="ts">
+await useGlobal().fetchInitial();
+</script>
+
 <template>
     <div :class="$style.DefaultLayout">
         <UiModal :class="$style.modal"/>
-        <DefaultMenu :class="$style.menu"/>
+        <DefaultMenu/>
 
         <div :class="$style.page">
             <main class="container">

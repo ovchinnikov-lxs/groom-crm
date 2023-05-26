@@ -25,12 +25,7 @@ async function onSubmit() {
         }
 
         const { $api } = useNuxtApp();
-        await useAxios($api.auth.password, {
-            method: 'PATCH',
-            body: {
-                password: actualValue.password,
-            },
-        });
+        await $api.auth.password(actualValue);
 
         updateValue();
     } catch (e) {

@@ -1,33 +1,19 @@
-export const api = {
-    tariffs: {
-        list: '/tariffs',
-    },
-    roles: {
-        list: '/roles',
-    },
-
-    auth: {
-        login: '/auth/login',
-        signup: '/auth/signup',
-        password: '/auth/password',
-    },
-
-    user: {
-        me: '/user/me',
-    },
-
-    company: {
-        detail: '/company',
-    },
-
-    salons: {
-        list: '/salons',
-        detail: (salonId: string) => `/salons/${salonId}`,
-    },
-};
+import { TariffsApi } from '~/plugins/api/tariffs';
+import { RolesApi } from '~/plugins/api/roles';
+import { AuthApi } from '~/plugins/api/auth';
+import { UserApi } from '~/plugins/api/user';
+import { CompanyApi } from '~/plugins/api/company';
+import { SalonsApi } from '~/plugins/api/salons';
 
 export default defineNuxtPlugin(() => ({
     provide: {
-        api,
+        api: {
+            tariffs: new TariffsApi(),
+            roles: new RolesApi(),
+            auth: new AuthApi(),
+            user: new UserApi(),
+            company: new CompanyApi(),
+            salons: new SalonsApi(),
+        },
     },
 }));

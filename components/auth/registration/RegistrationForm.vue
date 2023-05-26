@@ -4,7 +4,6 @@ import { useValidate } from '~/composables/useValidate';
 import { useTariffs } from '~/stores/tarrifs';
 import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
 
-const { $api, $routes } = useNuxtApp();
 const route = useRoute();
 const tariffs = useTariffs();
 const auth = useAuth();
@@ -50,23 +49,16 @@ async function onSubmit() {
             return false;
         }
 
-        const { data } = await useAxios<{
-            user: object;
-            token: string;
-        }>($api.auth.signup, {
-            method: 'POST',
-            body: {
-                ...actualValue,
-                tariffId: route.query.tariffId || tariffs.list.find(t => t.name === TARIFFS_KEY.PREMIUM)?.id,
-            },
-        });
+        const { $api, $routes } = useNuxtApp();
 
-        if (data.value) {
-            await auth.setUserToken(data.value.token);
-            await auth.fetchUser();
-            await useGlobal().fetchInitial();
-            navigateTo($routes.salons.list);
-        }
+
+        await $api.auth.signup({
+            ...actualValue,
+            tariffId: String(route.query.tariffId) || tariffs.list.find(t => t.name === TARIFFS_KEY.PREMIUM)?.id,
+        });
+        await auth.fetchUser();
+        await useGlobal().fetchInitial();
+        navigateTo($routes.salons.list);
         // todo: Добавить подтвержение номера телефона по смс и там уже регистрировать
     } catch (e) {
         console.log(e);

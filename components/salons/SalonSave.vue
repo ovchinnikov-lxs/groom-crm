@@ -1,24 +1,6 @@
 <script setup lang="ts">
-// Composables
 import type { PropType } from 'vue';
-// import { modal } from '~/composables/modal';
-
-interface IValue {
-    name: string | null;
-    preview: string | null;
-    openAt: string;
-    closeAt: string;
-    pricePerMonth: number | null;
-    location: {
-        lat: number | null;
-        lng: number | null;
-        address: string | null;
-    }
-}
-
-interface IPropsValue extends IValue {
-    id: string;
-}
+import { ISalonDetail, ISalonSave } from '~/plugins/api/salons';
 
 const props = defineProps({
     method: {
@@ -27,7 +9,7 @@ const props = defineProps({
     },
 
     value: {
-        type: [Object, null] as PropType<IPropsValue | null>,
+        type: [Object, null] as PropType<ISalonDetail | null>,
         default: null,
     },
 
@@ -37,7 +19,7 @@ const props = defineProps({
     },
 });
 
-const actualValue = reactive<IValue>({
+const actualValue = reactive<ISalonSave>({
     name: null,
     preview: null,
     openAt: '10:00',
@@ -85,30 +67,19 @@ async function onSubmit() {
         }
 
         const { $api, $routes } = useNuxtApp();
-        const url = props.method === 'PATCH' && props.value
-            ? $api.salons.detail(props.value.id)
-            : $api.salons.list;
 
-        const { data } = await useAxios<{
-            id: string;
-            [key: string]: any;
-        }>(url, {
-            method: props.method,
-            body: {
-                name: actualValue.name,
-                preview: actualValue.preview,
-                openAt: actualValue.openAt,
-                closeAt: actualValue.closeAt,
-                pricePerMonth: actualValue.pricePerMonth,
-                location: actualValue.location,
-            },
-        });
+        if (props.method === 'POST') {
+            const { data } = await $api.salons.create(actualValue);
+
+            if (data.value) {
+                navigateTo($routes.salons.detail(data.value.id));
+            }
+        } else if (props.value) {
+            await $api.salons.update(props.value.id, actualValue);
+        }
 
         props.onCloseModal();
         $emit('close');
-        if (props.method === 'POST' && data.value) {
-            navigateTo($routes.salons.detail(data.value.id));
-        }
     } catch (e) {
         console.log(e);
     }

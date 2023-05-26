@@ -2,6 +2,11 @@
 import stylelint from 'vite-plugin-stylelint';
 
 export default defineNuxtConfig({
+    runtimeConfig: {
+        public: {
+            SERVER_API_URL: '/api',
+        },
+    },
     app: {
         pageTransition: {
             name: 'page',

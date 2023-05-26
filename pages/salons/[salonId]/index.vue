@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useBreadCrumbsStore } from '~/stores/bread-crumbs';
 import { modal } from '~/composables/modal';
+import { ISalonDetail } from '~/plugins/api/salons';
 
-const breadCrumbs = useBreadCrumbsStore();
+const { changeBreadCrumbs } = useBreadCrumbsStore();
 const { $routes, $api } = useNuxtApp();
 
-const { data: salon, refresh } = await useAxios($api.salons.detail(String(useRoute().params.salonId)), {
+const { data: salon, refresh } = await $api.salons.getDetail<ISalonDetail>(String(useRoute().params.salonId), {
     key: 'salon',
 });
 
@@ -14,13 +15,13 @@ if (!salon.value) {
 }
 
 function updateBreadCrumbs() {
-    breadCrumbs.changeBreadCrumbs([
+    changeBreadCrumbs([
         {
             title: 'Салоны',
             to: $routes.salons.list,
         },
         {
-            title: salon.value.name,
+            title: salon.value?.name || '',
         },
     ]);
 }
@@ -43,9 +44,7 @@ function onUpdate() {
 
 async function onDelete() {
     try {
-        await useAxios($api.salons.detail(String(useRoute().params.salonId)), {
-            method: 'DELETE',
-        });
+        await $api.salons.delete(String(useRoute().params.salonId));
         navigateTo($routes.salons.list);
     } catch (e) {
         console.log(e);

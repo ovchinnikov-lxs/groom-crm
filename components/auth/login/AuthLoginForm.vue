@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const { $api, $routes } = useNuxtApp();
 const auth = useAuth();
 
 interface ILoginForm {
@@ -18,7 +17,7 @@ const rules = computed(() => ({
         'phone',
     ],
     password: [
-        // 'required',
+        'required',
     ],
 }));
 
@@ -30,23 +29,11 @@ async function onSubmit() {
             return false;
         }
 
-        const { data } = await useAxios<{
-            user: object;
-            token: string;
-        }>($api.auth.login, {
-            method: 'POST',
-            body: {
-                phone: actualValue.phone,
-                password: actualValue.password,
-            },
-        });
-
-        if (data.value) {
-            await auth.setUserToken(data.value.token);
-            await auth.fetchUser();
-            await useGlobal().fetchInitial();
-            navigateTo($routes.salons.list);
-        }
+        const { $api, $routes } = useNuxtApp();
+        await $api.auth.login(actualValue);
+        await auth.fetchUser();
+        await useGlobal().fetchInitial();
+        navigateTo($routes.salons.list);
     } catch (e) {
         console.log(e);
     }

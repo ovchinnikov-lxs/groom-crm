@@ -1,8 +1,5 @@
 import { defineStore } from 'pinia';
 
-// Constants
-import { api } from '~/plugins/api';
-
 interface IState {
     detail: {
         [key: string]: any
@@ -24,7 +21,8 @@ export const useCompany = defineStore('company', {
     actions: {
         async fetchDetail() {
             try {
-                const { data } = await useAxios(api.company.detail);
+                const { $api } = useNuxtApp();
+                const { data } = await $api.company.getInfo();
 
                 this.detail = data.value || {};
             } catch (e) {

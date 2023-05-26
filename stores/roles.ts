@@ -1,27 +1,19 @@
 import { defineStore } from 'pinia';
-import { api } from '~/plugins/api';
-
-interface IRole {
-    name: string;
-    value: string;
-    description: string;
-}
-
-type ListType = Array<IRole>
-
-interface IState {
-    list: ListType
-}
+import { IRolesItem } from '~/plugins/api/roles';
 
 export const useRoles = defineStore('roles', {
-    state: (): IState => ({
+    state: (): {
+        list: Array<IRolesItem>
+    } => ({
         list: [],
     }),
 
     actions: {
         async fetchList() {
             try {
-                const { data } = await useAxios<ListType>(api.roles.list);
+                const { $api } = useNuxtApp();
+
+                const { data } = await $api.roles.getList();
 
                 this.list = data.value || [];
             } catch (e) {
