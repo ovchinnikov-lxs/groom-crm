@@ -1,3 +1,6 @@
+import { defineStore } from 'pinia';
+
+// Constants
 import { AUTH_TOKEN_KEY } from 'assets/ts/constants/auth';
 
 interface IState {

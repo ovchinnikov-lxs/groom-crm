@@ -1,3 +1,5 @@
+import { defineStore } from 'pinia';
+// Constants
 import { ROLES_KEYS } from 'assets/ts/constants/roles';
 
 export const useUser = defineStore('user', {

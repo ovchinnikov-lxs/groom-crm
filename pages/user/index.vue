@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const { changeBreadCrumbs } = useBreadCrumbsStore();
+const breadcrumbs = useBreadcrumbs();
 
-changeBreadCrumbs([{
+breadcrumbs.setList([{
     title: 'Личный кабинет',
 }]);
 </script>

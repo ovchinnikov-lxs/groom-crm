@@ -1,9 +1,11 @@
 <script setup lang="ts">
-const { changeBreadCrumbs } = useBreadCrumbsStore();
+const breadcrumbs = useBreadcrumbs();
 
-changeBreadCrumbs([{
+breadcrumbs.setList([{
     title: 'Команда',
 }]);
+
+const staff = [];
 
 function openCreateModal() {
     modal.open({
@@ -20,7 +22,9 @@ function openCreateModal() {
             </UiButton>
         </template>
         <template #default>
-            StaffPage
+            <UiEmpty v-if="!staff.length">
+                <template #text>Вы еще не добавили сотрудников</template>
+            </UiEmpty>
         </template>
     </UiPage>
 </template>

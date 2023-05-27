@@ -2,7 +2,6 @@
 import { modal } from '~/composables/modal';
 import { ISalonDetail } from '~/plugins/api/salons';
 
-const { changeBreadCrumbs } = useBreadCrumbsStore();
 const { $routes, $api } = useNuxtApp();
 
 const { data: salon, refresh } = await $api.salons.getDetail<ISalonDetail>(String(useRoute().params.salonId), {
@@ -13,8 +12,10 @@ if (!salon.value) {
     navigateTo($routes.salons.list);
 }
 
-function updateBreadCrumbs() {
-    changeBreadCrumbs([
+function updateBreadcrumbs() {
+    const breadcrumbs = useBreadcrumbs();
+
+    breadcrumbs.setList([
         {
             title: 'Салоны',
             to: $routes.salons.list,
@@ -25,7 +26,7 @@ function updateBreadCrumbs() {
     ]);
 }
 
-updateBreadCrumbs();
+updateBreadcrumbs();
 
 function onUpdate() {
     modal.open({
@@ -35,7 +36,7 @@ function onUpdate() {
             value: salon,
             onCloseModal: async () => {
                 await refresh();
-                updateBreadCrumbs();
+                updateBreadcrumbs();
             },
         },
     });

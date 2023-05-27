@@ -6,7 +6,7 @@
         class="UiPage"
     >
         <header class="UiPage__header">
-            <UiPageBreadCrumbs/>
+            <UiPageBreadcrumbs/>
 
             <slot name="header"></slot>
         </header>

@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { modal } from '~/composables/modal';
 
-// Components
-import SalonsPlate from '~/components/salons/SalonsPlate';
-
 // Constants
 import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
 
-const { changeBreadCrumbs } = useBreadCrumbsStore();
-changeBreadCrumbs([{
+const breadcrumbs = useBreadcrumbs();
+breadcrumbs.setList([{
     title: 'Салоны',
 }]);
 
@@ -74,7 +71,7 @@ const disableCreateSalon = computed(() => {
                     </div>
                 </div>
 
-                <UiEmpty v-else :class="$style.empty">
+                <UiEmpty v-else>
                     <template #text>Вы еще не создали ни один салон</template>
                 </UiEmpty>
             </div>
@@ -115,9 +112,5 @@ const disableCreateSalon = computed(() => {
     left: 0;
     width: 100%;
     height: 100%;
-}
-
-.empty {
-    margin: var(--ui-col) 0;
 }
 </style>

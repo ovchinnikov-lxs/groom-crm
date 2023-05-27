@@ -1,16 +1,21 @@
-interface IBreadCrumbsItem {
+interface IBreadcrumbsItem {
     title: string
     to?: string
 }
-export const useBreadCrumbsStore = defineStore('breadCrumbs', () => {
-    const list = ref<Array<IBreadCrumbsItem>>([]);
 
-    function changeBreadCrumbs(value: Array<IBreadCrumbsItem>) {
-        list.value = value;
-    }
+export const useBreadcrumbs = defineStore('breadcrumbs', {
+    state: (): {
+        list: Array<IBreadcrumbsItem>
+        render: number,
+    } => ({
+        list: [],
+        render: 0,
+    }),
 
-    return {
-        list,
-        changeBreadCrumbs,
-    };
+    actions: {
+        setList(value: Array<IBreadcrumbsItem>) {
+            this.list = value;
+            this.render++;
+        },
+    },
 });

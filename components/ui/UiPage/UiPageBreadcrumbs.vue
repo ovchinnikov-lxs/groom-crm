@@ -1,31 +1,30 @@
 <script setup lang="ts">
-const { list } = useBreadCrumbsStore();
-await useAsyncData('breadCrumbs', async () => list);
+const breadcrumbs = useBreadcrumbs();
 </script>
 
 <template>
-    <div class="UiPageBreadCrumbs">
+    <div class="UiPageBreadcrumbs">
         <transition name="right" mode="out-in">
-            <div :key="JSON.stringify(list)" class="UiPageBreadCrumbs__wrapper">
+            <div :key="breadcrumbs.render" class="UiPageBreadcrumbs__wrapper">
                 <div
-                    v-for="(item, index) in list"
+                    v-for="(item, index) in breadcrumbs.list"
                     :key="index"
-                    class="UiPageBreadCrumbs__item"
+                    class="UiPageBreadcrumbs__item"
                 >
 
                     <UiIcon
                         v-if="index"
                         size="large"
                         name="ui/arrow-right"
-                        class="UiPageBreadCrumbs__icon"
+                        class="UiPageBreadcrumbs__icon"
                     />
 
                     <UiLink
                         :tag="!item.to ? 'span' : 'NuxtLink'"
                         :to="item.to"
                         size="custom"
-                        :color="index || list.length === 1 ? 'black' : 'secondary'"
-                        class="UiPageBreadCrumbs__link"
+                        :color="index || breadcrumbs.list.length === 1 ? 'black' : 'secondary'"
+                        class="UiPageBreadcrumbs__link"
                     >
                         <b>
                             {{ item.title }}
@@ -39,7 +38,7 @@ await useAsyncData('breadCrumbs', async () => list);
 </template>
 
 <style lang="scss">
-.UiPageBreadCrumbs {
+.UiPageBreadcrumbs {
     &__wrapper {
         display: flex;
         align-items: center;
