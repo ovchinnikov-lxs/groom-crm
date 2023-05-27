@@ -1,3 +1,8 @@
+<script setup lang="ts">
+// Constants
+import { COMPANY_NAME } from '~/assets/ts/constants';
+</script>
+
 <template>
     <section class="LandingAdvantages">
         <div :class="$style.wrapper">
@@ -25,7 +30,7 @@
 
                 <ol :class="$style.aside">
                     <li>
-                        <b>GROOM.CRM</b> упрощает процесс ведения онлайн-записи, облегчая доступ к&nbsp;информации о&nbsp;клиентах и&nbsp;встречах в&nbsp;режиме реального времени.
+                        <b>{{ COMPANY_NAME }}</b> упрощает процесс ведения онлайн-записи, облегчая доступ к&nbsp;информации о&nbsp;клиентах и&nbsp;встречах в&nbsp;режиме реального времени.
                     </li>
                     <li>
                         Наш удобный интерфейс позволяет быстро и&nbsp;удобно планировать и&nbsp;вести прием.
@@ -34,7 +39,7 @@
                         Функция регистрации позволяет клиентам присоединиться к&nbsp;вашему салону через безопасный и&nbsp;беспрепятственный цифровой процесс.
                     </li>
                     <li>
-                        Надежные функции управления финансами <b>GROOM.CRM</b> позволяют с&nbsp;легкостью отслеживать расходы, доходы и&nbsp;прибыль салона, делая вас организованным и&nbsp;информированным.
+                        Надежные функции управления финансами <b>{{ COMPANY_NAME }}</b> позволяют с&nbsp;легкостью отслеживать расходы, доходы и&nbsp;прибыль салона, делая вас организованным и&nbsp;информированным.
                     </li>
                     <li>
                         Наше программное обеспечение поставляется с&nbsp;настраиваемыми шаблонами, которые отвечают уникальным потребностям груминг-салонов и&nbsp;помогают повысить узнаваемость вашего бренда.
@@ -45,8 +50,6 @@
     </section>
 </template>
 
-<script setup lang="ts">
-</script>
 <style module lang="scss">
 .wrapper {
     display: flex;
@@ -65,7 +68,7 @@
     background-color: var(--ui-additional-color);
     text-transform: uppercase;
     color: var(--ui-white-color);
-    box-shadow: 0 45px 60px -20px rgba(19, 26, 53, .12);
+    box-shadow: var(--ui-box-shadow);
 }
 
 .container {

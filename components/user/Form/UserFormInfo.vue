@@ -123,15 +123,12 @@ async function onSubmit() {
                 <UiFormCell :error="getError('description')">
                     <template #label>Описание</template>
                     <template #default>
-                        <!--todo: Проблем с гидратацией, надо выявить и поправить-->
-                        <ClientOnly>
-                            <UiRichText
-                                v-model="$v.description.$model"
-                                rows="4"
-                                :error="getError('description')"
-                                placeholder="Введите описание мастера"
-                            />
-                        </ClientOnly>
+                        <UiRichText
+                            v-model="$v.description.$model"
+                            rows="4"
+                            :error="getError('description')"
+                            placeholder="Введите описание мастера"
+                        />
                     </template>
                 </UiFormCell>
             </template>

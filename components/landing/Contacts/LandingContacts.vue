@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Constants
+import { COMPANY_NAME } from '~/assets/ts/constants';
+
 const { $routes } = useNuxtApp();
 </script>
 
@@ -8,7 +11,7 @@ const { $routes } = useNuxtApp();
 
             <div>
                 <h3>
-                    Начните работу с&nbsp;GROOM.CRM <span>сегодня</span> и&nbsp;испытайте лучшее приложение для управления салонами,
+                    Начните работу с&nbsp;{{ COMPANY_NAME }} <span>сегодня</span> и&nbsp;испытайте лучшее приложение для управления салонами,
                     разработанное с&nbsp;учетом особенностей вашего бизнеса.
                 </h3>
 

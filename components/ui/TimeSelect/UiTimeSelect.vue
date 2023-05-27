@@ -206,7 +206,7 @@ function onMinuteSelect(minutes: number) {
 
         &.--additional-light-color {
             background-color: var(--ui-additional-light-color);
-            box-shadow: rgba(var(--ui-black-color-rgb), .04) 0 calc(var(--ui-unit) * 2) calc(var(--ui-unit) * 6) 0;
+            box-shadow: var(--ui-box-shadow);
         }
     }
 

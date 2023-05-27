@@ -41,7 +41,7 @@ defineProps({
         &.--white-color {
             #{$tooltip} {
                 &__wrapper {
-                    box-shadow: rgba(var(--ui-black-color-rgb), .04) 0 calc(var(--ui-unit) * 2) calc(var(--ui-unit) * 6) 0;
+                    box-shadow: var(--ui-box-shadow);
                     background-color: var(--ui-white-color);
                 }
             }

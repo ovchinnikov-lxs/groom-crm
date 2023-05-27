@@ -1,7 +1,12 @@
+<script setup lang="ts">
+// Constants
+import { COMPANY_NAME } from '~/assets/ts/constants';
+</script>
+
 <template>
     <div class="AuthAside">
         <div :class="$style.wrapper">
-            <h2>GROOM.CRM</h2>
+            <h2>{{ COMPANY_NAME }}</h2>
 
             <h4 :class="$style.subtitle">Приложение для записи клиентов</h4>
 

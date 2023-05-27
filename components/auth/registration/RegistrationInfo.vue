@@ -1,8 +1,13 @@
+<script setup lang="ts">
+// Constants
+import { COMPANY_NAME } from '~/assets/ts/constants';
+</script>
+
 <template>
     <UiPlate rounded class="RegistrationInfo">
         <div :class="$style.wrapper">
             <div class="text-small">
-                Если у Вас уже есть аккаунт в GROOM.CRM
+                Если у Вас уже есть аккаунт в {{ COMPANY_NAME }}
             </div>
 
             <UiButton

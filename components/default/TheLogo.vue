@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import type { PropType } from 'vue';
+
+// Constants
+import { COMPANY_NAME } from '~/assets/ts/constants';
+
 const { $routes } = useNuxtApp();
 
 const props = defineProps({
@@ -25,7 +29,7 @@ const classList = computed(() => [
 
 <template>
     <NuxtLink :to="$routes.index" :class="[$style.TheLogo, classList]">
-        GROOM.CRM
+        {{ COMPANY_NAME }}
     </NuxtLink>
 </template>
 

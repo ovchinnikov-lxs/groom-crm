@@ -5,7 +5,7 @@ import type { ModalTypes } from '~/composables/modal';
 const MODAL_TYPES: {
     [key: string]: any
 } = {
-    popup: defineAsyncComponent(() => import('~/components/ui/UiModal/UiModalPopup/UiModalPopup.vue')),
+    popup: defineAsyncComponent(() => import('~/components/ui/Modal/Popup/UiModalPopup.vue')),
 };
 const modalIsVisible = computed(() => (id: string, type: ModalTypes) => {
     const modalIndex = modal.list.findIndex((m: IModalItem) => m.id === id);

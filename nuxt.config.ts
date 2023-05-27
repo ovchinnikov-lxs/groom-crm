@@ -1,6 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import stylelint from 'vite-plugin-stylelint';
 
+// Constants
+import { COMPANY_NAME, COMPANY_DESCRIPTION } from './assets/ts/constants';
+
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
@@ -21,9 +24,9 @@ export default defineNuxtConfig({
         head: {
             charset: 'utf-16',
             viewport: 'width=device-width, initial-scale=1',
-            title: 'GROOM.CRM',
+            title: COMPANY_NAME,
             meta: [
-                { name: 'description', content: 'Приложение для записи клиентов' },
+                { name: 'description', content: COMPANY_DESCRIPTION },
             ],
         },
     },

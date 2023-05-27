@@ -96,7 +96,7 @@ const { classList } = useModal(props);
         border-radius: calc(var(--ui-unit) * 2.5);
         background-color: var(--ui-white-color);
         will-change: transform;
-        box-shadow: rgba(var(--ui-black-color-rgb), .04) 0 calc(var(--ui-unit) * 2) calc(var(--ui-unit) * 6) 0;
+        box-shadow: var(--ui-box-shadow);
     }
 }
 

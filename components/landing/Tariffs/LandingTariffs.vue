@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { splitThousands } from '~/assets/ts/utils/format-utils';
-const { $routes } = useNuxtApp();
+// Constants
+import { COMPANY_NAME } from '~/assets/ts/constants';
 
+// Utils
+import { splitThousands } from '~/assets/ts/utils/format-utils';
+
+const { $routes } = useNuxtApp();
 const tariffs = useTariffs();
 </script>
 
@@ -15,7 +19,7 @@ const tariffs = useTariffs();
             <h4 :class="$style.title">Тарифы</h4>
 
             <div class="text-large" :class="$style.text">
-                Мы&nbsp;разработали модель ценообразования GROOM.CRM с&nbsp;учетом особенностей
+                Мы&nbsp;разработали модель ценообразования {{ COMPANY_NAME }} с&nbsp;учетом особенностей
                 различных предприятий, чтобы обеспечить ее&nbsp;доступность и&nbsp;бюджетность.
                 <br/>
                 Выбирайте из&nbsp;трех различных тарифных&nbsp;планов:

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Constants
+import { COMPANY_NAME } from '~/assets/ts/constants';
+
 const { $routes } = useNuxtApp();
 </script>
 
@@ -9,12 +12,12 @@ const { $routes } = useNuxtApp();
             <aside :class="$style.aside">
 
                 <h2>
-                    Добро пожаловать в&nbsp;<span>GROOM.CRM</span>&nbsp;&mdash; ваше универсальное решение для управления салоном
+                    Добро пожаловать в&nbsp;<span>{{ COMPANY_NAME }}</span>&nbsp;&mdash; ваше универсальное решение для управления салоном
                 </h2>
 
                 <h4 :class="$style.text">
                     Управляйте онлайн-записями, храните информацию о&nbsp;клиентах, предлагайте удобную регистрацию
-                    и&nbsp;контролируйте свои финансы&nbsp;&mdash; все это с&nbsp;помощью GROOM.CRM
+                    и&nbsp;контролируйте свои финансы&nbsp;&mdash; все это с&nbsp;помощью {{ COMPANY_NAME }}
                 </h4>
 
                 <UiButton :to="$routes.auth.registration" :class="$style.button">

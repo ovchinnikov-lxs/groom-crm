@@ -1,3 +1,8 @@
+<script setup lang="ts">
+// Constants
+import { COMPANY_NAME } from '~/assets/ts/constants';
+</script>
+
 <template>
     <section class="LandingAbout">
         <UiPlate
@@ -8,7 +13,7 @@
             <h3>О НАС</h3>
 
             <div class="text-large">
-                GROOM.CRM была основана командой страстных любителей животных,
+                {{ COMPANY_NAME }} была основана командой страстных любителей животных,
                 которые понимают важность груминга для наших любимых питомцев. <b>Наша миссия&nbsp;&mdash;
                     облегчить жизнь владельцам салонов и&nbsp;их&nbsp;клиентам, предоставив беспроблемный
                     и&nbsp;эффективный способ управления и&nbsp;развития их&nbsp;бизнеса.</b> Мы&nbsp;стремимся
