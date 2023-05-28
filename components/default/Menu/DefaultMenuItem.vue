@@ -76,7 +76,7 @@ defineProps({
     width: 100%;
     height: 100%;
     column-gap: calc(var(--ui-unit) * 3);
-    padding: calc(var(--ui-unit) * 3) 0;
+    padding: calc(var(--ui-unit) * 3);
     font-size: calc(var(--ui-unit) * 4);
     line-height: 150%;
     color: var(--ui-black-color);
