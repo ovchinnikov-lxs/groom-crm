@@ -1,4 +1,4 @@
-# Nuxt3-Template
+# GROOM.CRM
 
 ## Setup
 
