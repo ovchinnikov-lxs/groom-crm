@@ -45,8 +45,6 @@ const userSymbols = computed(() => {
             >
                 <template #header>
                     <UiButton
-                        tag="NuxtLink"
-                        :to="$routes.user.detail"
                         icon
                         size="small"
                         :class="$style.button"
@@ -56,9 +54,18 @@ const userSymbols = computed(() => {
                 </template>
 
                 <template #bottom>
-                    <UiButton size="x-small" @click="onLogout">
-                        Выйти
-                    </UiButton>
+                    <div :class="$style.tooltipBottom">
+                        <UiButton
+                            tag="NuxtLink"
+                            size="x-small"
+                            :to="$routes.user.detail"
+                        >
+                            Аккаунт
+                        </UiButton>
+                        <UiButton size="x-small" @click="onLogout">
+                            Выйти
+                        </UiButton>
+                    </div>
                 </template>
             </UiTooltip>
 
@@ -103,6 +110,12 @@ const userSymbols = computed(() => {
 
 .name {
     color: var(--ui-black-color);
+}
+
+.tooltipBottom {
+    display: flex;
+    flex-direction: column;
+    row-gap: calc(var(--ui-unit) * 2);
 }
 
 .button {
