@@ -70,6 +70,35 @@ defineProps({
         }
     }
 
+    &.--success-color {
+        &.--is-solid {
+            background-color: var(--ui-success-color);
+            color: var(--ui-white-color);
+
+            @include hover {
+                opacity: .8;
+            }
+
+            &.--is-disabled {
+                opacity: .6;
+            }
+        }
+
+        &.--is-outline {
+            border-color: var(--ui-success-color);
+            color: var(--ui-success-color);
+
+            @include hover {
+                background-color: var(--ui-success-color);
+                color: var(--ui-white-color);
+            }
+
+            &.--is-disabled {
+                opacity: .6;
+            }
+        }
+    }
+
     &.--error-color {
         &.--is-solid {
             background-color: var(--ui-error-color);

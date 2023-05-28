@@ -10,13 +10,7 @@ const ROLES_LABELS = {
     [ROLES_KEYS.MASTER]: 'Мастер',
 };
 
-const ROLES_OPTIONS = Object.values(ROLES_KEYS).map(id => ({
-    id,
-    name: ROLES_LABELS[id],
-}));
-
 export {
     ROLES_KEYS,
     ROLES_LABELS,
-    ROLES_OPTIONS,
 };

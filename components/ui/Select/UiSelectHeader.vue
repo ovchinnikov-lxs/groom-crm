@@ -64,7 +64,7 @@ defineProps({
     &.--additional-light-color {
         border-color: var(--ui-white-color);
         background-color: var(--ui-additional-light-color);
-        color: var(--ui-secondary-color);
+        color: var(--ui-black-color);
 
         &.--is-opened {
             border-color: var(--ui-additional-color);

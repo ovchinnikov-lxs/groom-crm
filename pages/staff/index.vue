@@ -1,25 +1,35 @@
 <script setup lang="ts">
-import { IStaffItem } from 'assets/ts/types/staff';
-
 const breadcrumbs = useBreadcrumbs();
 
 breadcrumbs.setList([{
     title: 'Команда',
 }]);
 
-const staff: Array<IStaffItem> = [];
+const { $api } = useNuxtApp();
+const { data: staff, refresh } = await $api.staff.getList({
+    key: 'staff',
+});
 
 function openCreateModal() {
     modal.open({
         component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
+        componentProps: {
+            onCloseModal: refresh,
+        },
     });
 }
+
+const { isOwner } = useUser();
 </script>
 
 <template>
     <UiPage class="StaffPage">
         <template #header>
-            <UiButton :class="$style.button" @click="openCreateModal">
+            <UiButton
+                v-if="isOwner"
+                :class="$style.button"
+                @click="openCreateModal"
+            >
                 Добавить сотрудника
             </UiButton>
         </template>
@@ -27,6 +37,12 @@ function openCreateModal() {
             <UiEmpty v-if="!staff.length">
                 <template #text>Вы еще не добавили сотрудников</template>
             </UiEmpty>
+
+            <StaffTable
+                v-else
+                :list="staff"
+                @update="refresh"
+            />
         </template>
     </UiPage>
 </template>

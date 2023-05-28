@@ -27,6 +27,16 @@ import { UiLink } from '@ovchinnikov-lxs-frontend/ui-kit';
         }
     }
 
+    &.--primary-light-color {
+        color: var(--ui-primary-light-color);
+
+        &.--is-interactive {
+            @include hover {
+                color: var(--ui-primary-color);
+            }
+        }
+    }
+
     &.--black-color {
         color: var(--ui-black-color);
 

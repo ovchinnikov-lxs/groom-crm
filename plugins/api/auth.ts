@@ -36,6 +36,7 @@ export class AuthApi {
             const { data } = await useApi<IUserData>('/auth/sign', {
                 method: 'POST',
                 body,
+                key: 'signup',
             });
 
             if (!data.value) {
@@ -53,6 +54,7 @@ export class AuthApi {
             const { data } = await useApi<IUserData>('/auth/login', {
                 method: 'POST',
                 body,
+                key: 'login',
             });
 
             if (!data.value) {

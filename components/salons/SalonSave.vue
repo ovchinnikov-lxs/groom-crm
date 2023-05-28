@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
-import { ISalonDetail, ISalonSave } from '~/plugins/api/salons';
+import { ISalonDetail, ISalonSave } from 'assets/ts/types/salons';
 
 const props = defineProps({
     method: {
@@ -32,7 +32,7 @@ const actualValue = reactive<ISalonSave>({
     },
 });
 
-watch(() => props.value, val => {
+watch(() => props.value, (val: ISalonDetail) => {
     if (val) {
         actualValue.name = val.name;
         actualValue.preview = val.preview;
@@ -78,7 +78,9 @@ async function onSubmit() {
             await $api.salons.update(props.value.id, actualValue);
         }
 
-        props.onCloseModal();
+        if (props.onCloseModal) {
+            props.onCloseModal();
+        }
         $emit('close');
     } catch (e) {
         console.log(e);
