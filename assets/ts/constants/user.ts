@@ -5,7 +5,7 @@ const USER_STATUSES_TYPES = {
 };
 
 const USER_STATUSES_DISPLAY = {
-    [USER_STATUSES_TYPES.ACTIVE]: 'Активен',
+    [USER_STATUSES_TYPES.ACTIVE]: 'Подтвержден',
     [USER_STATUSES_TYPES.BLOCKED]: 'Заблокирован',
     [USER_STATUSES_TYPES.PENDING]: 'Не подтвержден',
 };

@@ -265,12 +265,12 @@ async function onSubmit() {
                         :error="getError('salary')"
                         :class="$style.form"
                     >
-                        <template #label>Почасовая оплата</template>
+                        <template #label>Ежемесячная оплата</template>
                         <template #default>
                             <UiInput
                                 v-model="$v.salary.$model"
                                 :error="getError('salary')"
-                                placeholder="Введите почасовую оплату"
+                                placeholder="Введите зарплату"
                             />
                         </template>
                     </UiFormCell>

@@ -15,33 +15,34 @@ defineProps({
     },
 });
 
+const { isOwner } = useUser();
+
+
 const columns = [
     { id: 'fullName', name: 'Имя и фамилия' },
     { id: 'phone', name: 'Номер телефона' },
     { id: 'status', name: 'Статус' },
-    { id: 'salary', name: 'Зарплата' },
+    { id: 'salary', name: isOwner ? 'Зарплата' : '' },
     { id: 'roles', name: 'Роли' },
     { id: 'control', name: '' },
 ];
-
+const templateColumns = isOwner ? '25% 15% 15% 15% 20% 10%' : '30% 20% 25% 0% 20% 5%';
 const displayStatus = (status: string): string | undefined => (USER_STATUSES_DISPLAY[status]);
 const statusColor = (status: string): string | undefined => USER_STATUSES_COLORS[status];
 
 const displaySalary = computed(() => (item: IStaffItem) => {
     const roles = item.roles.map(r => r.value);
 
-    if (roles.includes(ROLES_KEYS.OWNER)) {
+    if (roles.includes(ROLES_KEYS.OWNER) || !isOwner) {
         return '';
     }
 
-    if (roles.includes(ROLES_KEYS.ADMIN)) {
-        return `<b>${splitThousands(item.salary)} ₽</b> в час`;
+    if (roles.includes(ROLES_KEYS.ADMIN) && !roles.includes(ROLES_KEYS.MASTER)) {
+        return `<b>${splitThousands(item.salary)} ₽</b> в месяц`;
     }
 
     return `<b>${item.salary}%</b> от стрижки`;
 });
-
-const { isOwner } = useUser();
 
 const emit = defineEmits<{
     update: [void]
@@ -73,7 +74,7 @@ async function onDelete(item: IStaffItem) {
     <div class="StaffTable">
         <UiTable
             :columns="columns"
-            template-columns="25% 15% 15% 15% 20% 10%"
+            :template-columns="templateColumns"
             :data="list"
             :class="$style.wrapper"
         >
