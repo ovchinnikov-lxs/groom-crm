@@ -85,7 +85,7 @@ const { classList } = useModal(props);
         z-index: 1;
         width: 100%;
         height: 100%;
-        background-color: rgba(var(--ui-white-color-rgb), .5);
+        background-color: rgba(var(--ui-black-color-rgb), .8);
         will-change: opacity;
     }
 

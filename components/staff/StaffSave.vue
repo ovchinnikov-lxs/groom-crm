@@ -141,6 +141,7 @@ async function onSubmit() {
         tag="form"
         class="StaffSave"
         @submit.prevent="onSubmit"
+        @close="$emit('close')"
     >
         <template #header>
             <h4>

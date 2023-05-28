@@ -6,7 +6,9 @@ defineProps({
     },
 });
 
-defineEmits<{(e: 'close'): void}>();
+defineEmits<{
+    close: [void]
+}>();
 </script>
 
 <template>
@@ -52,7 +54,7 @@ defineEmits<{(e: 'close'): void}>();
         align-items: center;
         width: 100%;
         column-gap: calc(var(--ui-unit) * 4);
-        padding: calc(var(--ui-unit) * 6) calc(var(--ui-unit) * 12) calc(var(--ui-unit) * 4);
+        padding: var(--ui-col) calc(var(--ui-unit) * 12) calc(var(--ui-unit) * 4);
         background-color: var(--ui-white-color);
     }
 
@@ -76,7 +78,7 @@ defineEmits<{(e: 'close'): void}>();
         bottom: -1px;
         z-index: 3;
         width: 100%;
-        padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 12);
+        padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 12) var(--ui-col);
         background-color: var(--ui-white-color);
 
         & > * {
