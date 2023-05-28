@@ -15,9 +15,9 @@ defineProps({
 <template>
     <UiSelect v-bind="$attrs" :color="color">
 
-        <template #header-component="props">
-            <slot name="header-component" v-bind="props">
-                <UiSelectHeader v-bind="props"/>
+        <template #header-component="headerProps: object">
+            <slot name="header-component" v-bind="headerProps">
+                <UiSelectHeader v-bind="headerProps"/>
             </slot>
         </template>
 
@@ -25,9 +25,9 @@ defineProps({
             <slot name="body-header"></slot>
         </template>
 
-        <template #option-component="props">
-            <slot name="option-component" v-bind="props">
-                <UiSelectOptions v-bind="props"/>
+        <template #option-component="optionProps: object">
+            <slot name="option-component" v-bind="optionProps">
+                <UiSelectOptions v-bind="optionProps"/>
             </slot>
         </template>
 

@@ -2,8 +2,10 @@
 // UiKit Components
 import { UiPopover } from '@ovchinnikov-lxs-frontend/ui-kit';
 
+import type { PropType } from 'vue';
+import type { TypeSize } from 'assets/ts/types';
+
 // Utils
-import { PropType } from 'vue';
 import { leadingZero } from 'assets/ts/utils/format-utils';
 
 const props = defineProps({
@@ -31,7 +33,7 @@ const props = defineProps({
     },
 
     size: {
-        type: String,
+        type: String as PropType<TypeSize>,
         default: 'medium',
     },
 
@@ -100,7 +102,7 @@ function onMinuteSelect(minutes: number) {
         parent-width
         :size="size"
         :color="color"
-        :error="error"
+        :error="String(error)"
         class="UiTimeSelect"
     >
         <template #top>

@@ -43,8 +43,14 @@ function emitInput() {
     $emit('update:modelValue', actualValue.value);
 }
 
-async function onInput(file: File) {
+async function onInput(file: TypeValue) {
     if (!file) {
+        return false;
+    }
+
+    if (typeof file === 'string') {
+        actualValue.value = file;
+        emitInput();
         return false;
     }
 

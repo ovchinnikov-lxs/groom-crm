@@ -8,6 +8,19 @@ async function onLogout() {
     await auth.logout();
     navigateTo($routes.auth.login);
 }
+
+const userSymbols = computed(() => {
+    const { fullName } = auth.user;
+
+    if (!fullName) {
+        return '';
+    }
+
+    return fullName
+        .split(' ')
+        .map((i: string) => i[0])
+        .join('');
+});
 </script>
 
 <template>
@@ -22,7 +35,7 @@ async function onLogout() {
                     :class="$style.preview"
                 />
 
-                <div>{{ auth.user?.fullName?.split(' ').map(i => i[0]).join('') }}</div>
+                <div>{{ userSymbols }}</div>
             </div>
 
             <UiTooltip

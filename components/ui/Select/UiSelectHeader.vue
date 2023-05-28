@@ -3,6 +3,7 @@ import type { PropType } from 'vue';
 
 // UiKit Components
 import { UiSelectHeader } from '@ovchinnikov-lxs-frontend/ui-kit';
+import type { TypeSize } from 'assets/ts/types';
 
 defineProps({
     color: {
@@ -11,7 +12,7 @@ defineProps({
     },
 
     size: {
-        type: String,
+        type: String as PropType<TypeSize>,
         default: 'medium',
     },
 });
@@ -23,7 +24,6 @@ defineProps({
         :color="color"
         :size="size"
     >
-
         <template v-if="$slots.default" #default>
             <slot></slot>
         </template>

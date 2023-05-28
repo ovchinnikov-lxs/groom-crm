@@ -13,7 +13,7 @@ export interface IScheduleItem {
     status: 'active' | 'cancelled' | 'ready'
 }
 
-interface IScheduleMaster {
+export interface IScheduleMaster {
     id: string
     name: string
     schedule: Array<IScheduleItem>

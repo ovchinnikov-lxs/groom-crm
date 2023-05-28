@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { IStaffItem } from 'assets/ts/types/staff';
+
 const breadcrumbs = useBreadcrumbs();
 
 breadcrumbs.setList([{
     title: 'Команда',
 }]);
 
-const staff = [];
+const staff: Array<IStaffItem> = [];
 
 function openCreateModal() {
     modal.open({

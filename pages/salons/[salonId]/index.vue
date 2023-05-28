@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { modal } from '~/composables/modal';
 import { ISalonDetail } from '~/plugins/api/salons';
+import { IScheduleMaster } from '~/components/salons/detail/SalonsDetailSchedule.vue';
 
 const { $routes, $api } = useNuxtApp();
 
@@ -51,7 +52,7 @@ async function onDelete() {
     }
 }
 
-const scheduleMock = [
+const scheduleMock: IScheduleMaster[] = [
     // {
     //     id: '1',
     //     name: 'Анастасия Молькова',

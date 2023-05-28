@@ -13,8 +13,9 @@ interface IModalParams {
     type?: ModalTypes
 }
 
-export interface IModalItem extends IModalParams{
+export interface IModalItem extends IModalParams {
     id: string
+    type: ModalTypes
 }
 
 interface IModal {
