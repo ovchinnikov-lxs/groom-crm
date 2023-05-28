@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { IRolesItem } from '~/plugins/api/roles';
+import { IRolesItem } from '~/assets/ts/types/roles';
 
 export const useRoles = defineStore('roles', {
     state: (): {

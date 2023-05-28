@@ -68,6 +68,49 @@ defineProps({
                 opacity: .6;
             }
         }
+
+        &.--is-outline {
+            border-color: var(--ui-primary-color);
+            color: var(--ui-primary-color);
+
+            @include hover {
+                background-color: var(--ui-primary-color);
+                color: var(--ui-white-color);
+            }
+
+            &.--is-disabled {
+                opacity: .6;
+            }
+        }
+    }
+
+    &.--additional-color {
+        &.--is-solid {
+            background-color: var(--ui-additional-color);
+            color: var(--ui-white-color);
+
+            @include hover {
+                background-color: var(--ui-additional-light-color);
+            }
+
+            &.--is-disabled {
+                opacity: .6;
+            }
+        }
+
+        &.--is-outline {
+            border-color: var(--ui-additional-color);
+            color: var(--ui-additional-color);
+
+            @include hover {
+                background-color: var(--ui-additional-color);
+                color: var(--ui-white-color);
+            }
+
+            &.--is-disabled {
+                opacity: .6;
+            }
+        }
     }
 
     &.--success-color {

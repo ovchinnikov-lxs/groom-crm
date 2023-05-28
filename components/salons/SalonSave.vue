@@ -32,7 +32,7 @@ const actualValue = reactive<ISalonSave>({
     },
 });
 
-watch(() => props.value, (val: ISalonDetail) => {
+watch(() => props.value, (val: ISalonDetail | null) => {
     if (val) {
         actualValue.name = val.name;
         actualValue.preview = val.preview;

@@ -4,6 +4,7 @@ import type { PropType } from 'vue';
 
 // Constants
 import { ROLES_KEYS } from 'assets/ts/constants/roles';
+import { IStaffItem, IStaffSave } from 'assets/ts/types/staff';
 
 const props = defineProps({
     method: {
@@ -12,7 +13,7 @@ const props = defineProps({
     },
 
     value: {
-        type: Object,
+        type: Object as PropType<IStaffItem>,
         default: () => ({}),
     },
 
@@ -22,16 +23,7 @@ const props = defineProps({
     },
 });
 
-const actualValue = reactive<{
-    fullName: string | null
-    phone: string | null
-    roles: Array<string>
-    preview: string | null
-    description: string | null
-    salary: number
-    // breeds: Array<string>
-    // services: Array<string>
-}>({
+const actualValue = reactive<IStaffSave>({
     fullName: '',
     phone: '',
     roles: [],
@@ -42,7 +34,7 @@ const actualValue = reactive<{
     // services: [],
 });
 
-watch(() => props.value, (val: object) => {
+watch(() => props.value, (val: IStaffItem) => {
     if (!Object.keys(val).length) {
         return false;
     }
@@ -56,7 +48,7 @@ watch(() => props.value, (val: object) => {
 }, { immediate: true });
 const { list: rolesOptions } = useRoles();
 
-const roleIs = computed(() => key => {
+const roleIs = computed(() => (key: string) => {
     const keyRole = rolesOptions.find(r => r.value === key);
 
     if (!keyRole) {

@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { IStaffItem } from 'assets/ts/types/staff';
+
 // Utils
 import { splitThousands } from '~/assets/ts/utils/format-utils';
 
 // Constants
 import { ROLES_KEYS } from 'assets/ts/constants/roles';
+import { USER_STATUSES_COLORS, USER_STATUSES_DISPLAY } from 'assets/ts/constants/user';
 
 defineProps({
     list: {
@@ -21,12 +24,10 @@ const columns = [
     { id: 'control', name: '' },
 ];
 
-const displayStatus = status => ({
-    active: 'Активированный',
-    blocked: 'Заблокированный',
-    pending: 'Не подтвержденный',
-}[status]);
-const displaySalary = computed(() => item => {
+const displayStatus = (status: string): string | undefined => (USER_STATUSES_DISPLAY[status]);
+const statusColor = (status: string): string | undefined => USER_STATUSES_COLORS[status];
+
+const displaySalary = computed(() => (item: IStaffItem) => {
     const roles = item.roles.map(r => r.value);
 
     if (roles.includes(ROLES_KEYS.OWNER)) {
@@ -37,7 +38,7 @@ const displaySalary = computed(() => item => {
         return `<b>${splitThousands(item.salary)} ₽</b> в час`;
     }
 
-    return `<b>${item.salary}%</b> от стоимости`;
+    return `<b>${item.salary}%</b> от стрижки`;
 });
 
 const { isOwner } = useUser();
@@ -45,7 +46,7 @@ const { isOwner } = useUser();
 const emit = defineEmits<{
     update: [void]
 }>();
-function onEdit(value) {
+function onEdit(value: IStaffItem) {
     modal.open({
         component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
         componentProps: {
@@ -56,7 +57,7 @@ function onEdit(value) {
     });
 }
 
-async function onDelete(item: object) {
+async function onDelete(item: IStaffItem) {
     try {
         const { $api } = useNuxtApp();
 
@@ -76,7 +77,7 @@ async function onDelete(item: object) {
             :data="list"
             :class="$style.wrapper"
         >
-            <template #item="itemProps: {columnField: string, value: any, item: object}">
+            <template #item="itemProps: {columnField: string, value: keyof IStaffItem, item: IStaffItem }">
                 <div v-if="itemProps.columnField === 'fullName'" :class="$style.fullName">
                     {{ itemProps.value }}
                 </div>
@@ -90,13 +91,19 @@ async function onDelete(item: object) {
                     {{ itemProps.value }}
                 </UiLink>
 
-                <div v-if="itemProps.columnField === 'status'">
-                    {{ displayStatus(itemProps.value) }}
-                </div>
+                <UiButton
+                    v-if="itemProps.columnField === 'status'"
+                    size="x-small"
+                    :color="statusColor(itemProps.value)"
+                    outline
+                    :class="$style.tag"
+                >
+                    {{ typeof itemProps.value === 'string' ? displayStatus(itemProps.value) : '' }}
+                </UiButton>
 
 
                 <div v-if="itemProps.columnField === 'roles'">
-                    {{ itemProps.value.map(i => i.name).join(', ') }}
+                    {{ Array.isArray(itemProps.value) ? itemProps.value.map(i => i.name).join(', ') : '' }}
                 </div>
 
                 <div v-if="itemProps.columnField === 'salary'" v-html="displaySalary(itemProps.item)">
@@ -144,6 +151,7 @@ async function onDelete(item: object) {
 }
 
 .tag {
+    width: fit-content;
     pointer-events: none;
 }
 

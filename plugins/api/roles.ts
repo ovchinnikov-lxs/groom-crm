@@ -1,11 +1,5 @@
 import { useApi } from '~/composables/useApi';
-
-export interface IRolesItem {
-    id: string;
-    name: string;
-    value: string;
-    description: string;
-}
+import { IRolesItem } from '~/assets/ts/types/roles';
 
 export class RolesApi {
     getList() {
