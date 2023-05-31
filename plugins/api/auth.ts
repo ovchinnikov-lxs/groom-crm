@@ -33,7 +33,7 @@ export class AuthApi {
 
     async signup(body: iSignupBody) {
         try {
-            const { data } = await useApi<IUserData>('/auth/sign', {
+            const { data } = await useApi<IUserData>('/auth/signup', {
                 method: 'POST',
                 body,
                 key: 'signup',

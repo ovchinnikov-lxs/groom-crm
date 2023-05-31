@@ -1,7 +1,5 @@
 <script setup lang="ts">
-// Composables
-import { useValidate } from '~/composables/useValidate';
-import { useTariffs } from '~/stores/tarrifs';
+// Constants
 import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
 
 const route = useRoute();
@@ -51,10 +49,14 @@ async function onSubmit() {
 
         const { $api, $routes } = useNuxtApp();
 
+        const tariffId = route.query.tariffId
+            ? route.query.tariffId
+            : tariffs.list.find(t => t.name === TARIFFS_KEY.BASIC)?.id;
+
 
         await $api.auth.signup({
             ...actualValue,
-            tariffId: String(route.query.tariffId) || tariffs.list.find(t => t.name === TARIFFS_KEY.PREMIUM)?.id,
+            tariffId,
         });
         await auth.fetchUser();
         await useGlobal().fetchInitial();
