@@ -35,7 +35,9 @@ defineProps({
 });
 
 defineEmits<{(e: 'update'): void; (e: 'delete'): void }>();
+const { isOwner } = useUser();
 </script>
+
 <template>
     <UiPlate class="SalonsDetailInfo">
         <div :class="$style.wrapper">
@@ -60,7 +62,7 @@ defineEmits<{(e: 'update'): void; (e: 'delete'): void }>();
 
             </div>
 
-            <div :class="$style.controls">
+            <div v-if="isOwner" :class="$style.controls">
                 <UiButton size="small" @click="$emit('update')">
                     Редактировать
                 </UiButton>

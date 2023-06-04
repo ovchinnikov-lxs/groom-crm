@@ -2,6 +2,7 @@
 import { modal } from '~/composables/modal';
 
 const { $routes, $api } = useNuxtApp();
+const { isOwner } = useUser();
 const breadcrumbs = useBreadcrumbs();
 
 const { data: serviceCategory, refresh: categoryRefresh } = await $api.services.getCategoryDetail(String(useRoute().params.categoryId), {
@@ -75,7 +76,7 @@ function createService() {
                     @delete="onDelete"
                 />
 
-                <div :class="$style.control">
+                <div v-if="isOwner" :class="$style.control">
                     <UiHelp type="tutorial">
                         <template #title>Список услуг</template>
                         <template #default>

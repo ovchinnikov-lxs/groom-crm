@@ -9,9 +9,10 @@ defineProps({
     },
 });
 defineEmits<{
-    update: [void];
-    delete: [void];
+    update: [void]
+    delete: [void]
 }>();
+const { isOwner } = useUser();
 </script>
 
 <template>
@@ -36,7 +37,7 @@ defineEmits<{
                 </div>
             </div>
 
-            <div :class="$style.controls">
+            <div v-if="isOwner" :class="$style.controls">
                 <UiButton size="small" @click="$emit('update')">
                     Редактировать
                 </UiButton>
