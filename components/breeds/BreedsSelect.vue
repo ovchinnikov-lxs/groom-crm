@@ -80,9 +80,9 @@ async function fetchOptions(initial = false) {
         },
     });
 
-    optionsList.value = data.value;
+    optionsList.value = data.value.rows;
     if (initial) {
-        optionsDict.value = data.value.reduce((acc: object, option: object) => ({
+        optionsDict.value = data.value.rows.reduce((acc: object, option: object) => ({
             ...acc,
             [option.id]: option,
         }), {});
