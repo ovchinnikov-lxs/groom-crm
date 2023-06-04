@@ -25,8 +25,16 @@ const columns = [
     { id: 'salary', name: isOwner ? 'Зарплата' : '' },
     { id: 'roles', name: 'Роли' },
     { id: 'control', name: '' },
-];
-const templateColumns = isOwner ? '25% 15% 15% 15% 20% 10%' : '30% 20% 25% 0% 20% 5%';
+].map((i, index) => {
+    const TEMPLATE_COLUMNS = isOwner
+        ? ['25%', '15%', '15%', '15%', '20%', '10%']
+        : ['30%', '20%', '25%', '0%', '20%', '5%'];
+
+    return {
+        ...i,
+        width: TEMPLATE_COLUMNS[index],
+    };
+});
 const displayStatus = (status: string): string | undefined => (USER_STATUSES_DISPLAY[status]);
 const statusColor = (status: string): string | undefined => USER_STATUSES_COLORS[status];
 
@@ -51,10 +59,9 @@ function onEdit(value: IStaffItem) {
     modal.open({
         component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
         componentProps: {
-            method: 'PATCH',
             value,
-            onCloseModal: () => emit('update'),
         },
+        onClose: () => emit('update'),
     });
 }
 
@@ -74,7 +81,6 @@ async function onDelete(item: IStaffItem) {
     <div class="StaffTable">
         <UiTable
             :columns="columns"
-            :template-columns="templateColumns"
             :data="list"
             :class="$style.wrapper"
         >

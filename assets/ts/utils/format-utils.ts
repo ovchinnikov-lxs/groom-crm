@@ -1,5 +1,15 @@
 const leadingZero = (num: number): number | string => num < 10 ? `0${num}` : num;
 
+const getHumanTime = (value: number) => {
+    const hours = Math.floor(value / 60);
+    const minutes = value % 60;
+
+    return {
+        hours,
+        minutes,
+    };
+};
+
 const plural = (num: number, postfixes: Array<string>) => {
     if (!num && isNaN(num)) {
         console.warn('[plural] Wrong Number ', num);
@@ -45,4 +55,5 @@ export {
     splitThousands,
     leadingZero,
     plural,
+    getHumanTime,
 };

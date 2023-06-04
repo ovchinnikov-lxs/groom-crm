@@ -3,18 +3,8 @@ import type { PropType } from 'vue';
 import { ISalonDetail, ISalonSave } from 'assets/ts/types/salons';
 
 const props = defineProps({
-    method: {
-        type: String as PropType<'POST' | 'PATCH'>,
-        default: 'POST',
-    },
-
     value: {
-        type: [Object, null] as PropType<ISalonDetail | null>,
-        default: null,
-    },
-
-    onCloseModal: {
-        type: Function,
+        type: Object as PropType<ISalonDetail>,
         default: () => ({}),
     },
 });
@@ -68,7 +58,7 @@ async function onSubmit() {
 
         const { $api, $routes } = useNuxtApp();
 
-        if (props.method === 'POST') {
+        if (!Object.keys(props.value).length) {
             const { data } = await $api.salons.create(actualValue);
 
             if (data.value) {
@@ -76,10 +66,6 @@ async function onSubmit() {
             }
         } else if (props.value) {
             await $api.salons.update(props.value.id, actualValue);
-        }
-
-        if (props.onCloseModal) {
-            props.onCloseModal();
         }
         $emit('close');
     } catch (e) {
@@ -104,7 +90,7 @@ async function onSubmit() {
     >
         <template #header>
             <h4>
-                <template v-if="method === 'POST'">Добавить</template>
+                <template v-if="!Object.keys(value).length">Добавить</template>
                 <template v-else>Редактировать</template>
                 салон
             </h4>

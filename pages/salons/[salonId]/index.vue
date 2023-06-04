@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { modal } from '~/composables/modal';
-import { ISalonDetail } from '~/plugins/api/salons';
 import { IScheduleMaster } from '~/components/salons/detail/SalonsDetailSchedule.vue';
+import { ISalonDetail } from 'assets/ts/types/salons';
 
 const { $routes, $api } = useNuxtApp();
 
@@ -33,12 +33,11 @@ function onUpdate() {
     modal.open({
         component: defineAsyncComponent(() => import('~/components/salons/SalonSave.vue')),
         componentProps: {
-            method: 'PATCH',
             value: salon,
-            onCloseModal: async () => {
-                await refresh();
-                updateBreadcrumbs();
-            },
+        },
+        onClose: async () => {
+            await refresh();
+            updateBreadcrumbs();
         },
     });
 }

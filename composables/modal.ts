@@ -11,6 +11,7 @@ interface IModalParams {
     modalProps?: object
     componentProps?: object
     type?: ModalTypes
+    onClose: () => void
 }
 
 export interface IModalItem extends IModalParams {
@@ -27,13 +28,14 @@ interface IModal {
 export const modal = reactive<IModal>({
     bodyIsLocked: false,
     list: [],
-    open({ component, modalProps, componentProps, type = 'popup' } : IModalParams) {
+    open({ component, modalProps, componentProps, type = 'popup', onClose } : IModalParams) {
         this.list.push({
             id: uuidv4(),
             component: shallowRef(component),
             modalProps,
             componentProps,
             type,
+            onClose,
         });
 
         if (!this.bodyIsLocked) {
@@ -44,8 +46,12 @@ export const modal = reactive<IModal>({
     close(id) {
         const modalIndex = this.list.findIndex(m => m.id === id);
 
-        this.list.splice(modalIndex, 1);
+        const currentModal = this.list[modalIndex];
 
+        if (currentModal.onClose) {
+            currentModal.onClose();
+        }
+        this.list.splice(modalIndex, 1);
 
         if (!this.list.length && this.bodyIsLocked) {
             unlockBody();

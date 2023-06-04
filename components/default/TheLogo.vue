@@ -28,7 +28,7 @@ const classList = computed(() => [
 </script>
 
 <template>
-    <NuxtLink :to="$routes.index" :class="[$style.TheLogo, classList]">
+    <NuxtLink :to="$routes.landing" :class="[$style.TheLogo, classList]">
         {{ COMPANY_NAME }}
     </NuxtLink>
 </template>

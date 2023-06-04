@@ -29,6 +29,10 @@ defineProps({
         flex-direction: column;
     }
 
+    &__label {
+        display: flex;
+    }
+
     &__error {
         color: var(--ui-error-color);
     }
@@ -39,9 +43,8 @@ defineProps({
                 row-gap: var(--ui-unit);
             }
 
-            &__label,
-            &__error {
-                padding-left: calc(var(--ui-unit) * 5);
+            &__label {
+                column-gap: calc(var(--ui-unit) * 2);
             }
 
             &__label,
@@ -54,7 +57,12 @@ defineProps({
 
     &.--secondary-color {
         #{$cell} {
-            &__label,
+            &__label {
+                span {
+                    color: var(--ui-secondary-color);
+                }
+            }
+
             &__info {
                 color: var(--ui-secondary-color);
             }

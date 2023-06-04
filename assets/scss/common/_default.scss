@@ -15,6 +15,7 @@
     --ui-error-color: #ef3d3d;
     --ui-success-color: #32cd32;
     --ui-warning-color: #ffa000;
+    // todo: Убрать rgb сделать палитру hex8
     --ui-primary-color-rgb: 222, 75, 80;
     --ui-primary-light-color-rgb: 241, 116, 121;
     --ui-secondary-color-rgb: 118, 119, 124;
@@ -34,6 +35,7 @@ body {
 }
 
 .container {
-    width: calc(var(--ui-col) * 36);
+    max-width: calc(var(--ui-unit) * 366);
     margin: 0 auto;
+    padding: 0 calc(var(--ui-unit) * 3);
 }

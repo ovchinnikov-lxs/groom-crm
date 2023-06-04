@@ -7,18 +7,8 @@ import { ROLES_KEYS } from 'assets/ts/constants/roles';
 import { IStaffItem, IStaffSave } from 'assets/ts/types/staff';
 
 const props = defineProps({
-    method: {
-        type: String as PropType<'POST' | 'PATCH'>,
-        default: 'POST',
-    },
-
     value: {
         type: Object as PropType<IStaffItem>,
-        default: () => ({}),
-    },
-
-    onCloseModal: {
-        type: Function,
         default: () => ({}),
     },
 });
@@ -120,15 +110,12 @@ async function onSubmit() {
 
         const { $api } = useNuxtApp();
 
-        if (props.method === 'POST') {
+        if (!Object.keys(props.value).length) {
             await $api.staff.create(actualValue);
         } else if (props.value) {
             await $api.staff.update(props.value.id, actualValue);
         }
 
-        if (props.onCloseModal) {
-            props.onCloseModal();
-        }
         $emit('close');
     } catch (e) {
         console.log(e);
@@ -145,7 +132,7 @@ async function onSubmit() {
     >
         <template #header>
             <h4>
-                <template v-if="method === 'POST'">
+                <template v-if="!Object.keys(value).length">
                     Добавить
                 </template>
                 <template v-else>

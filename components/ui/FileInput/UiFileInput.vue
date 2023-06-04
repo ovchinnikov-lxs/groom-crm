@@ -191,7 +191,6 @@ const buttonSize = computed(() => {
             }
 
             &__info {
-                padding-left: calc(var(--ui-unit) * 5);
                 font-size: calc(var(--ui-unit) * 3);
             }
         }

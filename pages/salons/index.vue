@@ -11,7 +11,7 @@ breadcrumbs.setList([{
 
 const { $api } = useNuxtApp();
 const { data: list } = await $api.salons.getList<object[]>({
-    key: 'list',
+    key: 'salons',
 });
 const { isOwner } = useUser();
 

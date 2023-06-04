@@ -10,7 +10,7 @@
             </div>
 
             <UiLink
-                :href="$routes.index"
+                :href="$routes.landing"
                 color="black"
                 size="small"
                 :class="$style.link"

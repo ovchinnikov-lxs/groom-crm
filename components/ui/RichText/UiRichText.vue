@@ -14,12 +14,15 @@ defineProps({
     <UiRichText v-bind="$attrs" :color="color"/>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .UiRichText {
     border-style: solid;
 
     &.--medium-size {
-        padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 5);
+        .ProseMirror {
+            padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 5);
+        }
+
         border-radius: calc(var(--ui-unit) * 2.5);
         border-width: 1px;
         font-size: calc(var(--ui-unit) * 3.5);

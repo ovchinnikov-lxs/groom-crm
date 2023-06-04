@@ -14,8 +14,8 @@ function openCreateModal() {
     modal.open({
         component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
         componentProps: {
-            onCloseModal: refresh,
         },
+        onClose: refresh,
     });
 }
 

@@ -13,6 +13,11 @@ const navItems = [
         icon: 'staff',
     },
     {
+        to: $routes.services.list,
+        title: 'Услуги',
+        icon: 'services',
+    },
+    {
         to: $routes.finance.detail,
         title: 'Финансы',
         icon: 'finance',

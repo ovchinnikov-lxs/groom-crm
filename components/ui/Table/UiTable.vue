@@ -4,6 +4,7 @@ import type { PropType } from 'vue';
 interface IColumn {
     id: string;
     name: string;
+    width?: string;
 }
 
 const props = defineProps({
@@ -12,24 +13,61 @@ const props = defineProps({
         required: true,
     },
 
-    templateColumns: {
-        type: String,
-        default: '',
-    },
-
     data: {
         type: Array,
         default: () => [],
     },
+
+    interactive: {
+        type: Boolean,
+        default: false,
+    },
 });
 
-const styleList = computed(() => [{
-    '--columns-count': props.templateColumns || `repeat(${props.columns?.length}, 1fr)`,
+const classList = computed(() => [{
+    '--is-interactive': props.interactive,
 }]);
+
+// const styleList = computed(() => [{
+// '--columns-count': props.columns.map(i => i.width) || `repeat(${props.columns?.length}, 1fr)`,
+// }]);
+const styleList = computed(() => {
+    if (!props.columns) {
+        return [];
+    }
+
+    let columnsCount;
+
+    if (props.columns.every(i => i.width)) {
+        columnsCount = props.columns.map((i: IColumn) => i.width).join(' ');
+    } else {
+        columnsCount = `repeat(${props.columns.length}, 1fr)`;
+    }
+
+    return [{
+        '--columns-count': columnsCount,
+    }];
+});
+
+const $emit = defineEmits<{
+    'click-row': [item: object]
+}>();
+
+function onClickRow(item: object) {
+    if (!props.interactive) {
+        return false;
+    }
+
+    $emit('click-row', item);
+}
 </script>
 
 <template>
-    <div :style="styleList" class="UiTable">
+    <div
+        :style="styleList"
+        :class="classList"
+        class="UiTable"
+    >
         <div class="UiTable__wrapper">
             <div
                 v-for="item in columns"
@@ -44,6 +82,7 @@ const styleList = computed(() => [{
                     v-for="col in columns"
                     :key="index + col.id"
                     class="UiTable__data-row UiTable__item text-x-small"
+                    @click="onClickRow(item)"
                 >
                     <slot
                         name="item"
@@ -51,9 +90,11 @@ const styleList = computed(() => [{
                         :item="item"
                         :value="item[col.id]"
                     >
-                        <div v-if="item[col.id]" class="UiTable__data-value">
-
-                            {{ item[col.id] }}
+                        <div
+                            v-if="item[col.id]"
+                            class="UiTable__data-value"
+                            v-html="item[col.id]"
+                        >
                         </div>
 
                         <div v-else class="UiTable__data-empty">
@@ -68,6 +109,8 @@ const styleList = computed(() => [{
 
 <style lang="scss">
 .UiTable {
+    $table: &;
+
     &__wrapper {
         display: grid;
         grid-template-columns: var(--columns-count);
@@ -81,7 +124,7 @@ const styleList = computed(() => [{
     }
 
     &__item {
-        border-bottom: 1px solid var(--ui-secondary-light-color);
+        border-bottom: 1px solid rgba(var(--ui-secondary-light-color-rgb), .48);
     }
 
     &__data-row {
@@ -93,6 +136,14 @@ const styleList = computed(() => [{
 
     &__data-empty {
         color: var(--ui-secondary-color);
+    }
+
+    &.--is-interactive {
+        #{$table} {
+            &__data-row {
+                cursor: pointer;
+            }
+        }
     }
 }
 </style>

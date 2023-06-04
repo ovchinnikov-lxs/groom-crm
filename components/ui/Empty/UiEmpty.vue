@@ -3,7 +3,7 @@
         <div class="UiEmpty__wrapper">
 
             <UiImage
-                src="images/empty.png"
+                src="/images/empty.png"
                 :has-preview="false"
                 object-fit="contain"
                 class="UiEmpty__image"
