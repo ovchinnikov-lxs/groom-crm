@@ -107,6 +107,12 @@ defineProps({
             transform: translateY(0);
         }
     }
+
+    @include respond-to(mobile) {
+        b {
+            display: none;
+        }
+    }
 }
 
 .icon {

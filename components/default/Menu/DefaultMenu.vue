@@ -18,6 +18,11 @@ const navItems = [
         icon: 'services',
     },
     {
+        to: $routes.breeds.list,
+        title: 'Породы',
+        icon: 'breeds',
+    },
+    {
         to: $routes.finance.detail,
         title: 'Финансы',
         icon: 'finance',
