@@ -62,6 +62,7 @@ const linkClassList = computed(() => (link: { hash: string }) => [{
 
 <style module lang="scss">
 .wrapper {
+    backdrop-filter: blur(var(--ui-unit));
     background-color: rgba(var(--ui-additional-light-color-rgb), .8);
 }
 
