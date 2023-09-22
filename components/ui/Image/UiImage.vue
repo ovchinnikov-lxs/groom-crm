@@ -1,5 +1,11 @@
 <script setup lang="ts">
-// TODO: Добавить placeholder
+/**
+ * TODO:
+ * 1) Добавить провайдера
+ * 2) Добавить норм управление lazy
+ * 3) Да и вообще все пропсы вынести и так же для свайпера тоже сделать логику,
+ * для дальнейшего переноса в nuxt3-template
+ */
 defineProps({
     hasPreview: {
         type: Boolean,
@@ -11,43 +17,15 @@ defineProps({
         default: '',
     },
 });
+
+const img = useImage();
 </script>
 
 <template>
     <NuxtImg
+        :placeholder="hasPreview ? img(`/images/skeleton.svg`) : false"
         :src="src"
         class="UiImage"
         loading="lazy"
     />
 </template>
-
-<style lang="scss">
-.UiImage__preview {
-    background-color: var(--ui-additional-color);
-
-    &:after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-image:
-            linear-gradient(
-                90deg,
-                rgba(var(--ui-white-color-rgb), 0) 0,
-                rgba(var(--ui-white-color-rgb), .2) 20%,
-                rgba(var(--ui-white-color-rgb), .5) 60%,
-                rgba(var(--ui-white-color-rgb), 0)
-            );
-        transform: translateX(-100%);
-        animation: shimmer 2s infinite;
-    }
-
-    @keyframes shimmer {
-        100% {
-            transform: translateX(100%);
-        }
-    }
-}
-</style>

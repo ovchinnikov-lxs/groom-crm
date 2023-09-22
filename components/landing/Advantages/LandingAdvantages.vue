@@ -22,7 +22,6 @@ import { COMPANY_NAME } from '~/assets/ts/constants';
 
                     <UiImage
                         :has-preview="false"
-                        object-fit="contain"
                         src="/images/dog.png"
                         :class="$style.image"
                     />
@@ -90,6 +89,7 @@ import { COMPANY_NAME } from '~/assets/ts/constants';
     left: 50%;
     z-index: 3;
     width: 100%;
+    object-fit: contain;
     height: 100%;
     transform: translate3d(-50%, -50%, 0);
 }
