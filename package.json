@@ -16,6 +16,7 @@
         "lint:fix": "npm run el:fix && npm run sl:fix"
     },
     "dependencies": {
+        "@nuxt/image": "^1.0.0-rc.1",
         "@googlemaps/js-api-loader": "^1.15.1",
         "@nuxtjs/svg-sprite": "^1.0.2",
         "@ovchinnikov-lxs-frontend/ui-kit": "^2.10.2",

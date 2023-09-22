@@ -57,26 +57,26 @@ async function onDelete(id: string) {
             :columns="columns"
             :class="$style.wrapper"
         >
-            <template #item="itemProps: {columnField: string, value: any, item }">
-                <div v-if="itemProps.columnField === 'price'">
-                    {{ splitThousands(itemProps.value) }} ₽
-                </div>
+            <template #price="{ value }">
+                {{ splitThousands(value) }} ₽
+            </template>
 
-                <div v-if="itemProps.columnField === 'duration'">
-                    <template v-if="getHumanTime(itemProps.value).hours">
-                        {{ getHumanTime(itemProps.value).hours }} час{{ plural(getHumanTime(itemProps.value).hours, ['', 'а', 'ов']) }}
-                    </template>
-                    <template v-if="getHumanTime(itemProps.value).minutes">
-                        <template v-if="getHumanTime(itemProps.value).hours">,</template>
-                        {{ getHumanTime(itemProps.value).minutes }} минут{{ plural(getHumanTime(itemProps.value).minutes, ['а', 'ы', '']) }}
-                    </template>
-                </div>
+            <template #duration="{ value }">
+                <template v-if="getHumanTime(value).hours">
+                    {{ getHumanTime(value).hours }} час{{ plural(getHumanTime(value).hours, ['', 'а', 'ов']) }}
+                </template>
+                <template v-if="getHumanTime(value).minutes">
+                    <template v-if="getHumanTime(value).hours">,</template>
+                    {{ getHumanTime(value).minutes }} минут{{ plural(getHumanTime(value).minutes, ['а', 'ы', '']) }}
+                </template>
+            </template>
 
-                <div v-if="itemProps.columnField === 'breeds'">
-                    <b>{{ itemProps.value.map(i => i.name).join(', ') }}</b>
-                </div>
+            <template #breeds="{value}">
+                <b>{{ value.map((i) => i.name).join(', ') }}</b>
+            </template>
 
-                <div v-if="itemProps.columnField === 'control'" :class="$style.control">
+            <template #control="{ item }">
+                <div :class="$style.control">
                     <UiTooltip v-if="isOwner" interactive>
                         <template #header>
                             <UiButton size="small" icon>
@@ -85,10 +85,10 @@ async function onDelete(id: string) {
                         </template>
                         <template #bottom>
                             <div :class="$style.tooltipBottom">
-                                <UiButton size="x-small" @click="onEdit(itemProps.item)">
+                                <UiButton size="x-small" @click="onEdit(item)">
                                     Редактировать
                                 </UiButton>
-                                <UiButton size="x-small" @click="onDelete(itemProps.item.id)">
+                                <UiButton size="x-small" @click="onDelete(item.id)">
                                     Удалить
                                 </UiButton>
                             </div>

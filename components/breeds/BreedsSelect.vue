@@ -7,6 +7,12 @@ import _ from 'lodash';
 
 type ValueType = Array<string>;
 
+interface IOption {
+    id: string;
+    name: string;
+    preview: string;
+}
+
 const props = defineProps({
     modelValue: {
         type: Array as PropType<ValueType>,
@@ -31,6 +37,7 @@ const $emit = defineEmits<{
 
 const suggestValue = ref('');
 const actualValue = ref<ValueType>([]);
+
 watch(props.modelValue, (val: ValueType) => {
     actualValue.value = [...val];
 }, { immediate: true });
@@ -67,8 +74,10 @@ function onFocusOut() {
 }
 
 // OPTIONS SECTION
-const optionsDict = ref({});
-const optionsList = ref([]);
+const optionsDict = ref<{
+    [key: string]: IOption
+}>({});
+const optionsList = ref <IOption[]>([]);
 const actualOptionsList = computed(() => optionsList.value.filter(i => !actualValue.value.includes(i.id) && i.name.includes(suggestValue.value)));
 async function fetchOptions(initial = false) {
     const { $api } = useNuxtApp();
@@ -82,7 +91,7 @@ async function fetchOptions(initial = false) {
 
     optionsList.value = data.value.rows;
     if (initial) {
-        optionsDict.value = data.value.rows.reduce((acc: object, option: object) => ({
+        optionsDict.value = data.value.rows.reduce((acc: object, option: IOption) => ({
             ...acc,
             [option.id]: option,
         }), {});

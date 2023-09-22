@@ -11,7 +11,7 @@ interface IModalParams {
     modalProps?: object
     componentProps?: object
     type?: ModalTypes
-    onClose: () => void
+    onClose?: () => void
 }
 
 export interface IModalItem extends IModalParams {

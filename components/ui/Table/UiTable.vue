@@ -7,6 +7,10 @@ interface IColumn {
     width?: string;
 }
 
+export interface IDataItem {
+    [key: string]: any
+}
+
 const props = defineProps({
     columns: {
         type: Array as PropType<IColumn[]>,
@@ -14,7 +18,7 @@ const props = defineProps({
     },
 
     data: {
-        type: Array,
+        type: Array as PropType<any | IDataItem>,
         default: () => [],
     },
 
@@ -31,29 +35,33 @@ const classList = computed(() => [{
 // const styleList = computed(() => [{
 // '--columns-count': props.columns.map(i => i.width) || `repeat(${props.columns?.length}, 1fr)`,
 // }]);
-const styleList = computed(() => {
-    if (!props.columns) {
-        return [];
-    }
+// const styleList = computed(() => {
+//     if (!props.columns) {
+//         return [];
+//     }
+//
+//     let columnsCount;
+//
+//     if (props.columns.every(i => i.width)) {
+//         columnsCount = props.columns.map((i: IColumn) => i.width).join(' ');
+//     } else {
+//         columnsCount = `repeat(${props.columns.length}, 1fr)`;
+//     }
+//
+//     return [{
+//         '--columns-count': columnsCount,
+//     }];
+// });
 
-    let columnsCount;
-
-    if (props.columns.every(i => i.width)) {
-        columnsCount = props.columns.map((i: IColumn) => i.width).join(' ');
-    } else {
-        columnsCount = `repeat(${props.columns.length}, 1fr)`;
-    }
-
-    return [{
-        '--columns-count': columnsCount,
-    }];
-});
+const columnStyleList = computed(() => (item: IColumn) => ({
+    ...item.width && { width: item.width },
+}));
 
 const $emit = defineEmits<{
-    'click-row': [item: object]
+    'click-row': [item: IDataItem]
 }>();
 
-function onClickRow(item: object) {
+function onClickRow(item: IDataItem) {
     if (!props.interactive) {
         return false;
     }
@@ -63,63 +71,57 @@ function onClickRow(item: object) {
 </script>
 
 <template>
-    <div
-        :style="styleList"
-        :class="classList"
-        class="UiTable"
-    >
-        <div class="UiTable__wrapper">
-            <div
-                v-for="item in columns"
-                :key="item.id"
-                class="UiTable__header-label UiTable__item text-x-small"
-            >
-                {{ item.name }}
-            </div>
+    <table :class="classList" class="UiTable">
+        <thead>
+            <tr>
+                <th
+                    v-for="item in columns"
+                    :key="item.id"
+                    :style="columnStyleList(item)"
+                    class="UiTable__header-cell UiTable__item text-x-small"
+                >
+                    {{ item.name }}
+                </th>
+            </tr>
+        </thead>
 
-            <template v-for="(item, index) in data">
-                <div
+        <tbody>
+            <tr
+                v-for="(item, index) in data"
+                :key="item.id || index"
+                class="UiTable__row text-x-small"
+                @click="onClickRow(item)"
+            >
+                <td
                     v-for="col in columns"
-                    :key="index + col.id"
-                    class="UiTable__data-row UiTable__item text-x-small"
-                    @click="onClickRow(item)"
+                    :key="item.id + col.id"
+                    class="UiTable__cell UiTable__item"
+                    :style="columnStyleList(col)"
                 >
                     <slot
-                        name="item"
-                        :column-field="col.id"
+                        :name="col.id"
                         :item="item"
                         :value="item[col.id]"
                     >
-                        <div
-                            v-if="item[col.id]"
-                            class="UiTable__data-value"
-                            v-html="item[col.id]"
-                        >
-                        </div>
+                        <div v-if="item[col.id]" v-html="item[col.id]"></div>
 
                         <div v-else class="UiTable__data-empty">
                             Не установленно
                         </div>
                     </slot>
-                </div>
-            </template>
-        </div>
-    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </template>
 
 <style lang="scss">
 .UiTable {
     $table: &;
 
-    &__wrapper {
-        display: grid;
-        grid-template-columns: var(--columns-count);
-        width: 100%;
-        height: 100%;
-    }
-
-    &__header-label {
+    &__header-cell {
         padding: calc(var(--ui-unit) * 2);
+        text-align: left;
         color: var(--ui-secondary-color);
     }
 
@@ -127,11 +129,12 @@ function onClickRow(item: object) {
         border-bottom: 1px solid rgba(var(--ui-secondary-light-color-rgb), .48);
     }
 
-    &__data-row {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+    &__cell {
         padding: calc(var(--ui-unit) * 4) calc(var(--ui-unit) * 2);
+
+        &:last-child {
+            text-align: right;
+        }
     }
 
     &__data-empty {
@@ -140,7 +143,7 @@ function onClickRow(item: object) {
 
     &.--is-interactive {
         #{$table} {
-            &__data-row {
+            &__row {
                 cursor: pointer;
             }
         }

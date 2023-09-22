@@ -1,8 +1,6 @@
 <script setup lang="ts">
-// Lib Components
-import { UiImage } from '@ovchinnikov-lxs-frontend/ui-kit';
-
-const props = defineProps({
+// TODO: Добавить placeholder
+defineProps({
     hasPreview: {
         type: Boolean,
         default: true,
@@ -13,17 +11,14 @@ const props = defineProps({
         default: '',
     },
 });
-
-const imageAttrs = computed(() => ({
-    origin: props.src,
-    // preview: props.src, todo: imgproxy blured
-}));
 </script>
 
 <template>
-    <UiImage v-bind="{...$attrs, ...imageAttrs}">
-        <template v-if="hasPreview" #preview></template>
-    </UiImage>
+    <NuxtImg
+        :src="src"
+        class="UiImage"
+        loading="lazy"
+    />
 </template>
 
 <style lang="scss">

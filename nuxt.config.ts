@@ -42,6 +42,9 @@ export default defineNuxtConfig({
 
     modules: [
         '@nuxtjs/svg-sprite',
+        ['@nuxt/image', {
+            format: ['webp'],
+        }],
         '@pinia/nuxt',
     ],
 

@@ -52,8 +52,8 @@ function onClick(item: object) {
             :class="$style.wrapper"
             @click-row="onClick"
         >
-            <template #item="itemProps: {columnField: string, value: any, item: IServiceCategory }">
-                <div v-if="itemProps.columnField === 'control'" :class="$style.control">
+            <template #control="itemProps: {columnField: string, value: any, item: IServiceCategory }">
+                <div :class="$style.control">
                     <UiTooltip v-if="isOwner" interactive>
                         <template #header>
                             <UiButton size="small" icon>

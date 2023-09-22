@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import _ from 'lodash';
 import { IBreed } from 'assets/ts/types/breeds';
 
 const breadcrumbs = useBreadcrumbs();
@@ -8,17 +9,18 @@ breadcrumbs.setList([{
     title: 'Список пород',
 }]);
 
-// TODO: Реализовать пагинацию(сейчас лень)
-// const LIMIT = 5;
-// const offset = 0;
+
+const breedsQuery = reactive({
+    limit: 20,
+    offset: 0,
+});
+
 const { $api } = useNuxtApp();
 const { data, refresh } = await $api.breeds.getList({
-    key: 'breedsList',
-    // params: {
-    //     limit: LIMIT,
-    //     offset,
-    // },
+    query: breedsQuery,
 });
+
+const actualList = ref<IBreed[]>(_.cloneDeep(data.value.rows));
 
 const columns = [
     { id: 'preview', name: 'Изображение', width: '15%' },
@@ -27,7 +29,7 @@ const columns = [
     { id: 'control', name: '', width: '10%' },
 ];
 
-function openModal(value: IBreed | null) {
+function openModal(value: any | null) {
     modal.open({
         component: defineAsyncComponent(() => import('~/components/breeds/BreedsSave.vue')),
         componentProps: {
@@ -47,6 +49,16 @@ async function onDelete(id: string) {
         console.log(e);
     }
 }
+
+const loadMore = async () => {
+    try {
+        breedsQuery.offset += 5;
+        await refresh();
+        actualList.value = actualList.value.concat(data.value.rows);
+    } catch (e) {
+        console.log(e);
+    }
+};
 </script>
 
 <template>
@@ -61,48 +73,46 @@ async function onDelete(id: string) {
             </UiButton>
         </template>
         <template #default>
-            <!--TODO: Решить в чем проблема гидратации-->
-            <ClientOnly v-if="data.rows.length">
+            <template v-if="actualList.length">
                 <UiTable
                     :columns="columns"
-                    :data="data.rows"
+                    :data="actualList"
                     :class="$style.wrapper"
                 >
-                    <template #item="itemProps: {columnField: string, value: any, item: IBreed }">
+                    <template #preview="{ value }">
+                        <UiImage
+                            :src="value"
+                            :class="$style.preview"
+                        />
+                    </template>
 
-                        <div v-if="itemProps.columnField === 'preview' && itemProps.value">
-                            <UiImage
-                                :src="itemProps.value"
-                                :class="$style.preview"
-                            />
-                        </div>
-
-                        <div v-if="itemProps.columnField === 'control'" :class="$style.control">
-                            <UiTooltip
-                                v-if="isOwner"
-                                interactive
-                                :class="$style.tooltip"
-                            >
-                                <template #header>
-                                    <UiButton size="small" icon>
-                                        <UiIcon name="ui/settings"/>
+                    <template #control="{ item }">
+                        <UiTooltip
+                            v-if="isOwner"
+                            interactive
+                            :class="$style.tooltip"
+                        >
+                            <template #header>
+                                <UiButton size="small" icon>
+                                    <UiIcon name="ui/settings"/>
+                                </UiButton>
+                            </template>
+                            <template #bottom>
+                                <div :class="$style.tooltipBottom">
+                                    <UiButton size="x-small" @click="openModal(item)">
+                                        Редактировать
                                     </UiButton>
-                                </template>
-                                <template #bottom>
-                                    <div :class="$style.tooltipBottom">
-                                        <UiButton size="x-small" @click="openModal(itemProps.item)">
-                                            Редактировать
-                                        </UiButton>
-                                        <UiButton size="x-small" @click="onDelete(itemProps.item.id)">
-                                            Удалить
-                                        </UiButton>
-                                    </div>
-                                </template>
-                            </UiTooltip>
-                        </div>
+                                    <UiButton size="x-small" @click="onDelete(item.id)">
+                                        Удалить
+                                    </UiButton>
+                                </div>
+                            </template>
+                        </UiTooltip>
                     </template>
                 </UiTable>
-            </ClientOnly>
+
+                <UiButton :class="$style.load" @click="loadMore">Показать еще</UiButton>
+            </template>
 
             <UiEmpty v-else>
                 <template #text>
@@ -147,14 +157,18 @@ async function onDelete(id: string) {
     transform: translate3d(0, 0, 0);
 }
 
-.control {
-    display: flex;
-    justify-content: flex-end;
+.tooltip {
+    margin-left: auto;
 }
 
 .tooltipBottom {
     display: flex;
     flex-direction: column;
     row-gap: calc(var(--ui-unit) * 2);
+}
+
+.load {
+    width: 100%;
+    margin-top: var(--ui-col);
 }
 </style>

@@ -17,7 +17,6 @@ defineProps({
 
 const { isOwner } = useUser();
 
-
 const columns = [
     { id: 'fullName', name: 'Имя и фамилия' },
     { id: 'phone', name: 'Номер телефона' },
@@ -84,22 +83,24 @@ async function onDelete(item: IStaffItem) {
             :data="list"
             :class="$style.wrapper"
         >
-            <template #item="itemProps: {columnField: string, value: keyof IStaffItem, item: IStaffItem }">
-                <div v-if="itemProps.columnField === 'fullName'" :class="$style.fullName">
+            <template #full-name="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
+                <div :class="$style.fullName">
                     {{ itemProps.value }}
                 </div>
+            </template>
 
+            <template #phone="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
                 <UiLink
-                    v-if="itemProps.columnField === 'phone'"
                     tag="a"
                     color="primary-light"
                     :href="`tel:${itemProps.value}`"
                 >
                     {{ itemProps.value }}
                 </UiLink>
+            </template>
 
+            <template #item="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
                 <UiButton
-                    v-if="itemProps.columnField === 'status'"
                     size="x-small"
                     :color="statusColor(itemProps.value)"
                     outline
@@ -107,16 +108,19 @@ async function onDelete(item: IStaffItem) {
                 >
                     {{ typeof itemProps.value === 'string' ? displayStatus(itemProps.value) : '' }}
                 </UiButton>
+            </template>
 
+            <template #roles="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
+                {{ Array.isArray(itemProps.value) ? itemProps.value.map(i => i.name).join(', ') : '' }}
+            </template>
 
-                <div v-if="itemProps.columnField === 'roles'">
-                    {{ Array.isArray(itemProps.value) ? itemProps.value.map(i => i.name).join(', ') : '' }}
+            <template #salary="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
+                <div v-html="displaySalary(itemProps.item)">
                 </div>
+            </template>
 
-                <div v-if="itemProps.columnField === 'salary'" v-html="displaySalary(itemProps.item)">
-                </div>
-
-                <div v-if="itemProps.columnField === 'control'" :class="$style.control">
+            <template #control="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
+                <div :class="$style.control">
                     <UiTooltip v-if="isOwner" interactive>
                         <template #header>
                             <UiButton size="small" icon>
