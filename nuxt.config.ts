@@ -10,6 +10,9 @@ export default defineNuxtConfig({
             SERVER_API_URL: '/api',
         },
     },
+
+    devtools: { enabled: true },
+
     app: {
         pageTransition: {
             name: 'page',
