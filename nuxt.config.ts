@@ -38,7 +38,7 @@ export default defineNuxtConfig({
     },
 
     modules: [
-        'nuxt-icons',
+        '@nuxtjs/svg-sprite',
         '@pinia/nuxt',
     ],
 

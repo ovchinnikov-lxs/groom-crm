@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@googlemaps/js-api-loader": "^1.15.1",
+        "@nuxtjs/svg-sprite": "^1.0.2",
         "@ovchinnikov-lxs-frontend/ui-kit": "^2.10.2",
         "@pinia/nuxt": "^0.4.7",
         "@vuelidate/core": "^2.0.0",
@@ -24,7 +25,6 @@
         "libphonenumber-js": "^1.10.24",
         "lodash": "^4.17.21",
         "normalize.css": "^8.0.1",
-        "nuxt-icons": "^3.1.0",
         "pinia": "^2.0.33",
         "uuid": "^9.0.0"
     },

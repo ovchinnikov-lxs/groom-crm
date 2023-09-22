@@ -2,7 +2,6 @@
 import type { PropType } from 'vue';
 import type { TypeSize } from 'assets/ts/types';
 
-
 const props = defineProps({
     name: {
         type: String,
@@ -32,7 +31,7 @@ const classList = computed(() => [
 
 <template>
     <div :class="classList" class="UiIcon">
-        <nuxt-icon
+        <SvgIcon
             :name="name"
             class="UiIcon__el"
         />
@@ -60,15 +59,9 @@ const classList = computed(() => [
     }
 
     &__el {
+        display: block;
         width: 100%;
         height: 100%;
-
-        svg {
-            width: 100%;
-            height: 100%;
-            margin-bottom: 0;
-            vertical-align: initial;
-        }
     }
 }
 </style>
