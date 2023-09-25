@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ITS_USER } from 'assets/ts/constants/auth';
+
 const auth = useAuth();
 
 interface ILoginForm {
@@ -34,6 +36,7 @@ async function onSubmit() {
         await auth.fetchUser();
         await useGlobal().fetchInitial();
         navigateTo($routes.salons.list);
+        useCookie(ITS_USER, { path: '/' }).value = 'true';
     } catch (e) {
         console.log(e);
     }

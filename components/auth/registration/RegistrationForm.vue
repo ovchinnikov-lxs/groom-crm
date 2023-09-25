@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Constants
 import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
+import { ITS_USER } from 'assets/ts/constants/auth';
 
 const route = useRoute();
 const tariffs = useTariffs();
@@ -61,6 +62,7 @@ async function onSubmit() {
         await auth.fetchUser();
         await useGlobal().fetchInitial();
         navigateTo($routes.salons.list);
+        useCookie(ITS_USER, { path: '/' }).value = 'true';
         // todo: Добавить подтвержение номера телефона по смс и там уже регистрировать
     } catch (e) {
         console.log(e);

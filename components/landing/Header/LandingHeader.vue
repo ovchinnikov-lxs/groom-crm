@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ITS_USER } from 'assets/ts/constants/auth';
+
 const { $routes } = useNuxtApp();
 const route = useRoute();
 const $style = useCssModule();
@@ -32,6 +34,8 @@ const classList = computed(() => [{
 const linkClassList = computed(() => (link: { hash: string }) => [{
     [$style['--is-active']]: route.hash === link.hash,
 }]);
+
+const buttonTitle = ref(useCookie(ITS_USER).value ? 'Войти' : 'Получить 15 дней бесплатно');
 </script>
 
 <template>
@@ -60,7 +64,7 @@ const linkClassList = computed(() => (link: { hash: string }) => [{
                     </NuxtLink>
 
                     <UiButton :class="$style.button" :to="$routes.auth.login">
-                        Войти
+                        {{ buttonTitle }}
                     </UiButton>
                 </nav>
 
