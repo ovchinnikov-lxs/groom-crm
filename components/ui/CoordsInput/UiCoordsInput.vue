@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Loader } from '@googlemaps/js-api-loader';
 import type { PropType } from 'vue';
-import type { TypeSize } from 'assets/ts/types';
+import type { TypeSize } from '~/types';
 
 const loader = new Loader({
     apiKey: '',

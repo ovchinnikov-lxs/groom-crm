@@ -3,7 +3,7 @@ import type { PropType } from 'vue';
 
 // UiKit Components
 import { UiSelectHeader } from '@ovchinnikov-lxs-frontend/ui-kit';
-import type { TypeSize } from 'assets/ts/types';
+import type { TypeSize } from '~/types';
 
 defineProps({
     color: {

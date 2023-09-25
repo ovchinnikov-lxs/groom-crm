@@ -1,5 +1,5 @@
 import { UseFetchOptions } from '#app';
-import { IBreed } from 'assets/ts/types/breeds';
+import { IBreed } from '~/types/breeds';
 
 export class BreedsApi {
     private apiUrl = '/breeds';

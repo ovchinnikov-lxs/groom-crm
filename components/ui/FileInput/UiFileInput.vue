@@ -4,7 +4,7 @@ import { UiFileInput } from '@ovchinnikov-lxs-frontend/ui-kit';
 
 // Types
 import type { PropType } from 'vue';
-import type { TypeSize } from 'assets/ts/types';
+import type { TypeSize } from '~/types';
 import { getBase64UrlFromImage } from 'assets/ts/utils/image-utils';
 type TypeValue = string | null | File;
 
@@ -79,6 +79,16 @@ const buttonSize = computed(() => {
             return 'x-small';
     }
 });
+
+const imageSrc = computed(() => (urls: (string | File)[]): string | undefined => {
+    const [firstEl] = urls;
+
+    if (!firstEl || typeof firstEl !== 'string') {
+        return undefined;
+    }
+
+    return firstEl;
+});
 </script>
 
 <template>
@@ -99,8 +109,8 @@ const buttonSize = computed(() => {
                 </div>
 
                 <UiImage
-                    v-if="props.urls && props.urls[0]"
-                    :src="props.urls[0]"
+                    v-if="imageSrc(props.urls)"
+                    :src="imageSrc(props.urls)"
                     class="UiFileInput__image"
                 />
             </template>

@@ -1,8 +1,8 @@
 const leadingZero = (num: number): number | string => num < 10 ? `0${num}` : num;
 
-const getHumanTime = (value: number) => {
-    const hours = Math.floor(value / 60);
-    const minutes = value % 60;
+const getHumanTime = (value: number | string) => {
+    const hours = Math.floor(Number(value) / 60);
+    const minutes = Number(value) % 60;
 
     return {
         hours,

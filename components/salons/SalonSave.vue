@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
-import { ISalonDetail, ISalonSave } from 'assets/ts/types/salons';
+import { ISalonDetail, ISalonSave } from '~/types/salons';
 
 const props = defineProps({
     value: {

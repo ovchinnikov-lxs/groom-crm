@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { modal } from '~/composables/modal';
-import { IServiceCategory } from 'assets/ts/types/services';
+import { IServiceCategory } from '~/types/services';
 
 defineProps({
     list: {

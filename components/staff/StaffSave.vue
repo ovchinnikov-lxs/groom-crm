@@ -4,7 +4,7 @@ import type { PropType } from 'vue';
 
 // Constants
 import { ROLES_KEYS } from 'assets/ts/constants/roles';
-import { IStaffItem, IStaffSave } from 'assets/ts/types/staff';
+import { IStaffItem, IStaffSave } from '~/types/staff';
 
 const props = defineProps({
     value: {

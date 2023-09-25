@@ -1,5 +1,5 @@
 import { UseFetchOptions } from '#app';
-import { IService, IServiceCategory } from 'assets/ts/types/services';
+import { IService, IServiceCategory } from '~/types/services';
 
 export class ServicesApi {
     private apiUrl = '/services';

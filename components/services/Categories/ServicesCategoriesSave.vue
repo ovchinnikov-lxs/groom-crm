@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { IServiceCategory } from 'assets/ts/types/services';
+import { IServiceCategory } from '~/types/services';
 
 
 const props = defineProps({

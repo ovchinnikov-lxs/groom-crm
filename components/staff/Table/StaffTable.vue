@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IStaffItem } from 'assets/ts/types/staff';
+import { IStaffItem } from '~/types/staff';
 
 // Utils
 import { splitThousands } from '~/assets/ts/utils/format-utils';

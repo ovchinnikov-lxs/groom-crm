@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
-import type { TypeSize } from 'assets/ts/types';
+import type { TypeSize } from '~/types';
 
 const props = defineProps({
     name: {

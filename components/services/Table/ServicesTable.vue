@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { getHumanTime, plural, splitThousands } from '~/assets/ts/utils/format-utils';
+import { IBreed } from '~/types/breeds';
+import { IService } from '~/types/services';
 
 const props = defineProps({
     list: {
@@ -27,7 +29,7 @@ const $emit = defineEmits<{
     update: [void]
 }>();
 
-function onEdit(value) {
+function onEdit(value: IService) {
     modal.open({
         component: defineAsyncComponent(() => import('~/components/services/ServicesSave.vue')),
         componentProps: {
@@ -48,6 +50,8 @@ async function onDelete(id: string) {
         console.log(e);
     }
 }
+
+const displayBreeds = (value: IBreed[]) => value.map(i => i.name).join(', ');
 </script>
 
 <template>
@@ -72,7 +76,7 @@ async function onDelete(id: string) {
             </template>
 
             <template #breeds="{value}">
-                <b>{{ value.map((i) => i.name).join(', ') }}</b>
+                <b>{{ displayBreeds(value) }}</b>
             </template>
 
             <template #control="{ item }">

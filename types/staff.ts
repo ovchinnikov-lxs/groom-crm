@@ -1,4 +1,4 @@
-import { IRolesItem } from '~/assets/ts/types/roles';
+import { IRolesItem } from '~/types/roles';
 
 export interface IStaffSave {
     fullName: string;

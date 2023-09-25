@@ -1,5 +1,5 @@
 import type { UseFetchOptions } from 'nuxt/app';
-import { ISalonDetail, ISalonSave } from 'assets/ts/types/salons';
+import { ISalonDetail, ISalonSave } from '~/types/salons';
 
 export class SalonsApi {
     getList<T>(options: UseFetchOptions<T> = {}) {

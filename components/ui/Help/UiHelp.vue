@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { TypeSize } from 'assets/ts/types';
+import { TypeSize } from '~/types';
 
 type HelpType = 'error' | 'info' | 'tutorial' | 'warning';
 

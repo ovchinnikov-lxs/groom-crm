@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { modal } from '~/composables/modal';
 import { IScheduleMaster } from '~/components/salons/detail/SalonsDetailSchedule.vue';
-import { ISalonDetail } from 'assets/ts/types/salons';
+import { ISalonDetail } from '~/types/salons';
 
 const { $routes, $api } = useNuxtApp();
 

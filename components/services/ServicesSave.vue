@@ -6,8 +6,8 @@ interface IServiceSave {
     name: string;
     description: string;
     preview: string;
-    price: number;
-    duration: number;
+    price: string;
+    duration: string;
     breeds: Array<string>;
 }
 

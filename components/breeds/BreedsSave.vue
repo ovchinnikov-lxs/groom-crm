@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
 import _ from 'lodash';
-import { IBreed } from 'assets/ts/types/breeds';
+import { IBreed } from '~/types/breeds';
 
 const props = defineProps({
     value: {

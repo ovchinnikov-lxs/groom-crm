@@ -3,7 +3,7 @@
 import { UiPopover } from '@ovchinnikov-lxs-frontend/ui-kit';
 
 import type { PropType } from 'vue';
-import type { TypeSize } from 'assets/ts/types';
+import type { TypeSize } from '~/types';
 
 // Utils
 import { leadingZero } from 'assets/ts/utils/format-utils';
