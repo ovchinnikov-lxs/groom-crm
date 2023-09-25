@@ -28,6 +28,10 @@
     align-items: center;
     width: var(--container-width);
     margin: 0 auto;
+
+    @include respond-to(tablet) {
+        width: var(--container-adaptive-width);
+    }
 }
 
 .aside {

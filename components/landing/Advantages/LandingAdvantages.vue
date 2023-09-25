@@ -57,9 +57,16 @@ import { COMPANY_NAME } from '~/assets/ts/constants';
     height: 100%;
     row-gap: calc(var(--ui-unit) * 8);
     padding: calc(var(--ui-col) * 2) 0;
+
+    @include respond-to(tablet) {
+        row-gap: calc(var(--ui-unit) * 4);
+        padding: calc(var(--ui-unit) * 8) 0;
+    }
 }
 
 .plate {
+    position: relative;
+    z-index: 2;
     width: 59%;
     margin-left: auto;
     padding: calc(var(--ui-unit) * 8) var(--ui-col);
@@ -68,6 +75,11 @@ import { COMPANY_NAME } from '~/assets/ts/constants';
     text-transform: uppercase;
     color: var(--ui-white-color);
     box-shadow: var(--ui-box-shadow);
+
+    @include respond-to(tablet) {
+        width: 90%;
+        padding: calc(var(--ui-unit) * 6) calc(var(--ui-unit) * 12);
+    }
 }
 
 .container {
@@ -75,12 +87,29 @@ import { COMPANY_NAME } from '~/assets/ts/constants';
     align-items: center;
     width: var(--container-width);
     margin: 0 auto;
+
+    @include respond-to(tablet) {
+        position: relative;
+        width: var(--container-adaptive-width);
+    }
 }
 
 .imageWrapper {
     position: relative;
     width: calc(var(--ui-unit) * 120);
     height: calc(var(--ui-unit) * 120);
+
+    @include respond-to(tablet) {
+        @include aspect-ratio(1,1);
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 45%;
+        height: auto;
+        opacity: .4;
+        transform: translate3d(-50%, -50%, 0);
+    }
 }
 
 .image {
@@ -95,27 +124,28 @@ import { COMPANY_NAME } from '~/assets/ts/constants';
 }
 
 .circle {
+    position: absolute;
+    inset: 0;
     border-radius: 50%;
 
     &.--is-large {
-        position: relative;
         display: flex;
-        width: calc(var(--ui-unit) * 120);
-        height: calc(var(--ui-unit) * 120);
+        width: 100%;
+        height: 100%;
         border: 3px solid var(--ui-white-color);
 
         &:before,
         &:after {
             content: "";
             position: absolute;
-            width: calc(var(--ui-unit) * 8);
-            height: calc(var(--ui-unit) * 8);
+            width: 6%;
+            height: 6%;
             border-radius: 50%;
             background-color: var(--ui-additional-color);
         }
 
         &:before {
-            top: calc(var(--ui-unit) * 32);
+            top: 29%;
         }
 
         &:after {
@@ -125,34 +155,35 @@ import { COMPANY_NAME } from '~/assets/ts/constants';
     }
 
     &.--is-medium {
-        position: relative;
         display: flex;
-        width: calc(var(--ui-unit) * 96);
-        height: calc(var(--ui-unit) * 96);
+        width: 80%;
+        height: 80%;
         margin: auto;
         border: 3px solid var(--ui-white-color);
 
         &:before {
             content: "";
             position: absolute;
-            top: 10%;
+            top: 12%;
             right: 11%;
-            width: calc(var(--ui-unit) * 8);
-            height: calc(var(--ui-unit) * 8);
+            width: 6%;
+            height: 6%;
             border-radius: 50%;
             background-color: var(--ui-additional-color);
         }
     }
 
     &.--is-small {
-        width: calc(var(--ui-unit) * 75);
-        height: calc(var(--ui-unit) * 75);
+        width: 62%;
+        height: 62%;
         margin: auto;
         background-color: var(--ui-additional-color);
     }
 }
 
 .aside {
+    position: relative;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     width: calc(var(--ui-unit) * 168);
@@ -164,6 +195,11 @@ import { COMPANY_NAME } from '~/assets/ts/constants';
         &::marker {
             font-weight: bold;
         }
+    }
+
+    @include respond-to(tablet) {
+        width: 100%;
+        margin-left: 0;
     }
 }
 </style>

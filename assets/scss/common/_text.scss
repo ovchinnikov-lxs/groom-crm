@@ -10,7 +10,7 @@ h2 {
     font-size: calc(var(--ui-unit) * 11.25);
 
     @include respond-to(mobile) {
-        font-size: calc(var(--ui-unit) * 9);
+        font-size: calc(var(--ui-unit) * 6);
     }
 }
 

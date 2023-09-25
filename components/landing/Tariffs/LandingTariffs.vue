@@ -68,11 +68,21 @@ const tariffs = useTariffs();
     margin: 0 auto;
     padding: calc(var(--ui-unit) * 12) 0;
 
+    @include respond-to(tablet) {
+        width: var(--container-adaptive-width);
+        padding: calc(var(--ui-unit) * 8) 0;
+    }
+
     & > :global(.UiPlate__wrapper) {
         display: flex;
         flex-direction: column;
         row-gap: calc(var(--ui-unit) * 8);
         padding: calc(var(--ui-unit) * 8) calc(var(--ui-unit) * 16);
+
+        @include respond-to(tablet) {
+            row-gap: calc(var(--ui-unit) * 4);
+            padding: calc(var(--ui-unit) * 8) calc(var(--ui-unit) * 4);
+        }
     }
 }
 
@@ -87,10 +97,20 @@ const tariffs = useTariffs();
 
 .list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas:
+        'basic standart'
+        'premium premium';
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     grid-column-gap: calc(var(--ui-unit) * 4);
     grid-row-gap: calc(var(--ui-unit) * 4);
+
+    @include respond-to(tablet) {
+        grid-template-areas:
+            'basic basic'
+            'standart standart'
+            'premium premium';
+    }
 }
 
 .item {
@@ -101,20 +121,24 @@ const tariffs = useTariffs();
         flex-direction: column;
         align-items: center;
         row-gap: calc(var(--ui-unit) * 4);
-        padding: calc(var(--ui-unit) * 8) calc(var(--ui-unit) * 8);
+        padding: calc(var(--ui-unit) * 8);
         text-align: center;
+
+        @include respond-to(tablet) {
+            padding: calc(var(--ui-unit) * 4);
+        }
     }
 
     &.--basic-plan {
-        grid-area: 1 / 1 / 2 / 2;
+        grid-area: basic;
     }
 
     &.--standard-plan {
-        grid-area: 1 / 2 / 2 / 3;
+        grid-area: standart;
     }
 
     &.--premium-plan {
-        grid-area: 2 / 1 / 3 / 3;
+        grid-area: premium;
     }
 }
 

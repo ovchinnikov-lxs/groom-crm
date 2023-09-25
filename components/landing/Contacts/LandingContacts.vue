@@ -39,6 +39,10 @@ const { $routes } = useNuxtApp();
     padding: calc(var(--ui-unit) * 12) 0;
     text-align: center;
 
+    @include respond-to(tablet) {
+        width: var(--container-adaptive-width);
+    }
+
     span {
         color: var(--ui-primary-color);
     }

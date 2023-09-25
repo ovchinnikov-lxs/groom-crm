@@ -34,6 +34,10 @@ defineProps({
             height: calc(var(--ui-unit) * 12);
             padding: 0;
         }
+
+        @include respond-to(tablet) {
+            padding: calc(var(--ui-unit) * 3) calc(var(--ui-unit) * 6);
+        }
     }
 
     &.--small-size {

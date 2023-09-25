@@ -63,6 +63,13 @@ const { $routes } = useNuxtApp();
     row-gap: var(--ui-col);
     margin: 0 auto;
     padding: calc(var(--ui-col) * 2) 0;
+
+    @include respond-to(tablet) {
+        flex-direction: column;
+        align-items: stretch;
+        width: var(--container-adaptive-width);
+        padding: calc(var(--ui-unit) * 4) 0;
+    }
 }
 
 .aside {
@@ -71,6 +78,10 @@ const { $routes } = useNuxtApp();
     align-items: flex-start;
     width: calc(var(--ui-unit) * 164);
     row-gap: calc(var(--ui-unit) * 6);
+
+    @include respond-to(tablet) {
+        width: 100%;
+    }
 
     h2 {
         span {
@@ -82,6 +93,10 @@ const { $routes } = useNuxtApp();
 .button {
     &:not(:first-child) {
         margin-top: calc(var(--ui-unit) * 8);
+    }
+
+    @include respond-to(mobile) {
+        width: 100%;
     }
 }
 
@@ -95,6 +110,10 @@ const { $routes } = useNuxtApp();
     height: calc(var(--ui-unit) * 148);
     margin-right: calc(var(--ui-unit) * 28);
     margin-left: auto;
+
+    @include respond-to(tablet) {
+        display: none;
+    }
 }
 
 .image {

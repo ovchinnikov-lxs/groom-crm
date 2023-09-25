@@ -13,6 +13,7 @@
 <style lang="scss" module>
 .LandingLayout {
     --container-width: calc(var(--ui-col) * 32);
+    --container-adaptive-width: calc(100% - var(--ui-unit) * 8);
 
     position: relative;
     display: flex;
