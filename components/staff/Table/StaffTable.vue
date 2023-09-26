@@ -99,7 +99,7 @@ async function onDelete(item: IStaffItem) {
                 </UiLink>
             </template>
 
-            <template #item="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
+            <template #status="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
                 <UiButton
                     size="x-small"
                     :color="statusColor(itemProps.value)"
