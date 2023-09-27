@@ -3,7 +3,7 @@ import { IService, IServiceCategory } from '~/types/services';
 
 export class ServicesApi {
     private apiUrl = '/services';
-    private apiCategoryUrl = '/service-categories';
+    private apiCategoryUrl = '/services/categories';
 
     getCategoryList<T>(options: UseFetchOptions<T> = {}) {
         return useApi(this.apiCategoryUrl, options);
