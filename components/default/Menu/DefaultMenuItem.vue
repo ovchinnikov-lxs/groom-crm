@@ -108,7 +108,7 @@ defineProps({
         }
     }
 
-    @include respond-to(mobile) {
+    @include respond-to(tablet) {
         b {
             display: none;
         }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { modal } from '~/composables/modal';
 const { $routes } = useNuxtApp();
 const auth = useAuth();
 
@@ -21,12 +22,24 @@ const userSymbols = computed(() => {
         .map((i: string) => i[0])
         .join('');
 });
+
+const onBooking = () => {
+    modal.open({
+        component: defineAsyncComponent(() => import('~/components/bookings/BookingCreate.vue')),
+    });
+};
 </script>
 
 <template>
     <div class="DefaultMenuUser">
         <div :class="$style.wrapper">
 
+            <UiButton
+                size="x-small"
+                :class="$style.booking"
+                @click="onBooking"
+            >
+            </UiButton>
 
             <div :title="auth.user.fullName" :class="$style.previewWrapper">
                 <UiImage
@@ -81,6 +94,27 @@ const userSymbols = computed(() => {
     width: 100%;
     height: 100%;
     column-gap: calc(var(--ui-unit) * 2);
+}
+
+.booking {
+    &:after {
+        content: 'Записать';
+
+        @include respond-to(mobile) {
+            content: '+';
+        }
+    }
+
+    @include respond-to(tablet) {
+        &:global(.UiButton) {
+            &:global(.--x-small-size) {
+                width: calc(var(--ui-unit) * 8);
+                height: calc(var(--ui-unit) * 8);
+                padding: 0;
+                border-radius: calc(var(--ui-unit) * 2.5);
+            }
+        }
+    }
 }
 
 .previewWrapper {

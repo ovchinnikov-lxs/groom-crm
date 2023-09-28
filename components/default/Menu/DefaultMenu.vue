@@ -66,16 +66,38 @@ const navItems = [
     align-items: center;
     justify-content: space-between;
     column-gap: calc(var(--ui-unit) * 4);
+
+    @include respond-to(mobile) {
+        column-gap: calc(var(--ui-unit) * 2);
+    }
+}
+
+.logo {
+    @include respond-to(mobile) {
+        display: none;
+    }
 }
 
 .logo,
 .user {
     width: calc(var(--ui-unit) * 41);
+
+    @include respond-to(mobile) {
+        width: auto;
+    }
 }
 
 .nav {
     display: flex;
     align-items: center;
     column-gap: calc(var(--ui-unit) * 12);
+
+    @include respond-to(tablet) {
+        column-gap: calc(var(--ui-unit) * 4);
+    }
+
+    @include respond-to(mobile) {
+        column-gap: calc(var(--ui-unit) * 3);
+    }
 }
 </style>
