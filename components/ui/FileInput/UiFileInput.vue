@@ -101,42 +101,42 @@ const imageSrc = computed(() => (urls: (string | File)[]): string | undefined =>
         @update:model-value="onInput"
         @remove="onRemove"
     >
-        <template #data="props">
+        <template #data="dataProps">
             <template v-if="isImage">
                 <div class="UiFileInput__image-placeholder">
                     <UiIcon name="ui/camera" size="x-large"/>
-                    <div v-if="props.drop">Drop here</div>
+                    <div v-if="dataProps.drop">Drop here</div>
                 </div>
 
                 <UiImage
-                    v-if="imageSrc(props.urls)"
-                    :src="imageSrc(props.urls)"
+                    v-if="imageSrc(dataProps.urls)"
+                    :src="imageSrc(dataProps.urls)"
                     class="UiFileInput__image"
                 />
             </template>
         </template>
 
-        <template #input="props">
+        <template #input="inputProps">
             <UiButton
                 type="button"
                 :color="color"
                 :size="buttonSize"
-                @click="props.onClick"
+                @click="inputProps.onClick"
             >
-                {{ props.label }}
+                {{ inputProps.label }}
             </UiButton>
         </template>
 
-        <template #remove="props">
+        <template #remove="removeProps">
             <UiButton
                 type="button"
                 color="error"
                 outline
                 :disabled="!actualValue"
                 :size="buttonSize"
-                @click="props.onClick"
+                @click="removeProps.onClick"
             >
-                {{ props.label }}
+                {{ removeProps.label }}
             </UiButton>
         </template>
     </UiFileInput>
