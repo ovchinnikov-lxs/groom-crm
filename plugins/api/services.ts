@@ -37,6 +37,10 @@ export class ServicesApi {
         return useApi(this.apiUrl, options);
     }
 
+    getListByCategory<T>(categoryId: string, options: UseFetchOptions<T> = {}) {
+        return useApi(`${this.apiUrl}/${categoryId}`, options);
+    }
+
     create(body: IService) {
         return useApi(this.apiUrl, {
             method: 'POST',

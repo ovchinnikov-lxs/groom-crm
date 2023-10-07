@@ -77,6 +77,7 @@ async function onSubmit() {
             await $api.services.create({
                 ...actualValue,
                 duration,
+                categoryId: props.categoryId,
             });
         } else {
             await $api.services.update(props.value?.id, {
@@ -152,6 +153,7 @@ async function onSubmit() {
                         <BreedsSelect
                             v-model="$v.breeds.$model"
                             placeholder="Введите название пород"
+                            multiple
                             :error="getError('breeds')"
                         />
                     </template>
