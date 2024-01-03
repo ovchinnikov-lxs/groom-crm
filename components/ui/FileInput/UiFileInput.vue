@@ -5,7 +5,7 @@ import { UiFileInput } from '@ovchinnikov-lxs-frontend/ui-kit';
 // Types
 import type { PropType } from 'vue';
 import type { TypeSize } from '~/types';
-import { getBase64UrlFromImage } from 'assets/ts/utils/image-utils';
+// import { getBase64UrlFromImage } from 'assets/ts/utils/image-utils';
 type TypeValue = string | null | File;
 
 const props = defineProps({
@@ -43,24 +43,30 @@ function emitInput() {
     $emit('update:modelValue', actualValue.value);
 }
 
-async function onInput(file: TypeValue) {
-    if (!file) {
-        return false;
-    }
+// TODO: Временно убрал       @update:model-value="onInput" из за ошибки
 
-    if (typeof file === 'string') {
-        actualValue.value = file;
-        emitInput();
-        return false;
-    }
-
-    const res = await getBase64UrlFromImage(file);
-
-    if (typeof res === 'string') {
-        actualValue.value = res;
-        emitInput();
-    }
-}
+// async function onInput(file: TypeValue | File[]) {
+//     if (!file) {
+//         return false;
+//     }
+//
+//     if (typeof file === 'string') {
+//         actualValue.value = file;
+//         emitInput();
+//         return false;
+//     }
+//
+//     if (!Array.isArray(file)) {
+//
+//     }
+//
+//     const res = await getBase64UrlFromImage(file);
+//
+//     if (typeof res === 'string') {
+//         actualValue.value = res;
+//         emitInput();
+//     }
+// }
 
 function onRemove() {
     actualValue.value = null;
@@ -94,11 +100,10 @@ const imageSrc = computed(() => (urls: (string | File)[]): string | undefined =>
 <template>
     <UiFileInput
         v-bind="$attrs"
-        v-model="actualValue"
+        :model-value="actualValue"
         :size="size"
         :color="color"
         :class="classList"
-        @update:model-value="onInput"
         @remove="onRemove"
     >
         <template #data="props">

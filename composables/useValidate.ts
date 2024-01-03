@@ -72,14 +72,18 @@ export function useValidate(rules: ComputedRef<IRules>, value: object) {
         initialValue.value = _.cloneDeep(value);
     };
 
-    const getError = computed(() => (fieldPath: string) => {
-        const error = $v.value.$errors.find(i => i.$propertyPath === fieldPath);
+    const getError = computed(() => (propertyPath: string) => {
+        const error = $v.value.$errors.find(property => property.$propertyPath === propertyPath);
 
         if (!error) {
-            return null;
+            return '';
         }
 
-        return error.$message;
+        if (typeof error.$message === 'string') {
+            return error.$message;
+        }
+
+        return error.$message.value;
     });
 
     const isInvalid = computed(() => $v.value.$invalid || _.isEqual(initialValue.value, value));

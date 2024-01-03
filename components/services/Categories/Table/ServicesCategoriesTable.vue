@@ -37,7 +37,7 @@ async function onDelete(id: string) {
     $emit('update');
 }
 
-function onClick(item: object) {
+function onClick(item: any) {
     const { $routes } = useNuxtApp();
     navigateTo($routes.services.detail(item.id));
 }
@@ -52,7 +52,7 @@ function onClick(item: object) {
             :class="$style.wrapper"
             @click-row="onClick"
         >
-            <template #control="itemProps: {columnField: string, value: any, item: IServiceCategory }">
+            <template #control="{ item }: { item: IServiceCategory }">
                 <div :class="$style.control">
                     <UiTooltip v-if="isOwner" interactive>
                         <template #header>
@@ -62,10 +62,10 @@ function onClick(item: object) {
                         </template>
                         <template #bottom>
                             <div :class="$style.tooltipBottom">
-                                <UiButton size="x-small" @click="onEdit(itemProps.item)">
+                                <UiButton size="x-small" @click="onEdit(item)">
                                     Редактировать
                                 </UiButton>
-                                <UiButton size="x-small" @click="onDelete(itemProps.item.id)">
+                                <UiButton size="x-small" @click="onDelete(item.id)">
                                     Удалить
                                 </UiButton>
                             </div>
