@@ -1,6 +1,5 @@
 import { leadingZero } from '~/assets/ts/utils/format-utils';
 
-// todo: Типизировать утлиты
 export const milliseconds = 1000;
 export const minuteSeconds = 60;
 export const minuteMilliseconds = 60 * milliseconds;

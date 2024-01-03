@@ -1,15 +1,21 @@
 import { IRolesItem } from '~/types/roles';
 
-export interface IStaffSave {
+interface IMasterService {
+    id: string;
+    breeds: string[];
+}
+
+interface IStaffSave {
     fullName: string;
     phone: string;
     roles: Array<string>;
     preview: string | null
     description: string;
     salary: number;
+    services: IMasterService[];
 }
 
-export interface IStaffItem {
+interface IStaffItem {
     id: string;
     roles: Array<IRolesItem>;
     fullName: string;
@@ -18,3 +24,9 @@ export interface IStaffItem {
     description: string;
     salary: number;
 }
+
+export type {
+    IStaffSave,
+    IStaffItem,
+    IMasterService,
+};

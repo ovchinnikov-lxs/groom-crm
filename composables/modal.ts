@@ -1,14 +1,20 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Component } from 'vue';
+import { Component, PropType } from 'vue';
 
 // Utils
 import { lockBody, unlockBody } from 'assets/ts/utils/dom-utils';
 
 export type ModalTypes = 'popup' | 'confirm';
+type TypeModalSize = 'small' | 'medium';
+
+export interface IModalProps {
+    size: TypeModalSize
+    isVisible?: boolean
+}
 
 interface IModalParams {
     component: Component
-    modalProps?: object
+    modalProps?: IModalProps
     componentProps?: object
     type?: ModalTypes
     onClose?: () => void
@@ -60,14 +66,9 @@ export const modal = reactive<IModal>({
     },
 });
 
-export interface IModalProps {
-    size: string
-    isVisible: boolean
-}
-
 export const modalProps = {
     size: {
-        type: String,
+        type: String as PropType<TypeModalSize>,
         default: 'small',
     },
 

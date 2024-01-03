@@ -41,6 +41,10 @@ defineProps({
 .UiSelect {
     $select: &;
 
+    &.--is-disabled {
+        opacity: .6;
+    }
+
     &__bottom {
         &.--medium-size {
             display: flex;

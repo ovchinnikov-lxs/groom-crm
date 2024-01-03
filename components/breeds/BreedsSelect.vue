@@ -28,6 +28,11 @@ const props = defineProps({
         type: String,
         default: '',
     },
+
+    multiple: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 // VALUE SECTION
@@ -136,6 +141,7 @@ const actualValueOptions = computed(() => actualValue.value.map(id => ({
                 </div>
 
                 <input
+                    v-if="!actualValueOptions.length || multiple && actualValueOptions.length"
                     ref="inputRef"
                     :placeholder="placeholder"
                     :value="suggestValue"

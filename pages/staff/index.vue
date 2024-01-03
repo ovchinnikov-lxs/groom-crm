@@ -12,7 +12,7 @@ const { data: staff, refresh } = await $api.staff.getList({
 
 function openCreateModal() {
     modal.open({
-        component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
+        component: defineAsyncComponent(() => import('~/components/staff/Save/StaffSave.vue')),
         componentProps: {
         },
         onClose: refresh,

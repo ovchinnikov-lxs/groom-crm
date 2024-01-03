@@ -4,7 +4,7 @@ import type { PropType } from 'vue';
 
 // Constants
 import { ROLES_KEYS } from 'assets/ts/constants/roles';
-import { IStaffItem, IStaffSave } from '~/types/staff';
+import type { IStaffItem, IStaffSave } from '~/types/staff';
 
 const props = defineProps({
     value: {
@@ -13,15 +13,14 @@ const props = defineProps({
     },
 });
 
-const actualValue = reactive<IStaffSave>({
+const actualValue: IStaffSave = reactive({
     fullName: '',
     phone: '',
     roles: [],
     preview: '',
     description: '',
     salary: 0,
-    // breeds: [],
-    // services: [],
+    services: [],
 });
 
 watch(() => props.value, (val: IStaffItem) => {
@@ -57,8 +56,7 @@ const { $v, getError, getInvalidState } = useValidate(computed(() => ({
         preview: [],
         description: ['required'],
         salary: ['required', { name: 'maxLength', param: 100 }, { name: 'minLength', param: 1 }],
-        // breeds: [],
-        // services: ['required'],
+        services: ['required'],
     },
 
     ...roleIs.value(ROLES_KEYS.ADMIN) && !roleIs.value(ROLES_KEYS.MASTER) && {
@@ -66,40 +64,17 @@ const { $v, getError, getInvalidState } = useValidate(computed(() => ({
     },
 })), actualValue);
 
-// todo: from backend
-// const breedOptions = [
-//     {
-//         id: '1',
-//         name: 'Чихуахуа',
-//     },
-//     {
-//         id: '2',
-//         name: 'Мальтез',
-//     },
-// ];
+const $emit = defineEmits<{(e: 'close'): void }>();
 
 /**
- *  todo: from backend - Список услуг - базовые по типу - чистка зубов и тд,
- *  остальные услуги будут подгружаться с бэка относительно выбранных пород
+ * TODO: Схема прикрепления пород и услуг к мастеру
+ * 1) По породам
+ *      1) Выбор породы (в селекторе, а при выборе появляется карточка породы с закрытым списком услуг по этой породе
+ *      2) Выбор услуг относительно выбранной породы, открываешь список, и можешь через поиск фильтровать услуги, и выбирать точечно или "Выбрать все"
+ *      Итог: Получаем массив с объектами {id: 'breedId', services: ['serviceId']}
+ *      На беке:
+ *
  */
-// const servicesOptions = ref([
-//     {
-//         id: '1',
-//         name: 'Спа процедуры',
-//     },
-//     {
-//         id: '2',
-//         name: 'Чистка зубов',
-//     },
-// ]);
-// async function onBreedSelect() {
-//     try {
-//         console.log('fetch services by selected breeds and add to servicesOptions');
-//     } catch (e) {
-//         console.log(e);
-//     }
-// }
-const $emit = defineEmits<{(e: 'close'): void }>();
 
 
 async function onSubmit() {
@@ -214,6 +189,16 @@ async function onSubmit() {
                                     v-model="$v.salary.$model"
                                     placeholder="Введите процент выручки от стрижки"
                                     :error="getError('salary')"
+                                />
+                            </template>
+                        </UiFormCell>
+
+                        <UiFormCell :error="getError('services')">
+                            <template #label>Услуги мастера</template>
+                            <template #default>
+                                <StaffSaveMasterServices
+                                    v-model="$v.services.$model"
+                                    :error="getError('services')"
                                 />
                             </template>
                         </UiFormCell>

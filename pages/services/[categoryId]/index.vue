@@ -8,8 +8,11 @@ const breadcrumbs = useBreadcrumbs();
 const { data: serviceCategory, refresh: categoryRefresh } = await $api.services.getCategoryDetail(String(useRoute().params.categoryId), {
     key: 'serviceCategory',
 });
-const { data: serviceList, refresh: servicesRefresh } = await $api.services.getListByCategory(serviceCategory.value.id, {
+const { data: serviceList, refresh: servicesRefresh } = await $api.services.getList({
     key: 'serviceList',
+    params: {
+        categoryId: serviceCategory.value.id,
+    },
 });
 
 if (!serviceCategory.value) {

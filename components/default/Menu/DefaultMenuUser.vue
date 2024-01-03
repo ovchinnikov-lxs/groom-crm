@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { modal } from '~/composables/modal';
 const { $routes } = useNuxtApp();
+const { isOwner, isAdmin } = useUser();
 const auth = useAuth();
 
 const isOpened = ref(false);
@@ -25,7 +26,10 @@ const userSymbols = computed(() => {
 
 const onBooking = () => {
     modal.open({
-        component: defineAsyncComponent(() => import('~/components/bookings/BookingCreate.vue')),
+        component: defineAsyncComponent(() => import('~/components/booking/BookingCreate.vue')),
+        modalProps: {
+            size: 'medium',
+        },
     });
 };
 </script>
@@ -35,6 +39,7 @@ const onBooking = () => {
         <div :class="$style.wrapper">
 
             <UiButton
+                v-if="isAdmin || isOwner"
                 size="x-small"
                 :class="$style.booking"
                 @click="onBooking"

@@ -56,7 +56,7 @@ const emit = defineEmits<{
 }>();
 function onEdit(value: IStaffItem) {
     modal.open({
-        component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
+        component: defineAsyncComponent(() => import('~/components/staff/Save/StaffSave.vue')),
         componentProps: {
             value,
         },

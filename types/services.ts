@@ -10,7 +10,7 @@ export interface IService {
     name: string;
     description: string;
     preview: string;
-    price: string;
-    duration: string;
+    price: number;
+    duration: number;
     breeds: Array<string>;
 }
