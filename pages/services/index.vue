@@ -5,6 +5,10 @@ const breadcrumbs = useStoreBreadcrumbs();
 const storeModal = useStoreModal();
 const storeProfile = useStoreProfile();
 
+useSeoMeta({
+    title: 'Категории услуг',
+});
+
 const { data, refresh } = await useAsyncData(async () => await $fetch<{
     data: Tables<'ServiceCategory'>[];
 }>('/api/service', {

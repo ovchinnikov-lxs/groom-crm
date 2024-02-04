@@ -18,6 +18,10 @@ if (!data?.value) {
     });
 }
 
+useSeoMeta({
+    title: () => data?.value?.name || 'Услуга',
+});
+
 function setBreadcrumbs() {
     storeBreadcrumbs.setList([
         {

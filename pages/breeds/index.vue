@@ -6,6 +6,10 @@ const storeProfile = useStoreProfile();
 const storeModal = useStoreModal();
 const storeToast = useStoreToast();
 
+useSeoMeta({
+    title: 'Породы',
+});
+
 const { data, refresh: fetchBreeds } = await useAsyncData(async () => await $fetch<{data: Tables<'Breed'>[]}>('/api/breeds', {
     headers: useRequestHeaders(['cookie']),
     params: {

@@ -6,6 +6,10 @@ definePageMeta({
         mode: 'out-in',
     },
 });
+
+useSeoMeta({
+    title: 'Вход',
+});
 </script>
 
 <template>
