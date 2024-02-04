@@ -22,6 +22,11 @@ const props = defineProps({
             'custom',
         ].includes(v),
     },
+
+    viewBox: {
+        type: String,
+        default: '0 0 24 24',
+    },
 });
 
 const classList = computed(() => [
@@ -32,6 +37,7 @@ const classList = computed(() => [
 <template>
     <div :class="classList" class="UiIcon">
         <SvgIcon
+            :view-box="viewBox"
             :name="name"
             class="UiIcon__el"
         />

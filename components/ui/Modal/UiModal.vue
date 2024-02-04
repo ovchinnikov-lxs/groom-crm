@@ -1,45 +1,48 @@
 <script setup lang="ts">
-import { IModalItem, modal } from '~/composables/modal';
-import type { ModalTypes } from '~/composables/modal';
+import type { Component } from 'vue';
+import type { IModalItem, ModalTypes } from '~/types/modal';
 
-const MODAL_TYPES: {
-    [key: string]: any
-} = {
+const componentDict: Record<ModalTypes, Component> = {
     popup: defineAsyncComponent(() => import('~/components/ui/Modal/Popup/UiModalPopup.vue')),
+    confirm: defineAsyncComponent(() => import('~/components/ui/Modal/Confirm/UiModalConfirm.vue')),
 };
-const modalIsVisible = computed(() => (id: string, type: ModalTypes) => {
-    const modalIndex = modal.list.findIndex((m: IModalItem) => m.id === id);
 
-    return !modal.list.some((m: IModalItem, i) => i > modalIndex && m.type === type);
+const storeModal = useStoreModal();
+
+const modalIsVisible = computed(() => (id: string, type: ModalTypes) => {
+    const modalIndex = storeModal.list.findIndex((m: IModalItem) => m.id === id);
+
+    return !storeModal.list.some((m: IModalItem, i) => i > modalIndex && m.type === type);
 });
 
 </script>
 <template>
     <TransitionGroup
         tag="div"
-        name="modal-in"
+        name="ui-modal"
         class="UiModal"
     >
-        <component
-            :is="MODAL_TYPES[item.type]"
-            v-for="(item, index) in modal.list"
-            :key="item.id"
-            :style="{zIndex: index}"
-            :is-visible="modalIsVisible(item.id, item.type)"
+        <Component
+            :is="componentDict[item.type]"
+            v-for="(item, index) in storeModal.list"
             v-bind="item.modalProps"
+            :id="item.id"
+            :key="item.id"
+            :style="{ zIndex: index }"
+            :is-visible="modalIsVisible(item.id, item.type)"
             class="UiModal__item"
-            @close="modal.close(item.id)"
+            @close="storeModal.close(item.id, false, $event)"
         >
             <template #default>
-                <component
+                <Component
                     :is="item.component"
-                    :ref="item.id"
-                    :key="item.id"
+                    v-if="item.component"
                     v-bind="item.componentProps"
-                    @close="modal.close(item.id)"
+                    :key="item.id"
+                    @close="storeModal.close(item.id,false, $event)"
                 />
             </template>
-        </component>
+        </Component>
     </TransitionGroup>
 </template>
 
@@ -54,7 +57,6 @@ const modalIsVisible = computed(() => (id: string, type: ModalTypes) => {
         bottom: 0;
         left: 0;
         pointer-events: auto;
-        transition: all .6s ease;
     }
 }
 </style>

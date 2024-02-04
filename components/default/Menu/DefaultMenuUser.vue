@@ -1,16 +1,21 @@
 <script setup lang="ts">
-const { $routes } = useNuxtApp();
-const auth = useAuth();
+const storeProfile = useStoreProfile();
+const supabase = useSupabaseClient();
+const storeModal = useStoreModal();
 
 const isOpened = ref(false);
 async function onLogout() {
     isOpened.value = false;
-    await auth.logout();
-    navigateTo($routes.auth.login);
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        console.log('DEFAULT_MENU_USER:ON_LOGOUT:', error);
+    }
 }
 
 const userSymbols = computed(() => {
-    const { fullName } = auth.user;
+    const fullName = storeProfile.profile.full_name;
 
     if (!fullName) {
         return '';
@@ -21,17 +26,33 @@ const userSymbols = computed(() => {
         .map((i: string) => i[0])
         .join('');
 });
+
+const onBooking = () => {
+    storeModal.open({
+        component: defineAsyncComponent(() => import('~/components/booking/BookingCreate.vue')),
+        modalProps: {
+            size: 'medium',
+        },
+    });
+};
 </script>
 
 <template>
     <div class="DefaultMenuUser">
         <div :class="$style.wrapper">
 
+            <UiButton
+                v-if="storeProfile.isOwner || storeProfile.isMaster"
+                size="x-small"
+                :class="$style.booking"
+                @click="onBooking"
+            >
+            </UiButton>
 
-            <div :title="auth.user.fullName" :class="$style.previewWrapper">
+            <div :title="String(storeProfile.profile.full_name)" :class="$style.previewWrapper">
                 <UiImage
-                    v-if="auth.user.preview"
-                    :src="auth.user.preview"
+                    v-if="storeProfile.profile.avatar"
+                    :src="storeProfile.profile.avatar"
                     :class="$style.preview"
                 />
 
@@ -58,7 +79,7 @@ const userSymbols = computed(() => {
                         <UiButton
                             tag="NuxtLink"
                             size="x-small"
-                            :to="$routes.user.detail"
+                            to="/profile"
                         >
                             Аккаунт
                         </UiButton>
@@ -81,6 +102,27 @@ const userSymbols = computed(() => {
     width: 100%;
     height: 100%;
     column-gap: calc(var(--ui-unit) * 2);
+}
+
+.booking {
+    &:after {
+        content: 'Записать';
+
+        @include respond-to(mobile) {
+            content: '+';
+        }
+    }
+
+    @include respond-to(tablet) {
+        &:global(.UiButton) {
+            &:global(.--x-small-size) {
+                width: calc(var(--ui-unit) * 8);
+                height: calc(var(--ui-unit) * 8);
+                padding: 0;
+                border-radius: calc(var(--ui-unit) * 2.5);
+            }
+        }
+    }
 }
 
 .previewWrapper {

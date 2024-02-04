@@ -26,6 +26,7 @@
     --ui-col: 40px;
     --ui-unit: 4px;
     --ui-box-shadow: 0 0 32px rgba(var(--ui-secondary-color-rgb), .2);
+    --ui-cubic-bezier: cubic-bezier(.55, .085, .68, .53);
 }
 
 body {

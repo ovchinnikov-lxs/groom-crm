@@ -1,32 +1,24 @@
-<script setup lang="ts">
-import type { PropType } from 'vue';
-
+<script setup lang="ts" generic="T">
 interface IColumn {
-    id: string;
+    id: keyof T | string;
     name: string;
     width?: string;
 }
 
-export interface IDataItem {
-    [key: string]: any
+interface IProps {
+    columns: IColumn[];
+    data: Array<T>;
+    interactive?: boolean;
 }
 
-const props = defineProps({
-    columns: {
-        type: Array as PropType<IColumn[]>,
-        required: true,
-    },
-
-    data: {
-        type: Array as PropType<any | IDataItem>,
-        default: () => [],
-    },
-
-    interactive: {
-        type: Boolean,
-        default: false,
-    },
+const props = withDefaults(defineProps<IProps>(), {
+    interactive: false,
 });
+
+const emit = defineEmits<{
+    'click-row': [item: T]
+}>();
+
 
 const classList = computed(() => [{
     '--is-interactive': props.interactive,
@@ -57,16 +49,15 @@ const columnStyleList = computed(() => (item: IColumn) => ({
     ...item.width && { width: item.width },
 }));
 
-const $emit = defineEmits<{
-    'click-row': [item: IDataItem]
-}>();
 
-function onClickRow(item: IDataItem) {
+const dataItem = computed(() => (item: Record<IColumn['id'], any>, colId: IColumn['id']) => item[colId]);
+
+function onClickRow(item: T) {
     if (!props.interactive) {
         return false;
     }
 
-    $emit('click-row', item);
+    emit('click-row', item);
 }
 </script>
 
@@ -88,22 +79,26 @@ function onClickRow(item: IDataItem) {
         <tbody>
             <tr
                 v-for="(item, index) in data"
-                :key="item.id || index"
+                :key="index"
                 class="UiTable__row text-x-small"
                 @click="onClickRow(item)"
             >
                 <td
                     v-for="col in columns"
-                    :key="item.id + col.id"
+                    :key="String(col.id) + index"
                     class="UiTable__cell UiTable__item"
                     :style="columnStyleList(col)"
                 >
                     <slot
                         :name="col.id"
                         :item="item"
-                        :value="item[col.id]"
+                        :value="dataItem(item as Record<IColumn['id'],any>, col.id)"
                     >
-                        <div v-if="item[col.id]" v-html="item[col.id]"></div>
+                        <div
+                            v-if="dataItem(item as Record<IColumn['id'],any>, col.id)"
+                            v-html="dataItem(item as Record<IColumn['id'],any>, col.id)"
+                        >
+                        </div>
 
                         <div v-else class="UiTable__data-empty">
                             Не установленно

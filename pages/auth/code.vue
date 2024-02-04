@@ -3,7 +3,7 @@
 import { useValidate } from '~/composables/useValidate';
 
 // Utils
-import { leadingZero } from 'assets/ts/utils/format-utils';
+import { leadingZero } from '~/utils/format';
 
 definePageMeta({
     layout: 'auth',
@@ -13,14 +13,11 @@ definePageMeta({
     },
 });
 
-const router = useRouter();
-const { $routes } = useNuxtApp();
-
 const actualValue = reactive({
     code: '',
 });
 
-const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+const { v$, getError, getInvalidState } = useValidate(computed(() => ({
     code: [
         'required',
     ],
@@ -56,7 +53,7 @@ async function onSubmit() {
         }
 
         console.log('onSubmit');
-        router.push($routes.salons.list);
+        navigateTo('/dashboard');
     } catch (e) {
         console.log(e);
     }
@@ -81,7 +78,7 @@ async function onSubmit() {
             <UiFormCell :error="getError('code')" :class="$style.cell">
                 <template #default>
                     <UiInput
-                        v-model="$v.code.$model"
+                        v-model="v$.code.$model"
                         :error="getError('code')"
                         placeholder="Введите код"
                     />

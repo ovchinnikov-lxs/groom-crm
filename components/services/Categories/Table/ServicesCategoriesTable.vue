@@ -1,45 +1,65 @@
 <script setup lang="ts">
-import { modal } from '~/composables/modal';
-import { IServiceCategory } from '~/types/services';
+import type { Tables } from '~/types/supabase';
 
-defineProps({
-    list: {
-        type: Array,
-        default: () => [],
-    },
-});
-const { isOwner } = useUser();
+defineProps<{
+    list: Array<Tables<'ServiceCategory'>>
+}>();
+const storeProfile = useStoreProfile();
+const storeModal = useStoreModal();
+const storeToast = useStoreToast();
 
 const columns = [
-    { id: 'preview', name: 'Изображение категории' },
+    { id: 'image', name: 'Изображение категории' },
     { id: 'name', name: 'Название категории' },
     { id: 'description', name: 'Описание категории' },
     { id: 'control', name: '' },
 ];
 
-const $emit = defineEmits<{
+const emit = defineEmits<{
     update: [void]
 }>();
-function onEdit(value: IServiceCategory) {
-    modal.open({
+
+function onEdit(value: Tables<'ServiceCategory'>) {
+    storeModal.open({
         component: defineAsyncComponent(() => import('~/components/services/Categories/ServicesCategoriesSave.vue')),
         componentProps: {
             value,
         },
         onClose: () => {
-            $emit('update');
+            emit('update');
         },
     });
 }
 async function onDelete(id: string) {
-    const { $api } = useNuxtApp();
-    await $api.services.deleteServiceCategory(id);
-    $emit('update');
+    storeModal.open({
+        type: 'confirm',
+        modalProps: {
+            title: 'Вы действительно хотите удалить услугу?',
+        },
+        onClose: async res => {
+            if (!res) {
+                return false;
+            }
+
+            try {
+                await $fetch(`/api/service/${id}`, {
+                    method: 'DELETE',
+                });
+
+                storeToast.add({
+                    type: 'success',
+                    text: 'Услуга успешно удалена',
+                });
+                emit('update');
+            } catch (e) {
+                console.error('PAGE:BREEDS:ON_DELETE:', e);
+            }
+        },
+    });
 }
 
-function onClick(item: object) {
-    const { $routes } = useNuxtApp();
-    navigateTo($routes.services.detail(item.id));
+function onClick(id: string) {
+    navigateTo(`/services/${id}`);
 }
 </script>
 
@@ -50,27 +70,41 @@ function onClick(item: object) {
             :columns="columns"
             :data="list"
             :class="$style.wrapper"
-            @click-row="onClick"
+            @click-row="onClick($event.id)"
         >
-            <template #control="itemProps: {columnField: string, value: any, item: IServiceCategory }">
+            <template #image="columnProps">
+                <UiImage
+                    :src="columnProps.item.image"
+                    width="80"
+                    height="80"
+                    :class="$style.image"
+                />
+            </template>
+
+            <template #description="columnProps">
+                <div :class="$style.description" v-html="columnProps.item.description"></div>
+            </template>
+
+            <template #control="columnProps">
                 <div :class="$style.control">
-                    <UiTooltip v-if="isOwner" interactive>
+                    <LazyUiTooltip v-if="storeProfile.isOwner" interactive>
                         <template #header>
-                            <UiButton size="small" icon>
+                            <LazyUiButton size="small" icon>
                                 <UiIcon name="ui/settings"/>
-                            </UiButton>
+                            </LazyUiButton>
                         </template>
                         <template #bottom>
                             <div :class="$style.tooltipBottom">
-                                <UiButton size="x-small" @click="onEdit(itemProps.item)">
+                                <LazyUiButton size="x-small" @click="onEdit(columnProps.item)">
                                     Редактировать
-                                </UiButton>
-                                <UiButton size="x-small" @click="onDelete(itemProps.item.id)">
+                                </LazyUiButton>
+
+                                <LazyUiButton size="x-small" @click="onDelete(columnProps.item.id)">
                                     Удалить
-                                </UiButton>
+                                </LazyUiButton>
                             </div>
                         </template>
-                    </UiTooltip>
+                    </LazyUiTooltip>
                 </div>
             </template>
         </UiTable>
@@ -92,6 +126,15 @@ function onClick(item: object) {
             padding-right: var(--ui-col);
         }
     }
+}
+
+.image {
+    border-radius: 50%;
+    transform: translate3d(0, 0, 0);
+}
+
+.description {
+    @include text-clamp(2);
 }
 
 .control {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 import SalonsMasterCol from '~/components/salons/master/SalonsMasterCol.vue';
 
 export interface IScheduleItem {

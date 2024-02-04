@@ -1,10 +1,4 @@
 <script setup lang="ts">
-// Composables
-import { useValidate } from '~/composables/useValidate';
-
-const router = useRouter();
-const { $routes } = useNuxtApp();
-
 definePageMeta({
     layout: 'auth',
     pageTransition: {
@@ -17,7 +11,7 @@ const actualValue = reactive({
     phone: '',
 });
 
-const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+const { v$, getError, getInvalidState } = useValidate(computed(() => ({
     phone: [
         'required',
         'phone',
@@ -31,7 +25,7 @@ async function onSubmit() {
         }
 
         console.log('onSubmit');
-        router.push($routes.auth.code);
+        navigateTo('/auth/code');
     } catch (e) {
         console.log(e);
     }
@@ -47,7 +41,7 @@ async function onSubmit() {
                 <template #default>
                     <UiInput
                         id="phone"
-                        v-model="$v.phone.$model"
+                        v-model="v$.phone.$model"
                         :error="getError('phone')"
                         placeholder="Введите телефон"
                     />

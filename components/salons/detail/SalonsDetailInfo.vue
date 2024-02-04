@@ -1,54 +1,38 @@
 <script setup lang="ts">
-import type { PropType } from 'vue';
-import { plural } from '~/assets/ts/utils/format-utils';
+import { plural } from '~/utils/format';
+import type { Tables } from '~/types/supabase';
 
-defineProps({
-    id: {
-        type: String,
-        required: true,
-    },
+interface ISalon extends Tables<'Salon'>{
+    staff: {
+        user: Tables<'Profile'>
+    }[];
+}
 
-    preview: {
-        type: [String, null] as PropType<string | null>,
-        default: null,
-    },
+interface IProps {
+    salon: ISalon
+}
 
-    name: {
-        type: String,
-        required: true,
-    },
-
-    openAt: {
-        type: String,
-        required: true,
-    },
-
-    closeAt: {
-        type: String,
-        required: true,
-    },
-
-    masters: {
-        type: Array,
-        default: () => [],
-    },
-});
+const props = defineProps<IProps>();
 
 defineEmits<{(e: 'update'): void; (e: 'delete'): void }>();
-const { isOwner } = useUser();
+const storeProfile = useStoreProfile();
+
+const masters = computed(() => props.salon.staff
+    .filter(item => [ROLES_KEYS.MASTER, ROLES_KEYS.OWNER]
+        .includes(item.user.role)));
 </script>
 
 <template>
     <UiPlate class="SalonsDetailInfo">
         <div :class="$style.wrapper">
 
-            <SalonsPreview :preview="preview" :class="$style.preview"/>
+            <SalonsPreview :preview="salon.avatar" :class="$style.preview"/>
 
             <div :class="$style.info">
-                <h5>{{ name }}</h5>
+                <h5>{{ salon.name }}</h5>
 
                 <div class="text-x-small" :class="$style.time">
-                    С {{ openAt }} до {{ closeAt }}
+                    С {{ salon.open_at.slice(0, 5) }} до {{ salon.close_at.slice(0, 5) }}
                 </div>
 
                 <div class="text-medium">
@@ -62,19 +46,19 @@ const { isOwner } = useUser();
 
             </div>
 
-            <div v-if="isOwner" :class="$style.controls">
-                <UiButton size="small" @click="$emit('update')">
+            <div v-if="storeProfile.isOwner" :class="$style.controls">
+                <LazyUiButton size="small" @click="$emit('update')">
                     Редактировать
-                </UiButton>
+                </LazyUiButton>
 
-                <UiButton
+                <LazyUiButton
                     outline
                     color="error"
                     size="small"
                     @click="$emit('delete')"
                 >
                     Удалить
-                </UiButton>
+                </LazyUiButton>
             </div>
 
         </div>

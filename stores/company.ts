@@ -1,30 +1,45 @@
 import { defineStore } from 'pinia';
+import type { Tables } from '~/types/supabase';
+import type { Nullable } from '~/types';
 
 interface IState {
-    detail: {
-        [key: string]: any
-    }
+    detail: Tables<'Company'>
 }
-export const useCompany = defineStore('company', {
+export const useStoreCompany = defineStore('company', {
     state: (): IState => ({
-        detail: {},
+        detail: {
+            id: '',
+            name: null,
+            tariff_id: '',
+            created_at: 'string',
+            end_access_date: null,
+        },
     }),
 
     getters: {
-        tariffCompanyIs: state => (key: string) => {
-            const tariffs = useTariffs();
+        currentTariff(): Nullable<Tables<'Tariff'>> {
+            const tariffs = useStoreTariffs();
 
-            return tariffs.list.find(t => t.id === state.detail.tariffId)?.name === key;
+            return tariffs.list.find(item => item.id === this.detail.tariff_id) || null;
+        },
+
+        tariffCompanyIs() {
+            return (key: string): boolean => this.currentTariff?.name === key;
         },
     },
 
     actions: {
         async fetchDetail() {
             try {
-                const { $api } = useNuxtApp();
-                const { data } = await $api.company.getInfo();
+                const data = await $fetch('/api/company', {
+                    headers: useRequestHeaders(['cookie']),
+                });
 
-                this.detail = data.value || {};
+                if (!data) {
+                    return false;
+                }
+
+                this.detail = data;
             } catch (e) {
                 console.log(e);
             }

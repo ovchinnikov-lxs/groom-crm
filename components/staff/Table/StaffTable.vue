@@ -1,62 +1,58 @@
 <script setup lang="ts">
-import { IStaffItem } from '~/types/staff';
+import type { Tables } from '~/types/supabase';
 
-// Utils
-import { splitThousands } from '~/assets/ts/utils/format-utils';
+defineProps<{ list: Tables<'Profile'>[] }>();
+const emit = defineEmits<{
+    update: [void]
+}>();
 
-// Constants
-import { ROLES_KEYS } from 'assets/ts/constants/roles';
-import { USER_STATUSES_COLORS, USER_STATUSES_DISPLAY } from 'assets/ts/constants/user';
-
-defineProps({
-    list: {
-        type: Array,
-        default: () => [],
-    },
-});
-
-const { isOwner } = useUser();
+const storeProfile = useStoreProfile();
+const storeModal = useStoreModal();
+const storeToast = useStoreToast();
 
 const columns = [
-    { id: 'fullName', name: 'Имя и фамилия' },
-    { id: 'phone', name: 'Номер телефона' },
+    { id: 'full_name', name: 'Имя и фамилия' },
     { id: 'status', name: 'Статус' },
-    { id: 'salary', name: isOwner ? 'Зарплата' : '' },
-    { id: 'roles', name: 'Роли' },
+    { id: 'salary', name: 'Зарплата' },
+    { id: 'role', name: 'Позиция' },
     { id: 'control', name: '' },
 ].map((i, index) => {
-    const TEMPLATE_COLUMNS = isOwner
-        ? ['25%', '15%', '15%', '15%', '20%', '10%']
-        : ['30%', '20%', '25%', '0%', '20%', '5%'];
+    const TEMPLATE_COLUMNS = ['20%', '20%', '20%', '20%', '20%'];
 
     return {
         ...i,
         width: TEMPLATE_COLUMNS[index],
     };
 });
-const displayStatus = (status: string): string | undefined => (USER_STATUSES_DISPLAY[status]);
-const statusColor = (status: string): string | undefined => USER_STATUSES_COLORS[status];
 
-const displaySalary = computed(() => (item: IStaffItem) => {
-    const roles = item.roles.map(r => r.value);
+const displayStatus = (status: Tables<'Profile'>['status']): string | undefined => (USER_STATUSES_DISPLAY[status]);
+const statusColor = (status: Tables<'Profile'>['status']): string | undefined => USER_STATUSES_COLORS[status];
 
-    if (roles.includes(ROLES_KEYS.OWNER) || !isOwner) {
-        return '';
+const displaySalary = computed(() => (item: Tables<'Profile'>) => {
+    const getSalary = (val: Tables<'Profile'>['salary'], role: Tables<'Profile'>['role']) => {
+        const map = new Map<Tables<'Profile'>['role'], string>([
+            ['owner', `<b>${splitThousands(val)} ₽</b> в месяц`],
+            ['admin', `<b>${splitThousands(val)} ₽</b> в месяц`],
+            ['master', `<b>${val}%</b> от стрижки`],
+        ]);
+
+        return val ? map.get(role) : 'Не указано';
+    };
+
+    if (item.id === storeProfile.profile.id) {
+        return getSalary(item.salary, item.role);
+    } else if (!storeProfile.isOwner) {
+        return 'Недостаточно прав';
     }
 
-    if (roles.includes(ROLES_KEYS.ADMIN) && !roles.includes(ROLES_KEYS.MASTER)) {
-        return `<b>${splitThousands(item.salary)} ₽</b> в месяц`;
-    }
-
-    return `<b>${item.salary}%</b> от стрижки`;
+    return getSalary(item.salary, item.role);
 });
 
-const emit = defineEmits<{
-    update: [void]
-}>();
-function onEdit(value: IStaffItem) {
-    modal.open({
-        component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
+const displayRole = computed(() => (role: Tables<'Profile'>['role']) => ROLES_LABELS[role]);
+
+function onEdit(value: Tables<'Profile'>) {
+    storeModal.open({
+        component: defineAsyncComponent(() => import('~/components/staff/Save/StaffSave.vue')),
         componentProps: {
             value,
         },
@@ -64,15 +60,39 @@ function onEdit(value: IStaffItem) {
     });
 }
 
-async function onDelete(item: IStaffItem) {
-    try {
-        const { $api } = useNuxtApp();
+async function onDelete(item: Tables<'Profile'>) {
+    storeModal.open({
+        type: 'confirm',
+        modalProps: {
+            title: 'Вы действительно хотите удалить сотрудника?',
+        },
+        onClose: async res => {
+            if (!res) {
+                return false;
+            }
 
-        await $api.staff.delete(item.id);
-        emit('update');
-    } catch (e) {
-        console.log(e);
-    }
+            try {
+                await $fetch('/api/staff', {
+                    method: 'DELETE',
+                    body: {
+                        id: item.id,
+                    },
+                });
+                emit('update');
+
+                storeToast.add({
+                    type: 'success',
+                    text: 'Сотрудник успешно удален',
+                });
+            } catch (e) {
+                console.error('STAFF_TABLE:ON_DELETE:', e);
+                storeToast.add({
+                    type: 'error',
+                    text: 'Упс, что то пошло не так',
+                });
+            }
+        },
+    });
 }
 </script>
 
@@ -83,61 +103,60 @@ async function onDelete(item: IStaffItem) {
             :data="list"
             :class="$style.wrapper"
         >
-            <template #full-name="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
+            <template #full_name="columnProps">
                 <div :class="$style.fullName">
-                    {{ itemProps.value }}
+                    {{ columnProps.value }}
+
+                    <b v-if="storeProfile.profile.id === (columnProps.item as Tables<'Profile'>).id">
+                        (Вы)
+                    </b>
                 </div>
             </template>
 
-            <template #phone="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
-                <UiLink
-                    tag="a"
-                    color="primary-light"
-                    :href="`tel:${itemProps.value}`"
-                >
-                    {{ itemProps.value }}
-                </UiLink>
-            </template>
-
-            <template #status="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
+            <template #status="columnProps">
                 <UiButton
                     size="x-small"
-                    :color="statusColor(itemProps.value)"
+                    :color="statusColor(columnProps.value)"
                     outline
                     :class="$style.tag"
                 >
-                    {{ typeof itemProps.value === 'string' ? displayStatus(itemProps.value) : '' }}
+                    {{ displayStatus(columnProps.value) }}
                 </UiButton>
             </template>
 
-            <template #roles="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
-                {{ Array.isArray(itemProps.value) ? itemProps.value.map(i => i.name).join(', ') : '' }}
+            <template #role="columnProps">
+                {{ displayRole(columnProps.value) }}
             </template>
 
-            <template #salary="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
-                <div v-html="displaySalary(itemProps.item)">
-                </div>
+            <template #salary="columnProps">
+                <div v-html="displaySalary(columnProps.item as Tables<'Profile'>)"></div>
             </template>
 
-            <template #control="itemProps: { value: keyof IStaffItem, item: IStaffItem }">
+            <template #control="columnProps">
                 <div :class="$style.control">
-                    <UiTooltip v-if="isOwner" interactive>
+                    <LazyUiTooltip v-if="storeProfile.isOwner" interactive>
                         <template #header>
-                            <UiButton size="small" icon>
-                                <UiIcon name="ui/settings"/>
-                            </UiButton>
+                            <LazyUiButton size="small" icon>
+                                <LazyUiIcon name="ui/settings"/>
+                            </LazyUiButton>
                         </template>
+
                         <template #bottom>
                             <div :class="$style.tooltipBottom">
-                                <UiButton size="x-small" @click="onEdit(itemProps.item)">
+                                <LazyUiButton size="x-small" @click="onEdit(columnProps.item as Tables<'Profile'>)">
                                     Редактировать
-                                </UiButton>
-                                <UiButton size="x-small" @click="onDelete(itemProps.item)">
+                                </LazyUiButton>
+
+                                <LazyUiButton
+                                    v-if="columnProps.item.id !== storeProfile.profile.id"
+                                    size="x-small"
+                                    @click="onDelete(columnProps.item as Tables<'Profile'>)"
+                                >
                                     Удалить
-                                </UiButton>
+                                </LazyUiButton>
                             </div>
                         </template>
-                    </UiTooltip>
+                    </LazyUiTooltip>
                 </div>
             </template>
         </UiTable>
@@ -151,11 +170,11 @@ async function onDelete(item: IStaffItem) {
     margin-left: calc(var(--ui-col) * -1);
 
     :global(.UiTable__item) {
-        &:nth-child(6n + 1) {
+        &:nth-child(5n + 1) {
             padding-left: var(--ui-col);
         }
 
-        &:nth-child(6n) {
+        &:nth-child(5n) {
             padding-right: var(--ui-col);
         }
     }

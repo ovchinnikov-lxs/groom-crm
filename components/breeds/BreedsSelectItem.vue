@@ -1,17 +1,8 @@
 <script setup lang="ts">
-import type { PropType } from 'vue';
-
-defineProps({
-    name: {
-        type: String,
-        required: true,
-    },
-
-    preview: {
-        type: [String] as PropType<string>,
-        default: '',
-    },
-});
+defineProps<{
+    name: string;
+    image: string;
+}>();
 
 defineEmits<{
     close: [void]
@@ -23,8 +14,7 @@ defineEmits<{
         <div :class="$style.wrapper">
             <div :class="$style.previewWrapper">
                 <UiImage
-                    v-if="preview"
-                    :src="preview"
+                    :src="image"
                     :class="$style.preview"
                 />
             </div>

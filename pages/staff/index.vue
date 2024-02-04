@@ -1,44 +1,54 @@
 <script setup lang="ts">
-const breadcrumbs = useBreadcrumbs();
+import type { Tables } from '~/types/supabase';
 
-breadcrumbs.setList([{
+useSeoMeta({
+    title: 'Команда',
+});
+
+const storeBreadcrumbs = useStoreBreadcrumbs();
+const storeModal = useStoreModal();
+const storeProfile = useStoreProfile();
+const storeCompany = useStoreCompany();
+
+const { data, refresh } = await useAsyncData(async () => await $fetch('/api/staff', {
+    headers: useRequestHeaders(['cookie']),
+    params: {
+        company_id: storeCompany.detail.id,
+    },
+}));
+
+const staff = computed<Tables<'Profile'>[]>(() => data?.value?.data || []);
+
+storeBreadcrumbs.setList([{
     title: 'Команда',
 }]);
 
-const { $api } = useNuxtApp();
-const { data: staff, refresh } = await $api.staff.getList({
-    key: 'staff',
-});
-
 function openCreateModal() {
-    modal.open({
-        component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
-        componentProps: {
-        },
+    storeModal.open({
+        component: defineAsyncComponent(() => import('~/components/staff/Save/StaffSave.vue')),
         onClose: refresh,
     });
 }
 
-const { isOwner } = useUser();
 </script>
 
 <template>
     <UiPage class="StaffPage">
         <template #header>
-            <UiButton
-                v-if="isOwner"
+            <LazyUiButton
+                v-if="storeProfile.isOwner"
                 :class="$style.button"
                 @click="openCreateModal"
             >
                 Добавить сотрудника
-            </UiButton>
+            </LazyUiButton>
         </template>
         <template #default>
-            <UiEmpty v-if="!staff.length">
+            <LazyUiEmpty v-if="!staff.length">
                 <template #text>Вы еще не добавили сотрудников</template>
-            </UiEmpty>
+            </LazyUiEmpty>
 
-            <StaffTable
+            <LazyStaffTable
                 v-else
                 :list="staff"
                 @update="refresh"

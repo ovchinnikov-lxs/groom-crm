@@ -1,10 +1,59 @@
 <script setup lang="ts">
-await useGlobal().fetchInitial();
+const user = useSupabaseUser();
+const storeGlobal = useStoreGlobal();
+const storeProfile = useStoreProfile();
+const storeCompany = useStoreCompany();
+const storeModal = useStoreModal();
+
+await callOnce(async () => {
+    await Promise.all([
+        storeGlobal.fetchInitial(),
+    ]);
+});
+
+watch(user, value => {
+    if (!value) {
+        return navigateTo('/auth/login');
+    }
+}, { immediate: true });
+
+
+onMounted(() => {
+    const contactsFillModal = ref('');
+    const companyFillModal = ref('');
+
+    watch(() => storeCompany.detail.name, val => {
+        if (!val) {
+            companyFillModal.value = storeModal.open({
+                component: defineAsyncComponent(() => import('~/components/company/Popup/CompanyPopupContactsFill.vue')),
+                modalProps: {
+                    closable: false,
+                },
+            });
+        } else if (companyFillModal.value) {
+            storeModal.close(companyFillModal.value, true);
+            companyFillModal.value = '';
+        }
+    }, { immediate: true });
+
+    watch(() => storeProfile.profile.full_name, val => {
+        if (!val) {
+            contactsFillModal.value = storeModal.open({
+                component: defineAsyncComponent(() => import('~/components/profile/Popup/ProfilePopupContactsFill.vue')),
+                modalProps: {
+                    closable: false,
+                },
+            });
+        } else if (contactsFillModal.value) {
+            storeModal.close(contactsFillModal.value, true);
+            contactsFillModal.value = '';
+        }
+    }, { immediate: true });
+});
 </script>
 
 <template>
     <div :class="$style.DefaultLayout">
-        <UiModal :class="$style.modal"/>
         <DefaultMenu/>
 
         <div :class="$style.page">
@@ -27,14 +76,5 @@ await useGlobal().fetchInitial();
     overflow: auto;
     flex-grow: 1;
     padding: calc(var(--ui-unit) * 4) 0;
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 6;
-    width: 100%;
-    height: 100%;
 }
 </style>

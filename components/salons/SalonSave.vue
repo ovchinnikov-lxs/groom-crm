@@ -1,54 +1,54 @@
 <script setup lang="ts">
-import type { PropType } from 'vue';
-import { ISalonDetail, ISalonSave } from '~/types/salons';
+import { defu } from 'defu';
+import type { Tables } from '~/types/supabase';
+import type { Nullable } from '~/types';
 
-const props = defineProps({
-    value: {
-        type: Object as PropType<ISalonDetail>,
-        default: () => ({}),
-    },
-});
+interface IValue extends Tables<'Salon'> {
+    location: {
+        lat: Nullable<number>;
+        lng: Nullable<number>;
+        address: Nullable<string>;
+    }
+    staff: string[],
+}
 
-const actualValue = reactive<ISalonSave>({
-    name: null,
-    preview: null,
-    openAt: '10:00',
-    closeAt: '19:00',
-    pricePerMonth: null,
+type ValueType = Pick<IValue, 'avatar' | 'close_at' | 'location' | 'name' | 'open_at' | 'price' | 'staff'>;
+
+const props = defineProps<{ value?: IValue }>();
+const emit = defineEmits<{
+    close: [void];
+}>();
+
+const storeCompany = useStoreCompany();
+const storeModal = useStoreModal();
+
+const actualValue: ValueType = reactive(defu(props.value, {
+    name: '',
+    avatar: '',
+    open_at: '',
+    close_at: '',
+    price: null,
     location: {
         lat: null,
         lng: null,
         address: null,
     },
-});
+    staff: [],
+}));
 
-watch(() => props.value, (val: ISalonDetail | null) => {
-    if (val) {
-        actualValue.name = val.name;
-        actualValue.preview = val.preview;
-        actualValue.openAt = val.openAt;
-        actualValue.closeAt = val.closeAt;
-        actualValue.pricePerMonth = val.pricePerMonth;
-        actualValue.location = val.location;
-    }
-}, { immediate: true });
-
-const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+const { v$, getError, getInvalidState } = useValidate(computed(() => ({
     name: ['required'],
-    preview: [],
-    openAt: ['required'],
-    closeAt: ['required'],
-    pricePerMonth: ['required'],
+    avatar: [],
+    open_at: ['required'],
+    close_at: ['required'],
+    price: ['required'],
     location: {
         lat: ['required'],
         lng: ['required'],
         address: ['required'],
     },
+    staff: [],
 })), actualValue);
-
-
-// const staffOptions = [];
-const $emit = defineEmits<{(e: 'close'): void }>();
 
 async function onSubmit() {
     try {
@@ -56,41 +56,82 @@ async function onSubmit() {
             return false;
         }
 
-        const { $api, $routes } = useNuxtApp();
+        if (!props.value) {
+            const data = await $fetch('/api/salons', {
+                method: 'POST',
+                body: {
+                    ...actualValue,
+                    company_id: storeCompany.detail.id,
+                },
+            });
 
-        if (!Object.keys(props.value).length) {
-            const { data } = await $api.salons.create(actualValue);
-
-            if (data.value) {
-                navigateTo($routes.salons.detail(data.value.id));
+            if (data?.id) {
+                navigateTo(`/salons/${data.id}`);
             }
-        } else if (props.value) {
-            await $api.salons.update(props.value.id, actualValue);
+        } else {
+            await $fetch(`/api/salons/${props.value.id}`, {
+                method: 'PATCH',
+                body: actualValue,
+            });
         }
-        $emit('close');
+        emit('close');
     } catch (e) {
-        console.log(e);
+        console.error('SALON_SAVE:ON_SUBMIT:', e);
     }
 }
 
-// function onCreateStaff() {
-//     document.body.click();
-//     modal.open({
-//         component: defineAsyncComponent(() => import('~/components/staff/StaffSave.vue')),
-//     });
-// }
+const isLoading = ref(false);
+const staffList = ref <{id: string, name: Nullable<string>}[]>([]);
+
+async function fetchStaff() {
+    try {
+        isLoading.value = true;
+
+        const { data } = await $fetch('/api/staff', {
+            params: {
+                company_id: storeCompany.detail.id,
+            },
+        });
+
+        if (!data) {
+            return false;
+        }
+
+        staffList.value = data.map(item => ({
+            id: item.id,
+            name: item.full_name,
+        }));
+    } catch (e) {
+        console.error('SALON_SAVE:FETCH_STAFF:', e);
+    } finally {
+        isLoading.value = false;
+    }
+}
+
+
+onMounted(() => {
+    fetchStaff();
+});
+
+function onCreateStaff() {
+    storeModal.open({
+        component: defineAsyncComponent(() => import('~/components/staff/Save/StaffSave.vue')),
+        onClose: fetchStaff,
+    });
+}
 </script>
 
 <template>
     <UiModalPopupWrapper
         tag="form"
+        :loading="isLoading"
         class="SalonSave"
         @submit.prevent="onSubmit"
         @close="$emit('close')"
     >
         <template #header>
             <h4>
-                <template v-if="!Object.keys(value).length">Добавить</template>
+                <template v-if="!value">Добавить</template>
                 <template v-else>Редактировать</template>
                 салон
             </h4>
@@ -105,25 +146,25 @@ async function onSubmit() {
 
                     <template #default>
                         <UiInput
-                            v-model="$v.name.$model"
+                            v-model="v$.name.$model"
                             :error="getError('name')"
                             placeholder="Введите название салона"
                         />
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('preview')">
+                <UiFormCell :error="getError('avatar')">
                     <template #label>Изображение салона</template>
                     <template #default>
                         <UiFileInput
-                            v-model="$v.preview.$model"
-                            :error="getError('preview')"
+                            v-model="v$.avatar.$model"
+                            :error="getError('avatar')"
                             is-image
                         />
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('openAt') || getError('closeAt')">
+                <UiFormCell :error="getError('open_at') || getError('close_at')">
                     <template #label>
                         Укажите время работы
                     </template>
@@ -131,59 +172,59 @@ async function onSubmit() {
                     <template #default>
                         <div :class="$style.cellWrapper">
                             <UiTimeSelect
-                                v-model="$v.openAt.$model"
+                                v-model="v$.open_at.$model"
                                 placeholder="Открытие"
-                                :error="getError('openAt')"
+                                :error="getError('open_at')"
                             />
                             -
                             <UiTimeSelect
-                                v-model="$v.closeAt.$model"
+                                v-model="v$.close_at.$model"
                                 placeholder="Закрытие"
-                                :error="getError('closeAt')"
+                                :error="getError('close_at')"
                             />
                         </div>
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('pricePerMonth')">
+                <UiFormCell :error="getError('price')">
                     <template #label>
-                        Стоимость аренды в месяц
+                        Ежемесячная аренда
                     </template>
 
                     <template #default>
                         <UiInput
-                            v-model="$v.pricePerMonth.$model"
+                            v-model="v$.price.$model"
                             placeholder="Введите стоимость арендной платы"
-                            :error="getError('pricePerMonth')"
+                            :error="getError('price')"
                         />
                     </template>
                 </UiFormCell>
 
-                <!--                <UiFormCell :error="getError('staff')">-->
-                <!--                    <template #label>-->
-                <!--                        Команда салона-->
-                <!--                    </template>-->
+                <UiFormCell :error="getError('staff')">
+                    <template #label>
+                        Команда салона
+                    </template>
 
-                <!--                    <template #default>-->
-                <!--                        <UiSelect-->
-                <!--                            v-model="$v.staff.$model"-->
-                <!--                            multiple-->
-                <!--                            :error="getError('staff')"-->
-                <!--                            placeholder="Выберете сотрундиков"-->
-                <!--                            :options="staffOptions"-->
-                <!--                        >-->
-                <!--                            <template #body-header>-->
-                <!--                                <UiButton-->
-                <!--                                    type="button"-->
-                <!--                                    size="x-small"-->
-                <!--                                    @click="onCreateStaff"-->
-                <!--                                >-->
-                <!--                                    Добавить сотрудника-->
-                <!--                                </UiButton>-->
-                <!--                            </template>-->
-                <!--                        </UiSelect>-->
-                <!--                    </template>-->
-                <!--                </UiFormCell>-->
+                    <template #default>
+                        <UiSelect
+                            v-model="v$.staff.$model"
+                            multiple
+                            :error="getError('staff')"
+                            placeholder="Выберете сотрундиков"
+                            :options="staffList"
+                        >
+                            <template #body-header>
+                                <UiButton
+                                    type="button"
+                                    size="x-small"
+                                    @click="onCreateStaff"
+                                >
+                                    Добавить сотрудника
+                                </UiButton>
+                            </template>
+                        </UiSelect>
+                    </template>
+                </UiFormCell>
 
                 <UiFormCell :error="getError('location.lat') || getError('location.lng') || getError('location.address')">
                     <template #label>

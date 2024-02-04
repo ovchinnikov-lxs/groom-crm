@@ -1,31 +1,29 @@
 <script setup lang="ts">
-const { $routes } = useNuxtApp();
-
 const navItems = [
     {
-        to: $routes.salons.list,
+        to: '/dashboard',
+        title: 'Рабочий стол',
+        icon: 'finance',
+    },
+    {
+        to: '/salons',
         title: 'Салоны',
         icon: 'salons',
     },
     {
-        to: $routes.staff.list,
+        to: '/staff',
         title: 'Команда',
         icon: 'staff',
     },
     {
-        to: $routes.services.list,
+        to: '/services',
         title: 'Услуги',
         icon: 'services',
     },
     {
-        to: $routes.breeds.list,
+        to: '/breeds',
         title: 'Породы',
         icon: 'breeds',
-    },
-    {
-        to: $routes.finance.detail,
-        title: 'Финансы',
-        icon: 'finance',
     },
 ];
 
@@ -66,16 +64,38 @@ const navItems = [
     align-items: center;
     justify-content: space-between;
     column-gap: calc(var(--ui-unit) * 4);
+
+    @include respond-to(mobile) {
+        column-gap: calc(var(--ui-unit) * 2);
+    }
+}
+
+.logo {
+    @include respond-to(mobile) {
+        display: none;
+    }
 }
 
 .logo,
 .user {
     width: calc(var(--ui-unit) * 41);
+
+    @include respond-to(mobile) {
+        width: auto;
+    }
 }
 
 .nav {
     display: flex;
     align-items: center;
     column-gap: calc(var(--ui-unit) * 12);
+
+    @include respond-to(tablet) {
+        column-gap: calc(var(--ui-unit) * 4);
+    }
+
+    @include respond-to(mobile) {
+        column-gap: calc(var(--ui-unit) * 3);
+    }
 }
 </style>

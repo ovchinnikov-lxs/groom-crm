@@ -1,8 +1,6 @@
 <script setup lang="ts">
 // Constants
-import { COMPANY_NAME } from '~/assets/ts/constants';
-
-const { $routes } = useNuxtApp();
+import { COMPANY_NAME } from '~/utils/const/company';
 </script>
 
 <template>
@@ -21,7 +19,7 @@ const { $routes } = useNuxtApp();
                 </div>
             </div>
 
-            <UiButton :to="$routes.auth.registration">
+            <UiButton to="/auth/registration">
                 Получить 15 дней бесплатно
             </UiButton>
         </div>

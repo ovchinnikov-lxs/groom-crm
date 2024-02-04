@@ -6,11 +6,11 @@ import type { PropType } from 'vue';
 import type { TypeSize } from '~/types';
 
 // Utils
-import { leadingZero } from 'assets/ts/utils/format-utils';
+import { leadingZero } from '~/utils/format';
 
 const props = defineProps({
     modelValue: {
-        type: [String, null] as PropType<string | null>,
+        type: [String, Number, null] as PropType<string | null>,
         default: null,
     },
 
@@ -65,8 +65,16 @@ const $emit = defineEmits<{(e: 'update:modelValue', value: string): void }>();
 
 const isOpened = ref(false);
 
-watch(() => props.modelValue, (value: string | null) => {
-    const [hour, minutes] = value?.split(':') || ['', ''];
+watch(() => props.modelValue, (value: string | number | null) => {
+    let hour = '';
+    let minutes = '';
+
+    if (typeof value === 'string') {
+        const [h, m] = value?.split(':') || ['', ''];
+
+        hour = h;
+        minutes = m;
+    }
 
     actualValue.hour = hour;
     actualValue.minutes = minutes;

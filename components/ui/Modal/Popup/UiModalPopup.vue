@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { modalProps, useModal } from '~/composables/modal';
+import type { IModalProps } from '~/types/modal';
 
 defineEmits(['close']);
-const props = defineProps({
-    ...modalProps,
-});
+const props = withDefaults(defineProps<IModalProps>(), MODAL_DEFAULT_PROPS);
 
 const { classList } = useModal(props);
 </script>
@@ -27,42 +25,7 @@ const { classList } = useModal(props);
     display: flex;
     align-items: center;
     justify-content: center;
-
-    &.modal-in-enter-from,
-    &.modal-in-enter-to,
-    &.--is-visible {
-        #{$popup} {
-            &__overlay {
-                opacity: 0;
-                animation: overlayIn .2s ease forwards;
-            }
-
-            &__inner {
-                opacity: 0;
-                transform: scale(.8);
-                animation: innerIn .3s ease .1s forwards;
-            }
-        }
-    }
-
-    &.modal-in-leave-from,
-    &.modal-in-leave-to,
-    &.modal-out-in-leave-from,
-    &.modal-out-in-leave-to,
-    &.--is-hidden {
-        #{$popup} {
-            &__overlay {
-                opacity: 1;
-                animation: overlayOut .2s ease forwards;
-            }
-
-            &__inner {
-                opacity: 1;
-                transform: scale(1);
-                animation: innerOut .2s ease forwards;
-            }
-        }
-    }
+    transition: all .3s var(--ui-cubic-bezier);
 
     &.--small-size {
         #{$popup} {
@@ -98,49 +61,81 @@ const { classList } = useModal(props);
         will-change: transform;
         box-shadow: var(--ui-box-shadow);
     }
-}
 
-@keyframes overlayIn {
-    0% {
-        opacity: 0;
+    &.ui-modal-enter-from,
+    &.ui-modal-enter-to {
+        #{$popup} {
+            &__overlay {
+                opacity: 0;
+                animation: overlayIn .2s ease forwards;
+            }
+
+            &__inner {
+                opacity: 0;
+                transform: scale(.8);
+                animation: innerIn .3s ease .1s forwards;
+            }
+        }
     }
 
-    100% {
-        opacity: 1;
-    }
-}
+    &.ui-modal-leave-from,
+    &.ui-modal-leave-to {
+        #{$popup} {
+            &__overlay {
+                opacity: 1;
+                animation: overlayOut .2s ease forwards;
+            }
 
-@keyframes overlayOut {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes innerIn {
-    0% {
-        opacity: 0;
-        transform: scale(.8);
+            &__inner {
+                opacity: 1;
+                transform: scale(1);
+                animation: innerOut .3s ease forwards;
+            }
+        }
     }
 
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
+    @keyframes overlayIn {
+        0% {
+            opacity: 0;
+        }
 
-@keyframes innerOut {
-    0% {
-        opacity: 1;
-        transform: scale(1);
+        100% {
+            opacity: 1;
+        }
     }
 
-    100% {
-        opacity: 0;
-        transform: scale(.8);
+    @keyframes overlayOut {
+        0% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes innerIn {
+        0% {
+            opacity: 0;
+            transform: scale(.8);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes innerOut {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scale(.8);
+        }
     }
 }
 </style>

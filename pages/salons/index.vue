@@ -1,49 +1,59 @@
 <script setup lang="ts">
-import { modal } from '~/composables/modal';
+import type { Tables } from '~/types/supabase';
 
-// Constants
-import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
+useSeoMeta({
+    title: 'Салоны',
+});
 
-const breadcrumbs = useBreadcrumbs();
-breadcrumbs.setList([{
+const storeBreadcrumbs = useStoreBreadcrumbs();
+const storeModal = useStoreModal();
+const storeProfile = useStoreProfile();
+const storeCompany = useStoreCompany();
+
+const { data } = await useAsyncData(async () => await $fetch('/api/salons', {
+    headers: useRequestHeaders(['cookie']),
+}));
+
+if (!data.value) {
+    throw createError({
+        statusCode: 404,
+        message: 'Такой страницы не существует',
+    });
+}
+
+storeBreadcrumbs.setList([{
     title: 'Салоны',
 }]);
 
-const { $api } = useNuxtApp();
-const { data: list } = await $api.salons.getList<object[]>({
-    key: 'salons',
-});
-const { isOwner } = useUser();
+const actualList = computed<Tables<'Salon'>[]>(() => data?.value?.data || []);
 
 function openCreateModal() {
-    modal.open({
+    storeModal.open({
         component: defineAsyncComponent(() => import('~/components/salons/SalonSave.vue')),
     });
 }
 
 const disableCreateSalon = computed(() => {
-    const { tariffCompanyIs } = useCompany();
-
-    if (tariffCompanyIs(TARIFFS_KEY.PREMIUM)) {
+    if (storeCompany.tariffCompanyIs(TARIFFS_KEY.PREMIUM)) {
         return false;
     }
 
-    return Boolean(tariffCompanyIs(TARIFFS_KEY.BASIC) && list.value?.length);
+    return Boolean(storeCompany.tariffCompanyIs(TARIFFS_KEY.BASIC) && actualList.value.length);
 });
 </script>
 
 <template>
     <UiPage>
         <template #header>
-            <UiTooltip :disabled="!disableCreateSalon" :class="$style.button">
+            <LazyUiTooltip
+                v-if="storeProfile.isOwner"
+                :disabled="!disableCreateSalon"
+                :class="$style.button"
+            >
                 <template #header>
-                    <UiButton
-                        v-if="isOwner"
-                        :disabled="disableCreateSalon"
-                        @click="openCreateModal"
-                    >
+                    <LazyUiButton :disabled="disableCreateSalon" @click="openCreateModal">
                         Добавить салон
-                    </UiButton>
+                    </LazyUiButton>
                 </template>
                 <template #bottom>
                     <div :class="$style.tooltipBottom">
@@ -51,29 +61,29 @@ const disableCreateSalon = computed(() => {
                         оформите подписку <b>{{ TARIFFS_KEY.PREMIUM }}</b>
                     </div>
                 </template>
-            </UiTooltip>
+            </LazyUiTooltip>
         </template>
 
         <template #default>
             <div class="SalonsList">
-                <div v-if="list.length" :class="$style.wrapper">
+                <div v-if="actualList.length" :class="$style.wrapper">
                     <div
-                        v-for="item in list"
+                        v-for="item in actualList"
                         :key="item.id"
                         :class="$style.plateWrapper"
                     >
-                        <SalonsPlate
+                        <LazySalonsPlate
                             :id="item.id"
                             :name="item.name"
-                            :preview="item.preview"
+                            :preview="item.avatar"
                             :class="$style.plate"
                         />
                     </div>
                 </div>
 
-                <UiEmpty v-else>
+                <LazyUiEmpty v-else>
                     <template #text>Вы еще не создали ни один салон</template>
-                </UiEmpty>
+                </LazyUiEmpty>
             </div>
         </template>
     </UiPage>

@@ -104,3 +104,11 @@ $breakpoints: (
         height: 0;
     }
 }
+
+@mixin text-clamp($number: 3) {
+    overflow: hidden;
+    display: -webkit-box; /* stylelint-disable-line */
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $number;
+}

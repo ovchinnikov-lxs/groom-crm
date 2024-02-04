@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Constants
-import { COMPANY_NAME } from '~/assets/ts/constants';
+import { COMPANY_NAME } from '~/utils/const/company';
 </script>
 
 <template>
@@ -21,8 +21,9 @@ import { COMPANY_NAME } from '~/assets/ts/constants';
                     </div>
 
                     <UiImage
+                        storage-id="static"
                         :has-preview="false"
-                        src="/images/dog.png"
+                        src="images/dog.png"
                         :class="$style.image"
                     />
                 </div>

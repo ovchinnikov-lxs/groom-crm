@@ -1,28 +1,29 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
-import _ from 'lodash';
-import { IBreed } from '~/types/breeds';
+import { defu } from 'defu';
+import type { Tables } from '~/types/supabase';
 
-const props = defineProps({
-    value: {
-        type: Object as PropType<IBreed>,
-        default: () => ({
-            name: '',
-            description: '',
-            preview: '',
-        }),
-    },
-});
-const $emit = defineEmits<{
+const props = defineProps<{
+    value?: Tables<'Breed'>
+}>();
+const emit = defineEmits<{
     close: [void]
 }>();
 
-const actualValue = reactive<IBreed>(_.cloneDeep(props.value));
-const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+const storeCompany = useStoreCompany();
+const storeToast = useStoreToast();
+
+const actualValue = reactive<Tables<'Breed'>>(defu(props.value, {
+    name: '',
+    description: '',
+    image: '',
+}));
+
+const { v$, getError, getInvalidState } = useValidate(computed(() => ({
     name: ['required'],
     description: [],
-    preview: [],
+    image: [],
 })), actualValue);
+
 
 async function onSubmit() {
     try {
@@ -30,32 +31,48 @@ async function onSubmit() {
             return false;
         }
 
-        const { $api } = useNuxtApp();
-
-        if (!Object.keys(props.value).length) {
-            await $api.breeds.create(actualValue);
+        if (!props.value) {
+            await $fetch('/api/breeds', {
+                method: 'POST',
+                body: {
+                    ...actualValue,
+                    company_id: storeCompany.detail.id,
+                },
+            });
+            storeToast.add({
+                type: 'success',
+                text: 'Порода успешно создана',
+            });
         } else {
-            await $api.breeds.update(props.value?.id, actualValue);
+            await $fetch(`/api/breeds/${props.value.id}`, {
+                method: 'PATCH',
+                body: actualValue,
+            });
+            storeToast.add({
+                type: 'success',
+                text: 'Порода успешно обновлена',
+            });
         }
-
-        $emit('close');
+        emit('close');
     } catch (e) {
-        // TODO: Добавить логирование ошибок(sentry?) и уведомление об ошибках
-        console.log(e);
+        storeToast.add({
+            type: 'error',
+            text: 'Упс что то пошло не так',
+        });
+        console.error('BREEDS_SAVE:ON_SUBMIT:', e);
     }
 }
 </script>
 
 <template>
-
     <UiModalPopupWrapper
         tag="form"
-        @close="$emit('close')"
+        @close="emit('close')"
         @submit.prevent="onSubmit"
     >
         <template #header>
             <h4>
-                <template v-if="!Object.keys(value).length">Добавить</template>
+                <template v-if="!props.value">Добавить</template>
                 <template v-else>Редактировать</template>
                 Породу
             </h4>
@@ -70,7 +87,7 @@ async function onSubmit() {
 
                     <template #default>
                         <UiInput
-                            v-model="$v.name.$model"
+                            v-model="v$.name.$model"
                             :error="getError('name')"
                             placeholder="Введите название породы"
                         />
@@ -81,7 +98,7 @@ async function onSubmit() {
                     <template #label>Описание</template>
                     <template #default>
                         <UiRichText
-                            v-model="$v.description.$model"
+                            v-model="v$.description.$model"
                             rows="4"
                             :error="getError('description')"
                             placeholder="Введите описание породы"
@@ -89,12 +106,12 @@ async function onSubmit() {
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('preview')">
+                <UiFormCell :error="getError('image')">
                     <template #label>Изображение породы</template>
                     <template #default>
                         <UiFileInput
-                            v-model="$v.preview.$model"
-                            :error="getError('preview')"
+                            v-model="v$.image.$model"
+                            :error="getError('image')"
                             is-image
                         />
                     </template>

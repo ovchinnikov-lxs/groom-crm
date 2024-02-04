@@ -2,43 +2,33 @@
 // UiKit
 import { UiPopover } from '@ovchinnikov-lxs-frontend/ui-kit';
 
-import type { PropType } from 'vue';
 import _ from 'lodash';
+import type { Tables } from '~/types/supabase';
 
-type ValueType = Array<string>;
-
-interface IOption {
-    id: string;
-    name: string;
-    preview: string;
+interface IProps {
+    modelValue: string[];
+    placeholder?: string;
+    error?: string;
+    multiple?: boolean;
 }
 
-const props = defineProps({
-    modelValue: {
-        type: Array as PropType<ValueType>,
-        default: () => [],
-    },
+type IOption = Tables<'Breed'>;
 
-    placeholder: {
-        type: String,
-        default: '',
-    },
-
-    error: {
-        type: String,
-        default: '',
-    },
+const props = withDefaults(defineProps<IProps>(), {
+    placeholder: '',
+    error: '',
+    multiple: false,
 });
 
 // VALUE SECTION
-const $emit = defineEmits<{
-    'update:modelValue': [value: ValueType],
+const emit = defineEmits<{
+    'update:modelValue': [value: IProps['modelValue']],
 }>();
 
 const suggestValue = ref('');
-const actualValue = ref<ValueType>([]);
+const actualValue = ref<IProps['modelValue']>([]);
 
-watch(props.modelValue, (val: ValueType) => {
+watch(props.modelValue, (val: IProps['modelValue']) => {
     actualValue.value = [...val];
 }, { immediate: true });
 
@@ -46,17 +36,18 @@ async function onSelect(id: string) {
     actualValue.value.push(id);
     suggestValue.value = '';
     await fetchOptions(true);
-    $emit('update:modelValue', actualValue.value);
+    emit('update:modelValue', actualValue.value);
 }
 
 function onRemove(id: string) {
     actualValue.value = actualValue.value.filter(i => i !== id);
-    $emit('update:modelValue', actualValue.value);
+    emit('update:modelValue', actualValue.value);
 }
 
 // STATE SECTION
 const inputFocused = ref(false);
 const inputRef = ref<HTMLInputElement | null>(null);
+const listRef = ref<HTMLDivElement>();
 
 function onFocusInput() {
     if (!inputRef.value) {
@@ -68,33 +59,46 @@ function onFocusInput() {
 function onFocusIn() {
     inputFocused.value = true;
 }
-function onFocusOut() {
+function onFocusOut(input: boolean) {
+    if (input && props.multiple) {
+        return false;
+    }
+
     inputFocused.value = false;
-    $emit('update:modelValue', actualValue.value);
+    emit('update:modelValue', actualValue.value);
 }
 
 // OPTIONS SECTION
 const optionsDict = ref<{
-    [key: string]: IOption
+    [key: IOption['id']]: IOption;
 }>({});
+
 const optionsList = ref <IOption[]>([]);
 const actualOptionsList = computed(() => optionsList.value.filter(i => !actualValue.value.includes(i.id) && i.name.includes(suggestValue.value)));
 async function fetchOptions(initial = false) {
-    const { $api } = useNuxtApp();
+    try {
+        const storeCompany = useStoreCompany();
+        const { data } = await $fetch('/api/breeds/search', {
+            params: {
+                company_id: storeCompany.detail.id,
+                search: suggestValue.value,
+            },
+        });
 
-    const { data } = await $api.breeds.getList({
-        key: 'breedsOptions',
-        params: {
-            ...suggestValue.value && { search: suggestValue.value },
-        },
-    });
+        if (!data) {
+            return false;
+        }
 
-    optionsList.value = data.value.rows;
-    if (initial) {
-        optionsDict.value = data.value.rows.reduce((acc: object, option: IOption) => ({
-            ...acc,
-            [option.id]: option,
-        }), {});
+        optionsList.value = data;
+
+        if (initial) {
+            optionsDict.value = data.reduce((acc: object, option: IOption) => ({
+                ...acc,
+                [option.id]: option,
+            }), {});
+        }
+    } catch (e) {
+        console.error('BREEDS_SELECT:FETCH_OPTIONS:', e);
     }
 }
 
@@ -111,8 +115,9 @@ const debouncedInput = _.debounce(onInput, 200);
 const actualValueOptions = computed(() => actualValue.value.map(id => ({
     id,
     name: optionsDict.value[id]?.name || '',
-    preview: optionsDict.value[id]?.preview || '',
+    image: optionsDict.value[id]?.image || '',
 })));
+// TODO: Чет тут все плохо с поповеровм, кажется надо переделывать его
 </script>
 
 <template>
@@ -126,34 +131,42 @@ const actualValueOptions = computed(() => actualValue.value.map(id => ({
         <template #top>
             <div :class="$style.header" @click="onFocusInput">
                 <div v-if="actualValueOptions.length" :class="$style.selected">
-                    <BreedsSelectItem
+                    <LazyBreedsSelectItem
                         v-for="item in actualValueOptions"
                         :key="item.id"
-                        :preview="item.preview"
+                        :image="item.image"
                         :name="item.name"
                         @close="onRemove(item.id)"
                     />
                 </div>
 
                 <input
+                    v-if="!actualValueOptions.length || multiple && actualValueOptions.length"
                     ref="inputRef"
                     :placeholder="placeholder"
                     :value="suggestValue"
                     :class="$style.input"
                     @input="debouncedInput"
                     @focusin="onFocusIn"
-                    @focusout="onFocusOut"
+                    @focusout="onFocusOut(true)"
                 />
             </div>
         </template>
         <template #bottom>
-            <div :class="$style.list">
+            <div
+                ref="listRef"
+                tabindex="0"
+                :class="$style.list"
+                @focusout="onFocusOut(false)"
+            >
                 <div
                     v-for="item in actualOptionsList"
                     :key="item.id"
                     :class="[$style.item, { [$style['--is-active']]: actualValue.includes(item.id) }]"
                     @click="onSelect(item.id)"
                 >
+                    <UiImage :src="item.image" :class="$style.image"/>
+
                     {{ item.name }}
                 </div>
             </div>
@@ -219,11 +232,22 @@ const actualValueOptions = computed(() => actualValue.value.map(id => ({
 }
 
 .item {
+    display: flex;
+    align-items: center;
+    column-gap: calc(var(--ui-unit) * 3);
     padding: calc(var(--ui-unit) * 3) calc(var(--ui-unit) * 5);
     cursor: pointer;
 
     @include hover {
         background-color: rgba(var(--ui-additional-color-rgb), .32);
     }
+}
+
+.image {
+    overflow: hidden;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    transform: translate3d(0, 0, 0);
 }
 </style>

@@ -5,8 +5,8 @@ import { isValidPhoneNumber } from '@/node_modules/libphonenumber-js';
 import _ from 'lodash';
 
 // Dict
-import { ComputedRef } from 'vue';
-import { MESSAGE_DICT } from 'assets/ts/constants/validation';
+import type { ComputedRef } from 'vue';
+import { MESSAGE_DICT } from '~/utils/const/validation';
 
 interface ICustomRule {
     name: string
@@ -64,7 +64,7 @@ function setValidations(rules: IRules): object {
 
 export function useValidate(rules: ComputedRef<IRules>, value: object) {
     const actualRules = computed(() => setValidations(rules.value));
-    const $v = useVuelidate(actualRules, value);
+    const v$ = useVuelidate(actualRules, value);
 
     const initialValue = ref(_.cloneDeep(value));
 
@@ -72,26 +72,29 @@ export function useValidate(rules: ComputedRef<IRules>, value: object) {
         initialValue.value = _.cloneDeep(value);
     };
 
-    const getError = computed(() => (fieldPath: string) => {
-        const error = $v.value.$errors.find(i => i.$propertyPath === fieldPath);
+    const getError = computed(() => (propertyPath: string) => {
+        const error = v$.value.$errors.find(property => property.$propertyPath === propertyPath);
 
         if (!error) {
-            return null;
+            return '';
         }
 
-        return error.$message;
+        if (typeof error.$message === 'string') {
+            return error.$message;
+        }
+
+        return error.$message.value;
     });
 
-    const isInvalid = computed(() => $v.value.$invalid || _.isEqual(initialValue.value, value));
+    const isInvalid = computed(() => v$.value.$invalid || _.isEqual(initialValue.value, value));
 
     const getInvalidState = async (): Promise<boolean> => {
-        // todo: Добавил асинхронную проверку
-        const isValidated = await $v.value.$validate();
+        const isValidated = await v$.value.$validate();
 
         return !isValidated || isInvalid.value;
     };
     return {
-        $v,
+        v$,
         getError,
         getInvalidState,
         updateValue,

@@ -1,22 +1,17 @@
-export interface ISalonSave {
-    name: string | null;
-    preview: string | null;
-    openAt: string;
-    closeAt: string;
-    pricePerMonth: number | null;
+import type { Tables } from '~/types/supabase';
+import type { Nullable } from '~/types/index';
+
+interface ISalonDetail extends Tables<'Salon'>{
     location: {
-        lat: number | null;
-        lng: number | null;
-        address: string | null;
+        lat: Nullable<number>;
+        lng: Nullable<number>;
+        address: Nullable<string>;
     }
+    staff: {
+        user: Tables<'Profile'>
+    }[]
 }
-export interface ISalonDetail extends ISalonSave {
-    id: string;
-    name: string;
-    pricePerMonth: number;
-    location: {
-        lat: number;
-        lng: number;
-        address: string;
-    }
-}
+
+export type {
+    ISalonDetail,
+};

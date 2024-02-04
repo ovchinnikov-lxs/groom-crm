@@ -1,148 +1,159 @@
 <script setup lang="ts">
-import { modal } from '~/composables/modal';
-import { IScheduleMaster } from '~/components/salons/detail/SalonsDetailSchedule.vue';
-import { ISalonDetail } from '~/types/salons';
+import type { IScheduleMaster } from '~/components/salons/detail/SalonsDetailSchedule.vue';
+import type { ISalonDetail } from '~/types/salons';
 
-const { $routes, $api } = useNuxtApp();
 
-const { data: salon, refresh } = await $api.salons.getDetail<ISalonDetail>(String(useRoute().params.salonId), {
-    key: 'salon',
+const route = useRoute();
+
+const { data, refresh } = await useAsyncData<ISalonDetail>(async () => await $fetch(`/api/salons/${route.params.salonId}`, {
+    headers: useRequestHeaders(['cookie']),
+}));
+
+if (!data.value) {
+    throw createError({
+        statusCode: 404,
+        message: 'Такой страницы не существует',
+    });
+}
+
+useSeoMeta({
+    title: data?.value?.name,
 });
 
-if (!salon.value) {
-    navigateTo($routes.salons.list);
-}
+const storeModal = useStoreModal();
+const storeBreadcrumbs = useStoreBreadcrumbs();
 
-function updateBreadcrumbs() {
-    const breadcrumbs = useBreadcrumbs();
-
-    breadcrumbs.setList([
+watch(() => data?.value?.name, value => {
+    storeBreadcrumbs.setList([
         {
             title: 'Салоны',
-            to: $routes.salons.list,
+            to: '/salons',
         },
         {
-            title: salon.value?.name || '',
+            title: String(value),
         },
     ]);
-}
-
-updateBreadcrumbs();
+}, { immediate: true });
 
 function onUpdate() {
-    modal.open({
+    storeModal.open({
         component: defineAsyncComponent(() => import('~/components/salons/SalonSave.vue')),
         componentProps: {
-            value: salon,
+            value: {
+                ...data.value,
+                staff: data.value?.staff.map(i => i.user.id),
+            },
         },
-        onClose: async () => {
-            await refresh();
-            updateBreadcrumbs();
-        },
+        onClose: () => refresh(),
     });
 }
 
 async function onDelete() {
     try {
-        await $api.salons.delete(String(useRoute().params.salonId));
-        navigateTo($routes.salons.list);
+        if (!data?.value?.id) {
+            return false;
+        }
+
+        await $fetch(`/api/salons/${data.value.id}`, {
+            method: 'DELETE',
+        });
+        navigateTo('/salons');
     } catch (e) {
         console.log(e);
     }
 }
 
-const scheduleMock: IScheduleMaster[] = [
-    // {
-    //     id: '1',
-    //     name: 'Анастасия Молькова',
-    //     schedule: [
-    //         {
-    //             id: '1',
-    //             service_name: 'Полный комплекс',
-    //             pet_breed: 'Йорк.Терьер',
-    //             pet_name: 'Федя',
-    //             service_price: 2500,
-    //             service_time: 120,
-    //             booked_time: '10:00',
-    //             status: 'active',
-    //         },
-    //         // {
-    //         //     id: '2',
-    //         //     service_name: 'Полный комплекс',
-    //         //     pet_breed: 'Йорк.Терьер',
-    //         //     pet_name: 'Федя',
-    //         //     service_price: 2500,
-    //         //     service_time: 120,
-    //         //     booked_time: '12:00',
-    //         //     status: 'ready',
-    //         // },
-    //         // {
-    //         //     id: '3',
-    //         //     service_name: 'Полный комплекс',
-    //         //     pet_breed: 'Йорк.Терьер',
-    //         //     pet_name: 'Федя',
-    //         //     service_price: 2500,
-    //         //     service_time: 15,
-    //         //     booked_time: '15:00',
-    //         //     status: 'cancelled',
-    //         // },
-    //         //
-    //         // {
-    //         //     id: '4',
-    //         //     service_name: 'Полный комплекс',
-    //         //     pet_breed: 'Йорк.Терьер',
-    //         //     pet_name: 'Федя',
-    //         //     service_price: 2500,
-    //         //     service_time: 15,
-    //         //     booked_time: '15:30',
-    //         //     status: 'ready',
-    //         // },
-    //         // {
-    //         //     id: '5',
-    //         //     service_name: 'Полный комплекс',
-    //         //     pet_breed: 'Йорк.Терьер',
-    //         //     pet_name: 'Федя',
-    //         //     service_price: 2500,
-    //         //     service_time: 15,
-    //         //     booked_time: '15:45',
-    //         //     status: 'cancelled',
-    //         // },
-    //         // {
-    //         //     id: '6',
-    //         //     service_name: 'Полный комплекс',
-    //         //     pet_breed: 'Йорк.Терьер',
-    //         //     pet_name: 'Федя',
-    //         //     service_price: 2500,
-    //         //     service_time: 15,
-    //         //     booked_time: '16:00',
-    //         //     status: 'ready',
-    //         // },
-    //     ],
-    // },
-];
+const scheduleMock = computed(() => data.value?.staff
+    .filter(item => [ROLES_KEYS.OWNER, ROLES_KEYS.MASTER].includes(item.user.role))
+    .map(item => ({
+        id: item.user.id,
+        name: item.user.full_name,
+        schedule: [
+            {
+                id: '1',
+                service_name: 'Полный комплекс',
+                pet_breed: 'Йорк.Терьер',
+                pet_name: 'Федя',
+                service_price: 2500,
+                service_time: 120,
+                booked_time: '10:00',
+                status: 'active',
+            },
+            {
+                id: '2',
+                service_name: 'Полный комплекс',
+                pet_breed: 'Йорк.Терьер',
+                pet_name: 'Федя',
+                service_price: 2500,
+                service_time: 120,
+                booked_time: '12:00',
+                status: 'ready',
+            },
+            {
+                id: '3',
+                service_name: 'Полный комплекс',
+                pet_breed: 'Йорк.Терьер',
+                pet_name: 'Федя',
+                service_price: 2500,
+                service_time: 15,
+                booked_time: '15:00',
+                status: 'cancelled',
+            },
+
+            {
+                id: '4',
+                service_name: 'Полный комплекс',
+                pet_breed: 'Йорк.Терьер',
+                pet_name: 'Федя',
+                service_price: 2500,
+                service_time: 15,
+                booked_time: '15:30',
+                status: 'ready',
+            },
+            {
+                id: '5',
+                service_name: 'Полный комплекс',
+                pet_breed: 'Йорк.Терьер',
+                pet_name: 'Федя',
+                service_price: 2500,
+                service_time: 15,
+                booked_time: '15:45',
+                status: 'cancelled',
+            },
+            {
+                id: '6',
+                service_name: 'Полный комплекс',
+                pet_breed: 'Йорк.Терьер',
+                pet_name: 'Федя',
+                service_price: 2500,
+                service_time: 15,
+                booked_time: '16:00',
+                status: 'ready',
+            },
+        ],
+    })));
 </script>
 
 <template>
-    <UiPage class="SalonDetailPage">
+    <LazyUiPage v-if="data" class="SalonDetailPage">
         <template #default>
             <div :class="$style.wrapper">
-                <SalonsDetailInfo
-                    v-bind="salon"
+                <LazySalonsDetailInfo
+                    :salon="data"
                     :class="$style.info"
                     @update="onUpdate"
                     @delete="onDelete"
                 />
 
-                <SalonsDetailSchedule
-                    :open-at="salon.openAt"
-                    :close-at="salon.closeAt"
-                    :schedule="scheduleMock"
+                <LazySalonsDetailSchedule
+                    :open-at="data?.open_at"
+                    :close-at="data?.close_at"
+                    :schedule="scheduleMock as IScheduleMaster[]"
                     :class="$style.schedule"
                 />
-
             </div>
         </template>
-    </UiPage>
+    </LazyUiPage>
 </template>
 
 <style lang="scss" module>
