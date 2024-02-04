@@ -47,7 +47,7 @@ watch(() => props.value, (val: IServiceValue) => {
     actualValue.preview = val.preview;
     actualValue.price = val.price;
     actualValue.duration = `${leadingZero(hours)}:${leadingZero(minutes)}`;
-    // actualValue.breeds = val.breeds.map(i => i.id); // TODO: TS Ругается на .id в string
+    actualValue.breeds = val.breeds.map(i => i.id);
 }, { immediate: true });
 
 const { $v, getError, getInvalidState } = useValidate(computed(() => ({
