@@ -14,7 +14,6 @@ const $emit = defineEmits<{
 }>();
 
 const actualValue = reactive<IServiceCategory>({
-    id: '',
     name: '',
     description: '',
     preview: '',
