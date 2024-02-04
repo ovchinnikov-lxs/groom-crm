@@ -81,26 +81,26 @@ const optionsList = ref <IService[]>([]);
 const actualOptionsList = computed(() => optionsList.value.filter(i => !actualValue.value.includes(i.id) && i.name.includes(suggestValue.value)));
 
 async function fetchServices(initial = false) {
-    try {
-        const [breedId] = props.breeds;
-        const { $api } = useNuxtApp();
-        const { data } = await $api.services.getList({
-            key: 'serviceOptionsList',
-            params: {
-                ...suggestValue.value && { search: suggestValue.value },
-                breedId,
-            },
-        });
-        optionsList.value = data.value;
-        if (initial) {
-            optionsDict.value = data.value.reduce((acc: object, option: IOption) => ({
-                ...acc,
-                [option.id]: option,
-            }), {});
-        }
-    } catch (e) {
-        console.log(e);
-    }
+    console.log(initial);
+    // try {
+    //     const [breedId] = props.breeds;
+    //     // const { data } = await services.getList({
+    //     //     key: 'serviceOptionsList',
+    //     //     params: {
+    //     //         ...suggestValue.value && { search: suggestValue.value },
+    //     //         breedId,
+    //     //     },
+    //     // });
+    //     optionsList.value = data.value;
+    //     if (initial) {
+    //         optionsDict.value = data.value.reduce((acc: object, option: any) => ({ // TODO: FIX IT (это букинг)
+    //             ...acc,
+    //             [option.id]: option,
+    //         }), {});
+    //     }
+    // } catch (e) {
+    //     console.log(e);
+    // }
 };
 
 onMounted(() => {

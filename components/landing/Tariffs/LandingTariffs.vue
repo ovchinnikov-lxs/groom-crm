@@ -1,12 +1,5 @@
 <script setup lang="ts">
-// Constants
-import { COMPANY_NAME } from '~/assets/ts/constants';
-
-// Utils
-import { splitThousands } from '~/assets/ts/utils/format-utils';
-
-const { $routes } = useNuxtApp();
-const tariffs = useTariffs();
+const tariffs = useStoreTariffs();
 </script>
 
 <template>
@@ -48,7 +41,7 @@ const tariffs = useTariffs();
 
                         <UiButton
                             :to="{
-                                path: $routes.auth.registration,
+                                path: '/auth/registration',
                                 query: { tariffId: item.id },
                             }"
                         >

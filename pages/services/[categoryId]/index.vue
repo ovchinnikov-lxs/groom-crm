@@ -1,69 +1,90 @@
 <script setup lang="ts">
-import { modal } from '~/composables/modal';
+import type { IServiceDetail } from '~/types/services';
 
-const { $routes, $api } = useNuxtApp();
-const { isOwner } = useUser();
-const breadcrumbs = useBreadcrumbs();
+const storeProfile = useStoreProfile();
+const storeBreadcrumbs = useStoreBreadcrumbs();
+const storeModal = useStoreModal();
+const storeToast = useStoreToast();
+const route = useRoute();
 
-const { data: serviceCategory, refresh: categoryRefresh } = await $api.services.getCategoryDetail(String(useRoute().params.categoryId), {
-    key: 'serviceCategory',
-});
-const { data: serviceList, refresh: servicesRefresh } = await $api.services.getList({
-    key: 'serviceList',
-    params: {
-        categoryId: serviceCategory.value.id,
-    },
-});
+const { data, refresh } = await useAsyncData(async () => await $fetch(`/api/service/${route.params.categoryId}`, {
+    headers: useRequestHeaders(['cookie']),
+}));
 
-if (!serviceCategory.value) {
-    navigateTo($routes.services.list);
+if (!data?.value) {
+    throw createError({
+        statusCode: 404,
+        message: 'Такой страницы не существует',
+    });
 }
 
-function updateBreadcrumbs() {
-    breadcrumbs.setList([
+function setBreadcrumbs() {
+    storeBreadcrumbs.setList([
         {
             title: 'Услуги',
-            to: $routes.services.list,
+            to: '/services',
         },
         {
-            title: serviceCategory.value.name,
+            title: data?.value?.name || '',
         },
     ]);
 }
 
-updateBreadcrumbs();
+setBreadcrumbs();
 
 function onUpdate() {
-    modal.open({
+    storeModal.open({
         component: defineAsyncComponent(() => import('~/components/services/Categories/ServicesCategoriesSave.vue')),
         componentProps: {
-            value: serviceCategory,
+            value: data.value,
         },
         onClose: async () => {
-            await categoryRefresh();
-            updateBreadcrumbs();
+            await refresh();
+            setBreadcrumbs();
         },
     });
 }
 async function onDelete() {
-    const { $api, $routes } = useNuxtApp();
+    storeModal.open({
+        type: 'confirm',
+        modalProps: {
+            title: 'Вы действительно хотите удалить услугу?',
+        },
+        onClose: async res => {
+            if (!res) {
+                return false;
+            }
 
-    await $api.services.deleteServiceCategory(serviceCategory.value.id);
-    navigateTo($routes.services.list);
-}
+            try {
+                await $fetch(`/api/service/${data.value?.id}`, {
+                    method: 'DELETE',
+                });
 
-function onListUpdate() {
-    servicesRefresh();
+                navigateTo('/services');
+
+                storeToast.add({
+                    type: 'success',
+                    text: 'Услуга успешно удалена',
+                });
+            } catch (e) {
+                console.error('PAGE:BREEDS:ON_DELETE:', e);
+            }
+        },
+    });
 }
 
 function createService() {
-    modal.open({
+    if (!data?.value?.id) {
+        return false;
+    }
+
+    storeModal.open({
         component: defineAsyncComponent(() => import('~/components/services/ServicesSave.vue')),
         componentProps: {
-            categoryId: serviceCategory.value.id,
+            categoryId: data.value.id,
         },
         onClose: () => {
-            servicesRefresh();
+            refresh();
         },
     });
 }
@@ -74,34 +95,36 @@ function createService() {
         <template #default>
             <div :class="$style.wrapper">
                 <ServicesCategoriesDetailInfo
-                    :category="serviceCategory"
+                    :category="data!"
                     @update="onUpdate"
                     @delete="onDelete"
                 />
 
-                <div v-if="isOwner" :class="$style.control">
-                    <UiHelp type="tutorial">
+                <div v-if="storeProfile.isOwner" :class="$style.control">
+                    <LazyUiHelp type="tutorial" :class="$style.help">
                         <template #title>Список услуг</template>
                         <template #default>
-                            Создавайте услуги по категории с выбором пород
+                            Создавайте услуги в удобных категориях.
+                            Добавляйте подкатегории с породными особенностями,
+                            обеспечивая точный выбор для ваших клиентов.
                         </template>
-                    </UiHelp>
+                    </LazyUiHelp>
 
-                    <UiButton :class="$style.button" @click="createService">
+                    <LazyUiButton :class="$style.button" @click="createService">
                         Добавить услугу
-                    </UiButton>
+                    </LazyUiButton>
                 </div>
 
-                <ServicesTable
-                    v-if="serviceList.length"
-                    :list="serviceList"
-                    :category-id="serviceCategory.id"
-                    @update="onListUpdate"
+                <LazyServicesTable
+                    v-if="data?.services?.length"
+                    :list="data.services as IServiceDetail[]"
+                    :category-id="data.id"
+                    @update="refresh"
                 />
 
-                <UiEmpty v-else>
+                <LazyUiEmpty v-else>
                     <template #text>Вы еще не создали ни одну услугу</template>
-                </UiEmpty>
+                </LazyUiEmpty>
             </div>
         </template>
     </UiPage>
@@ -120,6 +143,10 @@ function createService() {
     display: flex;
     align-items: flex-start;
     column-gap: calc(var(--ui-unit) * 3);
+}
+
+.help {
+    max-width: 600px;
 }
 
 .button {

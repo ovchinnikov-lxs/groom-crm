@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { modal } from '~/composables/modal';
-const { $routes } = useNuxtApp();
-const { isOwner, isAdmin } = useUser();
-const auth = useAuth();
+const storeProfile = useStoreProfile();
+const supabase = useSupabaseClient();
+const storeModal = useStoreModal();
 
 const isOpened = ref(false);
 async function onLogout() {
     isOpened.value = false;
-    await auth.logout();
-    navigateTo($routes.auth.login);
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        console.log('DEFAULT_MENU_USER:ON_LOGOUT:', error);
+    }
 }
 
 const userSymbols = computed(() => {
-    const { fullName } = auth.user;
+    const fullName = storeProfile.profile.full_name;
 
     if (!fullName) {
         return '';
@@ -25,7 +28,7 @@ const userSymbols = computed(() => {
 });
 
 const onBooking = () => {
-    modal.open({
+    storeModal.open({
         component: defineAsyncComponent(() => import('~/components/booking/BookingCreate.vue')),
         modalProps: {
             size: 'medium',
@@ -39,17 +42,17 @@ const onBooking = () => {
         <div :class="$style.wrapper">
 
             <UiButton
-                v-if="isAdmin || isOwner"
+                v-if="storeProfile.isOwner || storeProfile.isMaster"
                 size="x-small"
                 :class="$style.booking"
                 @click="onBooking"
             >
             </UiButton>
 
-            <div :title="auth.user.fullName" :class="$style.previewWrapper">
+            <div :title="String(storeProfile.profile.full_name)" :class="$style.previewWrapper">
                 <UiImage
-                    v-if="auth.user.preview"
-                    :src="auth.user.preview"
+                    v-if="storeProfile.profile.avatar"
+                    :src="storeProfile.profile.avatar"
                     :class="$style.preview"
                 />
 
@@ -76,7 +79,7 @@ const onBooking = () => {
                         <UiButton
                             tag="NuxtLink"
                             size="x-small"
-                            :to="$routes.user.detail"
+                            to="/profile"
                         >
                             Аккаунт
                         </UiButton>

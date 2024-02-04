@@ -1,19 +1,29 @@
 <script setup lang="ts">
-import { modal } from '~/composables/modal';
+const breadcrumbs = useStoreBreadcrumbs();
+const storeModal = useStoreModal();
+const storeProfile = useStoreProfile();
 
-const breadcrumbs = useBreadcrumbs();
-const { isOwner } = useUser();
+const { data, refresh } = await useAsyncData(async () => await $fetch('/api/service', {
+    headers: useRequestHeaders(['cookie']),
+    params: {
+        company_id: storeProfile.profile.company_id,
+    },
+}));
+
+
+if (!data.value) {
+    throw createError({
+        statusCode: 404,
+        message: 'Такой страницы не существует',
+    });
+}
 
 breadcrumbs.setList([{
     title: 'Услуги',
 }]);
-const { $api } = useNuxtApp();
-const { data: list, refresh } = await $api.services.getCategoryList({
-    key: 'service-category',
-});
 
 function openCreateModal() {
-    modal.open({
+    storeModal.open({
         component: defineAsyncComponent(() => import('~/components/services/Categories/ServicesCategoriesSave.vue')),
         onClose: () => {
             refresh();
@@ -29,25 +39,25 @@ function onUpdate() {
 <template>
     <UiPage class="ServicesPage">
         <template #header>
-            <UiButton
-                v-if="isOwner"
+            <LazyUiButton
+                v-if="storeProfile.isOwner"
                 :class="$style.button"
                 @click="openCreateModal"
             >
                 Добавить категорию услуг
-            </UiButton>
+            </LazyUiButton>
         </template>
 
         <template #default>
-            <ServicesCategoriesTable
-                v-if="list.length"
-                :list="list"
+            <LazyServicesCategoriesTable
+                v-if="data?.data?.length"
+                :list="data.data"
                 @update="onUpdate"
             />
 
-            <UiEmpty v-else>
+            <LazyUiEmpty v-else>
                 <template #text>Вы еще не создали ни одну категорию</template>
-            </UiEmpty>
+            </LazyUiEmpty>
         </template>
     </UiPage>
 </template>

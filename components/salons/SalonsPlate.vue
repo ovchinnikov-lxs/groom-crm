@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
-
-const { $routes } = useNuxtApp();
+import type { PropType } from 'vue';
 
 defineProps({
     id: {
@@ -25,7 +23,7 @@ defineProps({
     <UiPlate
         tag="RouterLink"
         size="small"
-        :to="$routes.salons.detail(id)"
+        :to="`/salons/${id}`"
         rounded
         color="additional"
         :class="$style.SalonsPlate"

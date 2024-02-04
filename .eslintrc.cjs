@@ -2,6 +2,7 @@ module.exports = {
     root: true,
     extends: ["@nuxtjs/eslint-config-typescript"],
     rules: {
+        '@typescript-eslint/consistent-type-imports': 'error',
         'no-alert': 'off',
         'no-console': 0,
         'no-eval': 'error',
@@ -327,6 +328,18 @@ module.exports = {
             'never',
         ],
         // Vue linter optoins
+        'vue/component-tags-order': [
+            'error',
+            {
+                "order": [
+                    [
+                        'script',
+                        'template',
+                    ],
+                    'style',
+                ],
+            },
+        ],
         'vue/attribute-hyphenation': [
             'error',
             'always',

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
-import { IScheduleItem } from '~/components/salons/detail/SalonsDetailSchedule.vue';
+import type { PropType } from 'vue';
+import type { IScheduleItem } from '~/components/salons/detail/SalonsDetailSchedule.vue';
 
 const props = defineProps({
     id: {

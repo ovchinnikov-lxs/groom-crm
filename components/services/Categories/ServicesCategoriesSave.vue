@@ -1,38 +1,27 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
-import { IServiceCategory } from '~/types/services';
+import { defu } from 'defu';
+import type { Tables } from '~/types/supabase';
 
-
-const props = defineProps({
-    value: {
-        type: Object as PropType<IServiceCategory>,
-        default: () => ({}),
-    },
-});
-const $emit = defineEmits<{
+const props = defineProps<{
+    value?: Tables<'ServiceCategory'>
+}>();
+const emit = defineEmits<{
     close: [void]
 }>();
 
-const actualValue = reactive<IServiceCategory>({
+const storeCompany = useStoreCompany();
+const storeToast = useStoreToast();
+
+const actualValue = reactive<Tables<'ServiceCategory'>>(defu(props.value, {
     name: '',
     description: '',
-    preview: '',
-});
+    image: '',
+}));
 
-watch(() => props.value, (val: IServiceCategory) => {
-    if (!Object.keys(val).length) {
-        return false;
-    }
-
-    actualValue.name = val.name;
-    actualValue.description = val.description;
-    actualValue.preview = val.preview;
-}, { immediate: true });
-
-const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+const { v$, getError, getInvalidState } = useValidate(computed(() => ({
     name: ['required'],
     description: [],
-    preview: [],
+    image: [],
 })), actualValue);
 
 async function onSubmit() {
@@ -41,17 +30,34 @@ async function onSubmit() {
             return false;
         }
 
-        const { $api } = useNuxtApp();
+        const text = `Услуга успешно ${props.value ? 'обновлена' : 'созадана'}`;
 
-        if (!Object.keys(props.value).length) {
-            await $api.services.createServiceCategory(actualValue);
+        if (!props.value) {
+            await $fetch('/api/service', {
+                method: 'POST',
+                body: {
+                    ...actualValue,
+                    company_id: storeCompany.detail.id,
+                },
+            });
         } else {
-            await $api.services.updateServiceCategory(props.value?.id, actualValue);
+            await $fetch(`/api/service/${props.value.id}`, {
+                method: 'PATCH',
+                body: actualValue,
+            });
         }
 
-        $emit('close');
+        storeToast.add({
+            type: 'success',
+            text,
+        });
+        emit('close');
     } catch (e) {
-        console.log(e);
+        storeToast.add({
+            type: 'error',
+            text: 'Упс что то пошло не так',
+        });
+        console.error('SERVICES_CATEGORIES_SAVE:ON_SUBMIT:', e);
     }
 }
 </script>
@@ -61,11 +67,11 @@ async function onSubmit() {
         tag="form"
         class="ServicesCategoriesSave"
         @submit.prevent="onSubmit"
-        @close="$emit('close')"
+        @close="emit('close')"
     >
         <template #header>
             <h4>
-                <template v-if="!Object.keys(value).length">Добавить</template>
+                <template v-if="!props.value">Добавить</template>
                 <template v-else>Редактировать</template>
                 Категорию
             </h4>
@@ -80,7 +86,7 @@ async function onSubmit() {
 
                     <template #default>
                         <UiInput
-                            v-model="$v.name.$model"
+                            v-model="v$.name.$model"
                             :error="getError('name')"
                             placeholder="Введите название услуги"
                         />
@@ -91,7 +97,7 @@ async function onSubmit() {
                     <template #label>Описание</template>
                     <template #default>
                         <UiRichText
-                            v-model="$v.description.$model"
+                            v-model="v$.description.$model"
                             rows="4"
                             :error="getError('description')"
                             placeholder="Введите описание услуги"
@@ -99,12 +105,12 @@ async function onSubmit() {
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('preview')">
+                <UiFormCell :error="getError('image')">
                     <template #label>Изображение услуги</template>
                     <template #default>
                         <UiFileInput
-                            v-model="$v.preview.$model"
-                            :error="getError('preview')"
+                            v-model="v$.image.$model"
+                            :error="getError('image')"
                             is-image
                         />
                     </template>

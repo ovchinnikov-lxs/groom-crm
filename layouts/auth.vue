@@ -1,3 +1,13 @@
+<script setup lang="ts">
+const user = useSupabaseUser();
+
+watch(user, value => {
+    if (value) {
+        return navigateTo('/dashboard');
+    }
+}, { immediate: true });
+</script>
+
 <template>
     <div :class="$style.AuthLayout">
         <header :class="$style.header">

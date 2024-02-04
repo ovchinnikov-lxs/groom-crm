@@ -1,11 +1,10 @@
 <script setup lang="ts">
 // Constants
-import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
-import { ITS_USER } from 'assets/ts/constants/auth';
+// import { TARIFFS_KEY } from 'assets/ts/constants/tariffs';
+// import { ITS_USER } from 'assets/ts/constants/auth';
 
-const route = useRoute();
-const tariffs = useTariffs();
-const auth = useAuth();
+// const route = useRoute();
+// const tariffs = useStoreTariffs();
 
 const actualValue = reactive({
     phone: '',
@@ -37,33 +36,31 @@ const rules = computed(() => ({
     ],
 }));
 
-const { $v, getError, getInvalidState } = useValidate(rules, actualValue);
+const { v$, getError, getInvalidState } = useValidate(rules, actualValue);
 
 const showPassword = ref(false);
 const passwordType = computed(() => showPassword.value ? 'text' : 'password');
 
 async function onSubmit() {
+    // TODO: ЧО с регой делать?
     try {
         if (await getInvalidState()) {
             return false;
         }
 
-        const { $api, $routes } = useNuxtApp();
-
-        const tariffId = route.query.tariffId
-            ? route.query.tariffId
-            : tariffs.list.find(t => t.name === TARIFFS_KEY.BASIC)?.id;
+        // const tariffId = route.query.tariffId
+        //     ? route.query.tariffId
+        //     : tariffs.list.find(t => t.name === TARIFFS_KEY.BASIC)?.id;
 
 
-        await $api.auth.signup({
-            ...actualValue,
-            tariffId,
-        });
-        await auth.fetchUser();
-        await useGlobal().fetchInitial();
-        navigateTo($routes.salons.list);
-        useCookie(ITS_USER, { path: '/' }).value = 'true';
-        // todo: Добавить подтвержение номера телефона по смс и там уже регистрировать
+        // await auth.signup({
+        //     ...actualValue,
+        //     tariffId,
+        // });
+        // await auth.fetchUser();
+        // await useStoreGlobal().fetchInitial();
+        // navigateTo('/dashboard');
+        // useCookie(ITS_USER, { path: '/' }).value = 'true';
     } catch (e) {
         console.log(e);
     }
@@ -85,7 +82,7 @@ async function onSubmit() {
                     <template #default>
                         <UiInput
                             id="phone"
-                            v-model="$v.phone.$model"
+                            v-model="v$.phone.$model"
                             :error="getError('phone')"
                             placeholder="Введите телефон"
                         />
@@ -96,7 +93,7 @@ async function onSubmit() {
                     <template #default>
                         <UiInput
                             id="password"
-                            v-model="$v.password.$model"
+                            v-model="v$.password.$model"
                             :type="passwordType"
                             :error="getError('password')"
                             placeholder="Придумайте пароль"
@@ -108,7 +105,7 @@ async function onSubmit() {
                     <template #default>
                         <UiInput
                             id="password-confirm"
-                            v-model="$v.password2.$model"
+                            v-model="v$.password2.$model"
                             :type="passwordType"
                             :error="getError('password2')"
                             placeholder="Повторите пароль"
@@ -126,7 +123,7 @@ async function onSubmit() {
                     <template #default>
                         <UiInput
                             id="fullName"
-                            v-model="$v.fullName.$model"
+                            v-model="v$.fullName.$model"
                             :error="getError('fullName')"
                             placeholder="Введите имя и фамилию"
                         />
@@ -137,7 +134,7 @@ async function onSubmit() {
                     <template #default>
                         <UiInput
                             id="companyName"
-                            v-model="$v.companyName.$model"
+                            v-model="v$.companyName.$model"
                             :error="getError('companyName')"
                             placeholder="Название организации"
                         />

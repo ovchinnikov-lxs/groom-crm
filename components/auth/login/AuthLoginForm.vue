@@ -1,49 +1,62 @@
 <script setup lang="ts">
-import { ITS_USER } from 'assets/ts/constants/auth';
-
-const auth = useAuth();
+const supabase = useSupabaseClient();
+const storeToast = useStoreToast();
 
 interface ILoginForm {
-    phone: string
-    password: string
+    email: string
 }
 
 const actualValue = reactive<ILoginForm>({
-    phone: '',
-    password: '',
+    email: '',
 });
 
 const rules = computed(() => ({
-    phone: [
+    email: [
         'required',
-        'phone',
-    ],
-    password: [
-        'required',
+        'email',
     ],
 }));
 
-const { $v, getError, getInvalidState } = useValidate(rules, actualValue);
+const { v$, getError, getInvalidState } = useValidate(rules, actualValue);
 
 async function onSubmit() {
     try {
         if (await getInvalidState()) {
             return false;
         }
+        const config = useRuntimeConfig();
+        const route = useRoute();
 
-        const { $api, $routes } = useNuxtApp();
-        await $api.auth.login(actualValue);
-        await auth.fetchUser();
-        await useGlobal().fetchInitial();
-        navigateTo($routes.salons.list);
-        useCookie(ITS_USER, { path: '/' }).value = 'true';
+        const { error } = await supabase.auth.signInWithOtp({
+            email: actualValue.email,
+            options: {
+                emailRedirectTo: `${config.public.API_BASE_URL}/auth/confirm`,
+                data: {
+                    ...route.query.tariffId && {
+                        tarrif_id: route.query.tariffId,
+                    },
+                },
+            },
+        });
+
+        if (error) {
+            storeToast.add({
+                type: 'error',
+                text: error.message,
+            });
+        } else {
+            storeToast.add({
+                type: 'success',
+                text: 'На вашу почту отправлена ссылка для входа',
+            });
+        }
     } catch (e) {
-        console.log(e);
+        storeToast.add({
+            type: 'error',
+            text: 'Упс... что-то пошло не так',
+        });
     }
 }
-
-const showPassword = ref(false);
-const passwordType = computed(() => showPassword.value ? 'text' : 'password');
 </script>
 
 <template>
@@ -52,46 +65,46 @@ const passwordType = computed(() => showPassword.value ? 'text' : 'password');
             <h3>Вход</h3>
 
             <div :class="$style.cells">
-                <UiFormCell :error="getError('phone')">
+                <UiFormCell :error="getError('email')">
                     <template #default>
                         <UiInput
-                            id="phone"
-                            v-model="$v.phone.$model"
-                            :error="getError('phone')"
-                            placeholder="Введите телефон"
+                            id="email"
+                            v-model="v$.email.$model"
+                            :error="getError('email')"
+                            placeholder="Введите почту"
                         />
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('password')">
-                    <template #default>
-                        <UiInput
-                            id="password"
-                            v-model="$v.password.$model"
-                            :error="getError('password')"
-                            :type="passwordType"
-                            placeholder="Введите пароль"
-                        />
-                    </template>
+                <!--                <UiFormCell :error="getError('password')">-->
+                <!--                    <template #default>-->
+                <!--                        <UiInput-->
+                <!--                            id="password"-->
+                <!--                            v-model="v$.password.$model"-->
+                <!--                            :error="getError('password')"-->
+                <!--                            :type="passwordType"-->
+                <!--                            placeholder="Введите пароль"-->
+                <!--                        />-->
+                <!--                    </template>-->
 
-                    <template #info>
-                        <div :class="$style.info">
-                            <UiToggle v-model="showPassword" size="small">
-                                <template #true-label>Показать пароль</template>
-                            </UiToggle>
+                <!--                    <template #info>-->
+                <!--                        <div :class="$style.info">-->
+                <!--                            <UiToggle v-model="showPassword" size="small">-->
+                <!--                                <template #true-label>Показать пароль</template>-->
+                <!--                            </UiToggle>-->
 
-                            <UiLink
-                                :to="$routes.auth.recovery"
-                                size="small"
-                                color="secondary"
-                                :class="$style.restorePassword"
-                            >
-                                Не помню пароль
-                            </UiLink>
-                        </div>
+                <!--                            <UiLink-->
+                <!--                                to="auth/recovery"-->
+                <!--                                size="small"-->
+                <!--                                color="secondary"-->
+                <!--                                :class="$style.restorePassword"-->
+                <!--                            >-->
+                <!--                                Не помню пароль-->
+                <!--                            </UiLink>-->
+                <!--                        </div>-->
 
-                    </template>
-                </UiFormCell>
+                <!--                    </template>-->
+                <!--                </UiFormCell>-->
 
             </div>
 

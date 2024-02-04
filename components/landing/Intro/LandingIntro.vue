@@ -1,10 +1,3 @@
-<script setup lang="ts">
-// Constants
-import { COMPANY_NAME } from '~/assets/ts/constants';
-
-const { $routes } = useNuxtApp();
-</script>
-
 <template>
     <section class="LandingIntro">
         <div :class="$style.wrapper">
@@ -20,7 +13,7 @@ const { $routes } = useNuxtApp();
                     и&nbsp;контролируйте свои финансы&nbsp;&mdash; все это с&nbsp;помощью {{ COMPANY_NAME }}
                 </h4>
 
-                <UiButton :to="$routes.auth.registration" :class="$style.button">
+                <UiButton to="/auth/registration" :class="$style.button">
                     Получить 15 дней бесплатно
                 </UiButton>
 
@@ -29,7 +22,8 @@ const { $routes } = useNuxtApp();
             <div :class="$style.imageWrapper">
                 <UiImage
                     :has-preview="false"
-                    src="/images/dog.png"
+                    storage-id="static"
+                    src="images/dog.png"
                     :class="$style.image"
                 />
 

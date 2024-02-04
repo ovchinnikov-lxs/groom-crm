@@ -1,13 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import stylelint from 'vite-plugin-stylelint';
 
-// Constants
-import { COMPANY_NAME, COMPANY_DESCRIPTION } from './assets/ts/constants';
-
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
-            SERVER_API_URL: '/api',
+            GOOGLE_MAP_API_KEY: '',
+            API_BASE_URL: 'http://localhost:3000',
         },
     },
 
@@ -27,10 +25,6 @@ export default defineNuxtConfig({
         head: {
             charset: 'utf-16',
             viewport: 'width=device-width, initial-scale=1',
-            title: COMPANY_NAME,
-            meta: [
-                { name: 'description', content: COMPANY_DESCRIPTION },
-            ],
         },
     },
 
@@ -41,10 +35,17 @@ export default defineNuxtConfig({
     },
 
     modules: [
-        '@nuxtjs/svg-sprite',
-        ['@nuxt/image', {
-            format: ['webp'],
+        ['@nuxtjs/supabase', {
+            redirectOptions: {
+                login: '/auth/login',
+                callback: '/auth/confirm',
+                exclude: [
+                    '/',
+                    '/auth/*',
+                ],
+            },
         }],
+        '@nuxtjs/svg-sprite',
         '@pinia/nuxt',
     ],
 

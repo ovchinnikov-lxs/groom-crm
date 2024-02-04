@@ -1,94 +1,96 @@
 <script setup lang="ts">
-import type { PropType } from 'vue/dist/vue';
-import { getHumanTime, leadingZero } from 'assets/ts/utils/format-utils';
+import { getHumanTime, leadingZero } from '~/utils/format';
+import type { Tables } from '~/types/supabase';
 
-interface IServiceSave {
+interface IPropsValue extends Tables<'ServiceDetail'> {
+    breeds: Tables<'Breed'>[];
+}
+
+interface IValue {
     name: string;
     description: string;
-    preview: string;
-    price: string;
+    image: string;
+    price: number;
     duration: string;
-    breeds: Array<string>;
+    breeds: string[];
 }
 
-interface IServiceValue extends IServiceSave {
-    id: string;
-}
+const props = defineProps<{
+    value?: IPropsValue;
+    categoryId: string;
+}>();
 
-const props = defineProps({
-    value: {
-        type: Object as PropType<IServiceValue>,
-        default: () => ({}),
-    },
 
-    categoryId: {
-        type: String,
-        required: true,
-    },
-});
-const actualValue = reactive<IServiceSave>({
-    name: '',
-    description: '',
-    preview: '',
-    price: '',
-    duration: '00:00',
-    breeds: [],
+const { hours, minutes } = getHumanTime(props.value?.duration || 0);
+
+const actualValue: IValue = reactive({
+    name: props.value?.name || '',
+    description: props.value?.description || '',
+    image: props.value?.image || '',
+    price: props.value?.price || 0,
+    duration: `${leadingZero(hours)}:${leadingZero(minutes)}` || '00:00',
+    breeds: props.value?.breeds.map(b => b.id) || [],
 });
 
-watch(() => props.value, (val: IServiceValue) => {
-    if (!Object.keys(val).length) {
-        return false;
-    }
-
-    const { hours, minutes } = getHumanTime(val.duration);
-
-    actualValue.name = val.name;
-    actualValue.description = val.description;
-    actualValue.preview = val.preview;
-    actualValue.price = val.price;
-    actualValue.duration = `${leadingZero(hours)}:${leadingZero(minutes)}`;
-    actualValue.breeds = val.breeds.map(i => i.id);
-}, { immediate: true });
-
-const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+const { v$, getError, getInvalidState } = useValidate(computed(() => ({
     name: ['required'],
     description: [],
-    preview: [],
+    image: [],
     price: ['required'],
     duration: ['required'],
     breeds: ['required'],
 })), actualValue);
 
-const $emit = defineEmits<{
+const emit = defineEmits<{
     close: [void]
 }>();
+
+
+const storeToast = useStoreToast();
+const storeCompany = useStoreCompany();
+
 async function onSubmit() {
     try {
         if (await getInvalidState()) {
             return false;
         }
 
-        const { $api } = useNuxtApp();
-        const [hours, minutes] = actualValue.duration.split(':').map(i => Number(i));
+        const text = `Услуга успешно ${props.value ? 'обновлена' : 'созадана'}`;
 
-        const duration = hours * 60 + minutes;
 
-        if (!Object.keys(props.value).length) {
-            await $api.services.create({
-                ...actualValue,
-                duration,
-                categoryId: props.categoryId,
+        const [hours, minutes] = actualValue.duration
+            .split(':')
+            .map((i: string) => Number(i));
+
+        const body = {
+            ...actualValue,
+            duration: hours * 60 + minutes,
+            company_id: storeCompany.detail.id,
+        };
+
+        if (!props.value) {
+            await $fetch(`/api/service/${props.categoryId}/detail`, {
+                method: 'POST',
+                body,
             });
         } else {
-            await $api.services.update(props.value?.id, {
-                ...actualValue,
-                duration,
+            await $fetch(`/api/service/${props.categoryId}/detail/${props.value.id}`, {
+                method: 'PATCH',
+                body,
             });
         }
 
-        $emit('close');
+        storeToast.add({
+            type: 'success',
+            text,
+        });
+        emit('close');
     } catch (e) {
-        console.log(e);
+        storeToast.add({
+            type: 'error',
+            text: 'Упс что то пошло не так',
+        });
+        console.error('SERVICES_SAVE:ON_SUBMIT:', e);
     }
 }
 </script>
@@ -98,11 +100,11 @@ async function onSubmit() {
         tag="form"
         class="ServicesSave"
         @submit.prevent="onSubmit"
-        @close="$emit('close')"
+        @close="emit('close')"
     >
         <template #header>
             <h4>
-                <template v-if="!Object.keys(value).length">Добавить</template>
+                <template v-if="!props.value">Добавить</template>
                 <template v-else>Редактировать</template>
                 Услугу
             </h4>
@@ -117,7 +119,7 @@ async function onSubmit() {
 
                     <template #default>
                         <UiInput
-                            v-model="$v.name.$model"
+                            v-model="v$.name.$model"
                             :error="getError('name')"
                             placeholder="Введите название услуги"
                         />
@@ -128,7 +130,7 @@ async function onSubmit() {
                     <template #label>Описание</template>
                     <template #default>
                         <UiRichText
-                            v-model="$v.description.$model"
+                            v-model="v$.description.$model"
                             rows="4"
                             :error="getError('description')"
                             placeholder="Введите описание услуги"
@@ -136,12 +138,12 @@ async function onSubmit() {
                     </template>
                 </UiFormCell>
 
-                <UiFormCell :error="getError('preview')">
+                <UiFormCell :error="getError('image')">
                     <template #label>Изображение услуги</template>
                     <template #default>
                         <UiFileInput
-                            v-model="$v.preview.$model"
-                            :error="getError('preview')"
+                            v-model="v$.image.$model"
+                            :error="getError('image')"
                             is-image
                         />
                     </template>
@@ -151,24 +153,10 @@ async function onSubmit() {
                     <template #label>Породы</template>
                     <template #default>
                         <BreedsSelect
-                            v-model="$v.breeds.$model"
+                            v-model="v$.breeds.$model"
                             placeholder="Введите название пород"
                             multiple
                             :error="getError('breeds')"
-                        />
-                    </template>
-                </UiFormCell>
-
-                <UiFormCell :error="getError('price')">
-                    <template #label>
-                        Стоимость
-                    </template>
-
-                    <template #default>
-                        <UiInput
-                            v-model="$v.price.$model"
-                            placeholder="Введите стоимость услуги"
-                            :error="getError('price')"
                         />
                     </template>
                 </UiFormCell>
@@ -180,11 +168,25 @@ async function onSubmit() {
 
                     <template #default>
                         <UiTimeSelect
-                            v-model="$v.duration.$model"
+                            v-model="v$.duration.$model"
                             placeholder="Введите длительность услуги"
                             :end-hour="12"
                             :period="5"
                             :error="getError('duration')"
+                        />
+                    </template>
+                </UiFormCell>
+
+                <UiFormCell :error="getError('price')">
+                    <template #label>
+                        Стоимость
+                    </template>
+
+                    <template #default>
+                        <UiInput
+                            v-model="v$.price.$model"
+                            placeholder="Введите стоимость услуги"
+                            :error="getError('price')"
                         />
                     </template>
                 </UiFormCell>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const breadcrumbs = useBreadcrumbs();
+const breadcrumbs = useStoreBreadcrumbs();
 </script>
 
 <template>

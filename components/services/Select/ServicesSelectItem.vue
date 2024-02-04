@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { IService } from '~/types/services';
-import { getHumanTime, plural, splitThousands } from 'assets/ts/utils/format-utils';
+import { getHumanTime, plural, splitThousands } from '~/utils/format';
 
 interface IServiceSelectItem extends IService{
     active?: boolean;

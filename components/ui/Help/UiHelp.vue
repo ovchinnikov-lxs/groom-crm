@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
-import { TypeSize } from '~/types';
+import type { PropType } from 'vue';
+import type { TypeSize } from '~/types';
 
 type HelpType = 'error' | 'info' | 'tutorial' | 'warning';
 
@@ -71,13 +71,13 @@ const iconName = computed(() => `ui/${props.type}`);
     &.--medium-size {
         #{$help} {
             &__wrapper {
-                row-gap: calc(var(--ui-unit) * 4);
-                padding: calc(var(--ui-unit) * 3);
+                row-gap: calc(var(--ui-unit) * 3);
+                padding: calc(var(--ui-unit) * 2);
                 border-radius: calc(var(--ui-unit) * 2);
             }
 
             &__header {
-                column-gap: calc(var(--ui-unit) * 3);
+                column-gap: calc(var(--ui-unit) * 2);
             }
         }
     }
@@ -85,7 +85,12 @@ const iconName = computed(() => `ui/${props.type}`);
     &.--tutorial-type {
         #{$help} {
             &__wrapper {
-                background-color: rgba(var(--ui-additional-color-rgb), .4);
+                border: 4px solid rgba(var(--ui-secondary-light-color-rgb), .4);
+                background-color: rgba(var(--ui-secondary-light-color-rgb), .4);
+                color: rgba(var(--ui-black-color-rgb), .6);
+            }
+
+            &__icon {
                 color: var(--ui-primary-color);
             }
         }

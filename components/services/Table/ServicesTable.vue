@@ -1,23 +1,17 @@
 <script setup lang="ts">
-import { getHumanTime, plural, splitThousands } from '~/assets/ts/utils/format-utils';
-import { IBreed } from '~/types/breeds';
-import { IService } from '~/types/services';
+import type { IServiceDetail } from '~/types/services';
 
-const props = defineProps({
-    list: {
-        type: Array,
-        default: () => [],
-    },
+const props = defineProps<{
+    list: IServiceDetail[];
+    categoryId: string;
+}>();
 
-    categoryId: {
-        type: String,
-        required: true,
-    },
-});
-const { isOwner } = useUser();
+const storeProfile = useStoreProfile();
+const storeModal = useStoreModal();
+const storeToast = useStoreToast();
 
 const columns = [
-    { id: 'preview', name: 'Изображение', width: '15%' },
+    { id: 'image', name: 'Изображение', width: '15%' },
     { id: 'name', name: 'Название', width: '15%' },
     { id: 'description', name: 'Описание', width: '20%' },
     { id: 'price', name: 'Стоимость', width: '10%' },
@@ -25,33 +19,50 @@ const columns = [
     { id: 'breeds', name: 'Породы', width: '20%' },
     { id: 'control', name: '', width: '10%' },
 ];
-const $emit = defineEmits<{
+const emit = defineEmits<{
     update: [void]
 }>();
 
-function onEdit(value: IService) {
-    modal.open({
+function onEdit(value: IServiceDetail) {
+    storeModal.open({
         component: defineAsyncComponent(() => import('~/components/services/ServicesSave.vue')),
         componentProps: {
             categoryId: props.categoryId,
             value,
         },
         onClose: () => {
-            $emit('update');
+            emit('update');
         },
     });
 }
-async function onDelete(id: string) {
-    try {
-        const { $api } = useNuxtApp();
-        await $api.services.delete(id);
-        $emit('update');
-    } catch (e) {
-        console.log(e);
-    }
-}
 
-const displayBreeds = (value: IBreed[]) => value.map(i => i.name).join(', ');
+async function onDelete(id: string) {
+    storeModal.open({
+        type: 'confirm',
+        modalProps: {
+            title: 'Вы действительно хотите удалить услугу?',
+        },
+        onClose: async res => {
+            if (!res) {
+                return false;
+            }
+
+            try {
+                await $fetch(`/api/service/${props.categoryId}/detail/${id}`, {
+                    method: 'DELETE',
+                });
+
+                storeToast.add({
+                    type: 'success',
+                    text: 'Услуга успешно удалена',
+                });
+                emit('update');
+            } catch (e) {
+                console.error('PAGE:BREEDS:ON_DELETE:', e);
+            }
+        },
+    });
+}
 </script>
 
 <template>
@@ -61,43 +72,69 @@ const displayBreeds = (value: IBreed[]) => value.map(i => i.name).join(', ');
             :columns="columns"
             :class="$style.wrapper"
         >
-            <template #price="{ value }">
-                {{ splitThousands(value) }} ₽
+            <template #image="columnProps">
+                <UiImage :src="columnProps.item.image" :class="$style.image"/>
             </template>
 
-            <template #duration="{ value }">
-                <template v-if="getHumanTime(value).hours">
-                    {{ getHumanTime(value).hours }} час{{ plural(getHumanTime(value).hours, ['', 'а', 'ов']) }}
+            <template #name="columnProps">
+                <b>
+                    {{ columnProps.item.name }}
+                </b>
+            </template>
+
+            <template #price="columnProps">
+                {{ splitThousands(columnProps.value) }} ₽
+            </template>
+
+            <template #duration="columnProps">
+                <template v-if="getHumanTime(columnProps.value).hours">
+                    {{ getHumanTime(columnProps.value).hours }} час{{ plural(getHumanTime(columnProps.value).hours, ['', 'а', 'ов']) }}
                 </template>
-                <template v-if="getHumanTime(value).minutes">
-                    <template v-if="getHumanTime(value).hours">,</template>
-                    {{ getHumanTime(value).minutes }} минут{{ plural(getHumanTime(value).minutes, ['а', 'ы', '']) }}
+                <template v-if="getHumanTime(columnProps.value).minutes">
+                    <template v-if="getHumanTime(columnProps.value).hours">,</template>
+                    {{ getHumanTime(columnProps.value).minutes }} минут{{ plural(getHumanTime(columnProps.value).minutes, ['а', 'ы', '']) }}
                 </template>
             </template>
 
-            <template #breeds="{value}">
-                <b>{{ displayBreeds(value) }}</b>
+            <template #breeds="columnProps">
+                <div :class="$style.breeds">
+                    <div
+                        v-for="item in columnProps.item.breeds"
+                        :key="item.id"
+                        :class="$style.breedsItem"
+                    >
+                        <LazyUiTooltip>
+                            <template #header>
+                                <LazyUiImage :src="item.image" :class="$style.breedsImage"/>
+                            </template>
+                            <template #bottom>
+                                {{ item.name }}
+                            </template>
+                        </LazyUiTooltip>
+                    </div>
+                </div>
             </template>
 
-            <template #control="{ item }">
+            <template #control="columnProps">
                 <div :class="$style.control">
-                    <UiTooltip v-if="isOwner" interactive>
+                    <LazyUiTooltip v-if="storeProfile.isOwner" interactive>
                         <template #header>
-                            <UiButton size="small" icon>
-                                <UiIcon name="ui/settings"/>
-                            </UiButton>
+                            <LazyUiButton size="small" icon>
+                                <LazyUiIcon name="ui/settings"/>
+                            </LazyUiButton>
                         </template>
                         <template #bottom>
                             <div :class="$style.tooltipBottom">
-                                <UiButton size="x-small" @click="onEdit(item)">
+                                <LazyUiButton size="x-small" @click="onEdit(columnProps.item)">
                                     Редактировать
-                                </UiButton>
-                                <UiButton size="x-small" @click="onDelete(item.id)">
+                                </LazyUiButton>
+
+                                <LazyUiButton size="x-small" @click="onDelete(columnProps.item.id)">
                                     Удалить
-                                </UiButton>
+                                </LazyUiButton>
                             </div>
                         </template>
-                    </UiTooltip>
+                    </LazyUiTooltip>
                 </div>
             </template>
         </UiTable>
@@ -121,6 +158,14 @@ const displayBreeds = (value: IBreed[]) => value.map(i => i.name).join(', ');
     }
 }
 
+.image {
+    overflow: hidden;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transform: translate3d(0, 0, 0);
+}
+
 .control {
     display: flex;
     justify-content: flex-end;
@@ -130,5 +175,21 @@ const displayBreeds = (value: IBreed[]) => value.map(i => i.name).join(', ');
     display: flex;
     flex-direction: column;
     row-gap: calc(var(--ui-unit) * 2);
+}
+
+.breeds {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 8px;
+    row-gap: 8px;
+}
+
+.breedsImage {
+    overflow: hidden;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transform: translate3d(0, 0, 0);
 }
 </style>

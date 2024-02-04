@@ -1,11 +1,10 @@
 <script setup lang="ts">
 // UiKit Components
-import { UiFileInput } from '@ovchinnikov-lxs-frontend/ui-kit';
+// import { UiFileInput } from '@ovchinnikov-lxs-frontend/ui-kit';
 
 // Types
 import type { PropType } from 'vue';
 import type { TypeSize } from '~/types';
-import { getBase64UrlFromImage } from 'assets/ts/utils/image-utils';
 type TypeValue = string | null | File;
 
 const props = defineProps({
@@ -37,109 +36,111 @@ watch(() => props.modelValue, (val: TypeValue) => {
     immediate: true,
 });
 
-const $emit = defineEmits<{(e: 'update:modelValue', value: TypeValue): void }>();
+// const $emit = defineEmits<{(e: 'update:modelValue', value: TypeValue): void }>();
 
-function emitInput() {
-    $emit('update:modelValue', actualValue.value);
-}
+// function emitInput() {
+//     $emit('update:modelValue', actualValue.value);
+// }
 
-async function onInput(file: TypeValue) {
-    if (!file) {
-        return false;
-    }
-
-    if (typeof file === 'string') {
-        actualValue.value = file;
-        emitInput();
-        return false;
-    }
-
-    const res = await getBase64UrlFromImage(file);
-
-    if (typeof res === 'string') {
-        actualValue.value = res;
-        emitInput();
-    }
-}
-
-function onRemove() {
-    actualValue.value = null;
-    emitInput();
-}
-
-const classList = computed(() => [
-    {
-        '--is-image': props.isImage,
-    },
-]);
-
-const buttonSize = computed(() => {
-    switch (props.size) {
-        case 'medium':
-            return 'x-small';
-    }
-});
-
-const imageSrc = computed(() => (urls: (string | File)[]): string | undefined => {
-    const [firstEl] = urls;
-
-    if (!firstEl || typeof firstEl !== 'string') {
-        return undefined;
-    }
-
-    return firstEl;
-});
+// async function onInput(file: TypeValue) {
+//     if (!file) {
+//         return false;
+//     }
+//
+//     if (typeof file === 'string') {
+//         actualValue.value = file;
+//         emitInput();
+//         return false;
+//     }
+//
+//     const res = await getBase64UrlFromImage(file);
+//
+//     if (typeof res === 'string') {
+//         actualValue.value = res;
+//         emitInput();
+//     }
+// }
+//
+// function onRemove() {
+//     actualValue.value = null;
+//     emitInput();
+// }
+//
+// const classList = computed(() => [
+//     {
+//         '--is-image': props.isImage,
+//     },
+// ]);
+//
+// const buttonSize = computed(() => {
+//     switch (props.size) {
+//         case 'medium':
+//             return 'x-small';
+//     }
+// });
+//
+// const imageSrc = computed(() => (urls: (string | File)[]): string | undefined => {
+//     const [firstEl] = urls;
+//
+//     if (!firstEl || typeof firstEl !== 'string') {
+//         return undefined;
+//     }
+//
+//     return firstEl;
+// });
 </script>
 
 <template>
-    <UiFileInput
-        v-bind="$attrs"
-        v-model="actualValue"
-        :size="size"
-        :color="color"
-        :class="classList"
-        @update:model-value="onInput"
-        @remove="onRemove"
-    >
-        <template #data="dataProps">
-            <template v-if="isImage">
-                <div class="UiFileInput__image-placeholder">
-                    <UiIcon name="ui/camera" size="x-large"/>
-                    <div v-if="dataProps.drop">Drop here</div>
-                </div>
+    <!--    <UiFileInput-->
+    <!--        v-bind="$attrs"-->
+    <!--        v-model="actualValue"-->
+    <!--        :size="size"-->
+    <!--        :color="color"-->
+    <!--        :class="classList"-->
+    <!--        @update:model-value="onInput"-->
+    <!--        @remove="onRemove"-->
+    <!--    >-->
+    <!--        <template #data="dataProps">-->
+    <!--            <template v-if="isImage">-->
+    <!--                <div class="UiFileInput__image-placeholder">-->
+    <!--                    <UiIcon name="ui/camera" size="x-large"/>-->
+    <!--                    <div v-if="dataProps.drop">Drop here</div>-->
+    <!--                </div>-->
 
-                <UiImage
-                    v-if="imageSrc(dataProps.urls)"
-                    :src="imageSrc(dataProps.urls)"
-                    class="UiFileInput__image"
-                />
-            </template>
-        </template>
+    <!--                <UiImage-->
+    <!--                    v-if="imageSrc(dataProps.urls)"-->
+    <!--                    :src="imageSrc(dataProps.urls)"-->
+    <!--                    class="UiFileInput__image"-->
+    <!--                />-->
+    <!--            </template>-->
+    <!--        </template>-->
 
-        <template #input="inputProps">
-            <UiButton
-                type="button"
-                :color="color"
-                :size="buttonSize"
-                @click="inputProps.onClick"
-            >
-                {{ inputProps.label }}
-            </UiButton>
-        </template>
+    <!--        <template #input="inputProps">-->
+    <!--            <UiButton-->
+    <!--                type="button"-->
+    <!--                :color="color"-->
+    <!--                :size="buttonSize"-->
+    <!--                @click="inputProps.onClick"-->
+    <!--            >-->
+    <!--                {{ inputProps.label }}-->
+    <!--            </UiButton>-->
+    <!--        </template>-->
 
-        <template #remove="removeProps">
-            <UiButton
-                type="button"
-                color="error"
-                outline
-                :disabled="!actualValue"
-                :size="buttonSize"
-                @click="removeProps.onClick"
-            >
-                {{ removeProps.label }}
-            </UiButton>
-        </template>
-    </UiFileInput>
+    <!--        <template #remove="removeProps">-->
+    <!--            <UiButton-->
+    <!--                type="button"-->
+    <!--                color="error"-->
+    <!--                outline-->
+    <!--                :disabled="!actualValue"-->
+    <!--                :size="buttonSize"-->
+    <!--                @click="removeProps.onClick"-->
+    <!--            >-->
+    <!--                {{ removeProps.label }}-->
+    <!--            </UiButton>-->
+    <!--        </template>-->
+    <!--    </UiFileInput>-->
+    <div>file input</div>
+    <!--    TODO: TODO! это ui-kit-->
 </template>
 
 <style lang="scss">

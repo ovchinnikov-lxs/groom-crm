@@ -2,11 +2,6 @@
 import { useCssModule } from 'vue';
 import type { PropType } from 'vue';
 
-// Constants
-import { COMPANY_NAME } from '~/assets/ts/constants';
-
-const { $routes } = useNuxtApp();
-
 const props = defineProps({
     size: {
         type: String as PropType<'small' | 'medium' | 'large' | 'custom'>,
@@ -28,7 +23,7 @@ const classList = computed(() => [
 </script>
 
 <template>
-    <NuxtLink :to="$routes.landing" :class="[$style.TheLogo, classList]">
+    <NuxtLink to="/" :class="[$style.TheLogo, classList]">
         {{ COMPANY_NAME }}
     </NuxtLink>
 </template>

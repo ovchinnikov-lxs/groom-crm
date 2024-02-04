@@ -1,11 +1,15 @@
 import { defineStore } from 'pinia';
 
-export const useGlobal = defineStore('global', {
+export const useStoreGlobal = defineStore('global', {
     actions: {
         async fetchInitial() {
+            const storeProfile = useStoreProfile();
+            const storeCompany = useStoreCompany();
+
+
             await Promise.all([
-                useRoles().fetchInitial(),
-                useCompany().fetchInitial(),
+                storeProfile.fetchInitial(),
+                storeCompany.fetchInitial(),
             ]);
         },
     },

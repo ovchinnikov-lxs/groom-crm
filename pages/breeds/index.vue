@@ -1,124 +1,136 @@
 <script setup lang="ts">
-import _ from 'lodash';
-import { IBreed } from '~/types/breeds';
+import type { Tables } from '~/types/supabase';
 
-const breadcrumbs = useBreadcrumbs();
-const { isOwner } = useUser();
+const breadcrumbs = useStoreBreadcrumbs();
+const storeProfile = useStoreProfile();
+const storeModal = useStoreModal();
+const storeToast = useStoreToast();
+
+const { data, refresh: fetchBreeds } = await useAsyncData(async () => await $fetch('/api/breeds', {
+    headers: useRequestHeaders(['cookie']),
+    params: {
+        company_id: storeProfile.profile.company_id,
+    },
+}));
+
+if (!data.value) {
+    throw createError({
+        statusCode: 404,
+        message: 'Такой страницы не существует',
+    });
+}
 
 breadcrumbs.setList([{
     title: 'Список пород',
 }]);
 
-
-const breedsQuery = reactive({
-    limit: 20,
-    offset: 0,
-});
-
-const { $api } = useNuxtApp();
-const { data, refresh } = await $api.breeds.getList({
-    query: breedsQuery,
-});
-
-const actualList = ref<IBreed[]>(_.cloneDeep(data.value.rows));
-
 const columns = [
-    { id: 'preview', name: 'Изображение', width: '15%' },
+    { id: 'image', name: 'Изображение', width: '15%' },
     { id: 'name', name: 'Название', width: '35%' },
     { id: 'description', name: 'Описание', width: '40%' },
     { id: 'control', name: '', width: '10%' },
 ];
 
-function openModal(value: any | null) {
-    modal.open({
+function openModal(value: Tables<'Breed'> | null) {
+    storeModal.open({
         component: defineAsyncComponent(() => import('~/components/breeds/BreedsSave.vue')),
         componentProps: {
             ...value && { value },
         },
-        onClose: () => {
-            refresh();
-        },
+        onClose: () => fetchBreeds(),
     });
 }
 
 async function onDelete(id: string) {
-    try {
-        await $api.breeds.delete(id);
-        refresh();
-    } catch (e) {
-        console.log(e);
-    }
-}
+    storeModal.open({
+        type: 'confirm',
+        modalProps: {
+            title: 'Вы действительно хотите удалить породу?',
+        },
+        onClose: async res => {
+            if (!res) {
+                return false;
+            }
 
-const loadMore = async () => {
-    try {
-        breedsQuery.offset += 5;
-        await refresh();
-        actualList.value = actualList.value.concat(data.value.rows);
-    } catch (e) {
-        console.log(e);
-    }
-};
+            try {
+                await $fetch(`/api/breeds/${id}`, {
+                    method: 'DELETE',
+                });
+
+                await fetchBreeds();
+
+                storeToast.add({
+                    type: 'success',
+                    text: 'Порода успешно удалена',
+                });
+            } catch (e) {
+                console.error('PAGE:BREEDS:ON_DELETE:', e);
+            }
+        },
+    });
+}
 </script>
 
 <template>
     <UiPage class="BreedsPage">
         <template #header>
-            <UiButton
-                v-if="isOwner"
+            <LazyUiButton
+                v-if="storeProfile.isOwner"
                 :class="$style.button"
                 @click="openModal(null)"
             >
                 Добавить породу
-            </UiButton>
+            </LazyUiButton>
         </template>
+
         <template #default>
-            <template v-if="actualList.length">
-                <UiTable
+            <div :class="$style.page">
+
+                <LazyUiTable
+                    v-if="data?.data?.length"
                     :columns="columns"
-                    :data="actualList"
+                    :data="data.data"
                     :class="$style.wrapper"
                 >
-                    <template #preview="{ value }">
-                        <UiImage
-                            :src="value"
+                    <template #image="columnProps">
+                        <LazyUiImage
+                            :src="columnProps.value"
+                            external
                             :class="$style.preview"
                         />
                     </template>
 
-                    <template #control="{ item }">
-                        <UiTooltip
-                            v-if="isOwner"
+                    <template #control="columnProps">
+                        <LazyUiTooltip
+                            v-if="storeProfile.isOwner"
                             interactive
                             :class="$style.tooltip"
                         >
                             <template #header>
-                                <UiButton size="small" icon>
-                                    <UiIcon name="ui/settings"/>
-                                </UiButton>
+                                <LazyUiButton size="small" icon>
+                                    <LazyUiIcon name="ui/settings"/>
+                                </LazyUiButton>
                             </template>
                             <template #bottom>
                                 <div :class="$style.tooltipBottom">
-                                    <UiButton size="x-small" @click="openModal(item)">
+                                    <LazyUiButton size="x-small" @click="openModal(columnProps.item)">
                                         Редактировать
-                                    </UiButton>
-                                    <UiButton size="x-small" @click="onDelete(item.id)">
+                                    </LazyUiButton>
+                                    <LazyUiButton size="x-small" @click="onDelete(columnProps.item.id)">
                                         Удалить
-                                    </UiButton>
+                                    </LazyUiButton>
                                 </div>
                             </template>
-                        </UiTooltip>
+                        </LazyUiTooltip>
                     </template>
-                </UiTable>
+                </LazyUiTable>
 
-                <UiButton :class="$style.load" @click="loadMore">Показать еще</UiButton>
-            </template>
-
-            <UiEmpty v-else>
-                <template #text>
-                    Вы еще не создали ни одну породу
-                </template>
-            </UiEmpty>
+                <LazyUiEmpty v-else>
+                    <template #text>
+                        Вы еще не создали ни одну породу
+                    </template>
+                </LazyUiEmpty>
+            </div>
         </template>
     </UiPage>
 </template>
@@ -128,10 +140,17 @@ const loadMore = async () => {
     margin-left: auto;
 }
 
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 800px;
+}
+
 .wrapper {
     width: calc(100% + var(--ui-col) * 2);
     height: 100%;
-    margin-left: calc(var(--ui-col) * -1);
 
     :global(.UiTable__item) {
         &:nth-child(4n + 1) {
@@ -165,10 +184,5 @@ const loadMore = async () => {
     display: flex;
     flex-direction: column;
     row-gap: calc(var(--ui-unit) * 2);
-}
-
-.load {
-    width: 100%;
-    margin-top: var(--ui-col);
 }
 </style>

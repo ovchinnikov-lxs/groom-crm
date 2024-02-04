@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import type { PropType } from 'vue';
-
-// UiKit Components
 import { UiSelect } from '@ovchinnikov-lxs-frontend/ui-kit';
+import type { Nullable } from '~/types';
 
-defineProps({
-    color: {
-        type: [String, null] as PropType<string | null>,
-        default: 'additional-light',
-    },
+withDefaults(defineProps<{
+    color?: Nullable<string>;
+}>(), {
+    color: 'additional-light',
 });
 </script>
 

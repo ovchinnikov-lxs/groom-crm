@@ -1,18 +1,19 @@
 import { defineStore } from 'pinia';
-import { ITariffsItem } from '~/plugins/api/tariffs';
-export const useTariffs = defineStore('tariffs', {
-    state: (): {
-        list: Array<ITariffsItem>
-    } => ({
+import type { Tables } from '~/types/supabase';
+
+export const useStoreTariffs = defineStore('tariffs', {
+    state: (): { list: Array<Tables<'Tariff'>> } => ({
         list: [],
     }),
 
     actions: {
         async fetchList() {
             try {
-                const { $api } = useNuxtApp();
-                const { data } = await $api.tariffs.getList();
-                this.list = data.value || [];
+                const data = await $fetch('/api/tariffs', {
+                    headers: useRequestHeaders(['cookie']),
+                });
+
+                this.list = data || [];
             } catch (e) {
                 console.log(e);
             }

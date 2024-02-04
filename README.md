@@ -1,4 +1,4 @@
-# GROOM.CRM
+# Groom.CRM
 
 ## Setup
 
@@ -6,7 +6,7 @@
 Click to "Use this template" in github
 ```bash
 # npm
-npm install
+pnpm install
 ```
 
 ## Development Server
@@ -14,7 +14,7 @@ npm install
 Start the development server on http://localhost:3000
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ## Production
@@ -24,11 +24,11 @@ https://habr.com/ru/articles/438862/
 
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Locally preview production build:
 
 ```bash
-npm run preview
+pnpm run preview
 ```

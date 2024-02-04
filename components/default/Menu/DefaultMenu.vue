@@ -1,31 +1,29 @@
 <script setup lang="ts">
-const { $routes } = useNuxtApp();
-
 const navItems = [
     {
-        to: $routes.salons.list,
+        to: '/dashboard',
+        title: 'Рабочий стол',
+        icon: 'finance',
+    },
+    {
+        to: '/salons',
         title: 'Салоны',
         icon: 'salons',
     },
     {
-        to: $routes.staff.list,
+        to: '/staff',
         title: 'Команда',
         icon: 'staff',
     },
     {
-        to: $routes.services.list,
+        to: '/services',
         title: 'Услуги',
         icon: 'services',
     },
     {
-        to: $routes.breeds.list,
+        to: '/breeds',
         title: 'Породы',
         icon: 'breeds',
-    },
-    {
-        to: $routes.finance.detail,
-        title: 'Финансы',
-        icon: 'finance',
     },
 ];
 

@@ -21,7 +21,7 @@ const actualValue = reactive<IBookingCreate>({
     petId: '',
     description: '',
 });
-// const { $v, getError, getInvalidState } = useValidate(computed(() => ({
+// const { v$, getError, getInvalidState } = useValidate(computed(() => ({
 //     serviceId: ['required'],
 //     date: ['required'],
 //     salonId: ['required'],

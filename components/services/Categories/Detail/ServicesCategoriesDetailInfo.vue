@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import type { PropType } from 'vue';
-import { IServiceCategory } from '~/types/services';
+import type { Tables } from '~/types/supabase';
 
-defineProps({
-    category: {
-        type: Object as PropType<IServiceCategory>,
-        default: () => ({}),
-    },
-});
-defineEmits<{
-    update: [void]
-    delete: [void]
+defineProps<{
+    category: Tables<'ServiceCategory'>;
 }>();
-const { isOwner } = useUser();
+
+const emit = defineEmits<{
+    update: [void];
+    delete: [void];
+}>();
+
+const storeProfile = useStoreProfile();
 </script>
 
 <template>
@@ -20,8 +18,7 @@ const { isOwner } = useUser();
         <div :class="$style.wrapper">
             <div :class="$style.previewWrapper">
                 <UiImage
-                    v-if="category.preview"
-                    :src="category.preview"
+                    :src="category.image"
                     :class="$style.preview"
                 />
 
@@ -37,19 +34,19 @@ const { isOwner } = useUser();
                 </div>
             </div>
 
-            <div v-if="isOwner" :class="$style.controls">
-                <UiButton size="small" @click="$emit('update')">
+            <div v-if="storeProfile.isOwner" :class="$style.controls">
+                <LazyUiButton size="small" @click="emit('update')">
                     Редактировать
-                </UiButton>
+                </LazyUiButton>
 
-                <UiButton
+                <LazyUiButton
                     outline
                     color="error"
                     size="small"
-                    @click="$emit('delete')"
+                    @click="emit('delete')"
                 >
                     Удалить
-                </UiButton>
+                </LazyUiButton>
             </div>
         </div>
     </UiPlate>
