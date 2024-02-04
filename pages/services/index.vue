@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import type { Tables } from '~/types/supabase';
+
 const breadcrumbs = useStoreBreadcrumbs();
 const storeModal = useStoreModal();
 const storeProfile = useStoreProfile();
 
-const { data, refresh } = await useAsyncData(async () => await $fetch('/api/service', {
+const { data, refresh } = await useAsyncData(async () => await $fetch<{
+    data: Tables<'ServiceCategory'>[];
+}>('/api/service', {
     headers: useRequestHeaders(['cookie']),
     params: {
         company_id: storeProfile.profile.company_id,

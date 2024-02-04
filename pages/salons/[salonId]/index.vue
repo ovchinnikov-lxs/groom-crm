@@ -2,10 +2,9 @@
 import type { IScheduleMaster } from '~/components/salons/detail/SalonsDetailSchedule.vue';
 import type { ISalonDetail } from '~/types/salons';
 
-
 const route = useRoute();
 
-const { data, refresh } = await useAsyncData<ISalonDetail>(async () => await $fetch(`/api/salons/${route.params.salonId}`, {
+const { data, refresh } = await useAsyncData(async () => await $fetch<ISalonDetail>(`/api/salons/${route.params.salonId}`, {
     headers: useRequestHeaders(['cookie']),
 }));
 

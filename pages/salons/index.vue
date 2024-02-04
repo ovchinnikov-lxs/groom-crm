@@ -10,7 +10,7 @@ const storeModal = useStoreModal();
 const storeProfile = useStoreProfile();
 const storeCompany = useStoreCompany();
 
-const { data } = await useAsyncData(async () => await $fetch('/api/salons', {
+const { data } = await useAsyncData(async () => await $fetch<{data: Tables<'Salon'>[]}>('/api/salons', {
     headers: useRequestHeaders(['cookie']),
 }));
 
@@ -25,7 +25,7 @@ storeBreadcrumbs.setList([{
     title: 'Салоны',
 }]);
 
-const actualList = computed<Tables<'Salon'>[]>(() => data?.value?.data || []);
+const actualList = computed(() => data?.value?.data || []);
 
 function openCreateModal() {
     storeModal.open({

@@ -6,7 +6,7 @@ const storeProfile = useStoreProfile();
 const storeModal = useStoreModal();
 const storeToast = useStoreToast();
 
-const { data, refresh: fetchBreeds } = await useAsyncData(async () => await $fetch('/api/breeds', {
+const { data, refresh: fetchBreeds } = await useAsyncData(async () => await $fetch<{data: Tables<'Breed'>[]}>('/api/breeds', {
     headers: useRequestHeaders(['cookie']),
     params: {
         company_id: storeProfile.profile.company_id,

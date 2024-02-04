@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IServiceDetail } from '~/types/services';
+import type { IServiceCategory } from '~/types/services';
 
 const storeProfile = useStoreProfile();
 const storeBreadcrumbs = useStoreBreadcrumbs();
@@ -7,7 +7,7 @@ const storeModal = useStoreModal();
 const storeToast = useStoreToast();
 const route = useRoute();
 
-const { data, refresh } = await useAsyncData(async () => await $fetch(`/api/service/${route.params.categoryId}`, {
+const { data, refresh } = await useAsyncData(async () => await $fetch<IServiceCategory>(`/api/service/${route.params.categoryId}`, {
     headers: useRequestHeaders(['cookie']),
 }));
 
@@ -117,7 +117,7 @@ function createService() {
 
                 <LazyServicesTable
                     v-if="data?.services?.length"
-                    :list="data.services as IServiceDetail[]"
+                    :list="data.services"
                     :category-id="data.id"
                     @update="refresh"
                 />

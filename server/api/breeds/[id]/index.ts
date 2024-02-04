@@ -3,18 +3,26 @@ import type { Database } from '~/types/supabase';
 
 export default defineEventHandler(async event => {
     const client = await serverSupabaseClient<Database>(event);
-    const query = getQuery(event);
+    const id = getRouterParam(event, 'id');
 
-    if (!query.company_id) {
+    if (!id) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'company_id is required',
+            statusMessage: 'Param is required',
         });
     }
 
-    return await client
+    const { data, error } = await client
         .from('Breed')
         .select()
-        .ilike('name', `%${query.search}%`)
-        .order('name', { ascending: true });
+        .eq('id', id);
+
+    if (error) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: error.message,
+        });
+    }
+
+    return data[0];
 });

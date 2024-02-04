@@ -1,12 +1,5 @@
 import type { Tables } from '~/types/supabase';
 
-export interface IServiceCategory {
-    id: string;
-    name: string;
-    description: string;
-    preview: string;
-}
-
 export interface IService {
     id: string;
     name: string;
@@ -19,4 +12,8 @@ export interface IService {
 
 export interface IServiceDetail extends Tables<'ServiceDetail'> {
     breeds: Tables<'Breed'>[];
+}
+
+export interface IServiceCategory extends Tables<'ServiceCategory'> {
+    services: IServiceDetail[];
 }

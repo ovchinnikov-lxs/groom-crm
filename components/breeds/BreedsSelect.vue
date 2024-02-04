@@ -78,7 +78,7 @@ const actualOptionsList = computed(() => optionsList.value.filter(i => !actualVa
 async function fetchOptions(initial = false) {
     try {
         const storeCompany = useStoreCompany();
-        const { data } = await $fetch('/api/breeds/search', {
+        const { data } = await $fetch('/api/breeds', {
             params: {
                 company_id: storeCompany.detail.id,
                 search: suggestValue.value,
